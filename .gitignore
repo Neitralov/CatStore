@@ -1,0 +1,10 @@
+.idea
+.fleet
+src/Database/bin/
+src/Database/obj/
+src/Domain/bin/
+src/Domain/obj/
+src/WebAPI/bin/
+src/WebAPI/obj/
+src/WebAPI.Contracts/bin/
+src/WebAPI.Contracts/obj/
