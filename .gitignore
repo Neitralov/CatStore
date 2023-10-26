@@ -8,3 +8,4 @@ src/WebAPI/bin/
 src/WebAPI/obj/
 src/WebAPI.Contracts/bin/
 src/WebAPI.Contracts/obj/
+src/WebAPI/*.db
