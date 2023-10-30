@@ -12,6 +12,7 @@ public class CatService
     public ErrorOr<Created> StoreCat(Cat cat)
     {
         _repository.AddCat(cat);
+        _repository.SaveChanges();
         
         return Result.Created;
     }
@@ -20,29 +21,29 @@ public class CatService
     {
         var result = _repository.GetCat(catId);
         
-        if (result is not null)
-            return result;
-        
-        return Errors.Cat.NotFound;
+        return result is { } ? result : Errors.Cat.NotFound;
     }
     
     public ErrorOr<Updated> UpdateCat(Cat cat)
     {
         var result = _repository.UpdateCat(cat);
+        _repository.SaveChanges();
         
-        if (result)
-            return Result.Updated;
-        
-        return Errors.Cat.NotFound;
+        return result ? Result.Updated : Errors.Cat.NotFound;
     }
     
     public ErrorOr<Deleted> DeleteCat(Guid catId)
     {
         var result = _repository.DeleteCat(catId);
+        _repository.SaveChanges();
         
-        if (result)
-            return Result.Deleted;
+        return result ? Result.Deleted : Errors.Cat.NotFound;
+    }
+
+    public ErrorOr<IEnumerable<Cat>> GetAllCats()
+    {
+        var result = _repository.GetAllCats();
         
-        return Errors.Cat.NotFound;
+        return result.ToList();
     }
 }

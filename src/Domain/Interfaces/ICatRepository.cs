@@ -3,7 +3,9 @@ namespace Domain.Interfaces;
 public interface ICatRepository
 {
     void AddCat(Cat cat);
-    Cat? GetCat(Guid id);
+    Cat? GetCat(Guid catId);
     bool UpdateCat(Cat cat);
-    bool DeleteCat(Guid id);
+    bool DeleteCat(Guid catId);
+    IEnumerable<Cat> GetAllCats();
+    void SaveChanges();
 }

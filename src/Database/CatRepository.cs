@@ -2,31 +2,47 @@ namespace Database;
 
 public class CatRepository : ICatRepository
 {
+    private readonly DatabaseContext _database;
+
+    public CatRepository(IDbContextFactory<DatabaseContext> factory)
+    {
+        _database = factory.CreateDbContext();
+    }
+
     public void AddCat(Cat cat)
     {
-        using var db = new LiteDatabase("mydb.db");
-        var cats = db.GetCollection<Cat>("cats");
-        cats.Insert(cat);
+        _database.Add(cat);
     }
 
     public Cat? GetCat(Guid catId)
     {
-        using var db = new LiteDatabase("mydb.db");
-        var cats = db.GetCollection<Cat>("cats");
-        return cats.FindById(catId);
+        return _database.Cats.Find(catId);
     }
 
     public bool UpdateCat(Cat cat)
     {
-        using var db = new LiteDatabase("mydb.db");
-        var cats = db.GetCollection<Cat>("cats");
-        return cats.Update(cat);
+        var storedCat = _database.Cats.Find(cat.CatId);
+
+        if (storedCat is { })
+            storedCat.UpdateCat(cat);
+
+        return storedCat is { };
     }
 
-    public bool DeleteCat(Guid id)
+    public bool DeleteCat(Guid catId)
     {
-        using var db = new LiteDatabase("mydb.db");
-        var cats = db.GetCollection<Cat>("cats");
-        return cats.Delete(id);
+        var storedCat = _database.Cats.Find(catId);
+
+        if (storedCat is { })
+            _database.Remove(storedCat);
+
+        return storedCat is { };
     }
+
+    public IEnumerable<Cat> GetAllCats()
+    {
+        return _database.Cats.ToList();
+    }
+
+    public void SaveChanges() => _database.SaveChanges();
 }

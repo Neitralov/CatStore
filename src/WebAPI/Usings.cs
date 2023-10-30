@@ -6,3 +6,4 @@ global using Domain.Data;
 global using Domain.Interfaces;
 global using WebAPI.Contracts.Cat;
 global using Database;
+global using Microsoft.EntityFrameworkCore;

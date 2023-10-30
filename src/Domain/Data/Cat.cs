@@ -2,7 +2,7 @@ namespace Domain.Data;
 
 public class Cat
 {
-    public Guid Id { get; private set; }
+    public Guid CatId { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string SkinColor { get; private set; } = string.Empty;
     public string EyeColor { get; private set; } = string.Empty;
@@ -20,7 +20,7 @@ public class Cat
         string eyeColor,
         bool isMale,
         decimal cost,
-        Guid? id = null)
+        Guid? catId = null)
     {
        List<Error> errors = new();
        
@@ -43,12 +43,21 @@ public class Cat
        
        return new Cat
        {
-           Id        = id ?? Guid.NewGuid(),
+           CatId     = catId ?? Guid.NewGuid(),
            Name      = name,
            SkinColor = skinColor,
            EyeColor  = eyeColor,
            IsMale    = isMale,
            Cost      = cost
        };
+    }
+
+    public void UpdateCat(Cat cat)
+    {
+        Name      = cat.Name;
+        SkinColor = cat.SkinColor;
+        EyeColor  = cat.EyeColor;
+        IsMale    = cat.IsMale;
+        Cost      = cat.Cost; 
     }
 }
