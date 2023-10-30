@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers();
     
     builder.Services.AddDbContextFactory<DatabaseContext>(options =>
-        options.UseSqlite(builder.Configuration["ConnectionString"]));
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddTransient<ICatRepository, CatRepository>();
     builder.Services.AddTransient<CatService>();
     
