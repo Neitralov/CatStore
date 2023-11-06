@@ -58,7 +58,7 @@ public class CatsController : ApiController
     {
         ErrorOr<IEnumerable<Cat>> getAllCatResult = _catService.GetAllCats();
 
-        return getAllCatResult.Match(cats => Ok(cats.Select(MapCatResponse)), Problem);
+        return getAllCatResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
     }
     
     private static CatResponse MapCatResponse(Cat cat)
