@@ -3,6 +3,7 @@ namespace Database;
 public class DatabaseContext : DbContext
 {
     public DbSet<Cat> Cats => Set<Cat>();
+    public DbSet<User> Users => Set<User>();
     
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) => Database.EnsureCreated();
     

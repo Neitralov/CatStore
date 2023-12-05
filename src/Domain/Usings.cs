@@ -1,4 +1,5 @@
 global using ErrorOr;
+global using Domain.Services;
 global using Domain.Data;
 global using Domain.Interfaces;
 global using Domain.ServiceErrors;

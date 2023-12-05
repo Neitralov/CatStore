@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddTransient<ICatRepository, CatRepository>();
     builder.Services.AddTransient<CatService>();
+    builder.Services.AddTransient<IAuthRepository, AuthRepository>();
+    builder.Services.AddTransient<AuthService>();
     
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();    

@@ -5,5 +5,6 @@ global using Domain.Services;
 global using Domain.Data;
 global using Domain.Interfaces;
 global using WebAPI.Contracts.Cat;
+global using WebAPI.Contracts.User;
 global using Database;
 global using Microsoft.EntityFrameworkCore;
