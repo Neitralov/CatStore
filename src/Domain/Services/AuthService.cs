@@ -11,6 +11,9 @@ public class AuthService
 
     public ErrorOr<Created> StoreUser(User user)
     {
+        if (IsUserExists(user.Email))
+            return Errors.User.AlreadyExists;
+
         _repository.AddUser(user);
         _repository.SaveChanges();
 

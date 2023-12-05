@@ -11,7 +11,6 @@ public class User
 
     private User() { }
 
-    //AuthService authService,
     public static ErrorOr<User> Create(
         string email,
         string password,
@@ -19,9 +18,6 @@ public class User
         Guid? userId = null)
     {
         List<Error> errors = new();
-
-        //if (authService.IsUserExists(email))
-        //    errors.Add(Errors.User.AlreadyExists);
 
         if (password != confirmPassword)
             errors.Add(Errors.User.PasswordsDontMatch);
