@@ -27,8 +27,8 @@ public class AuthController : ApiController
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)
     {
         return Domain.Data.User.Create(
-            request.email,
-            request.password,
-            request.confirmPassword);
+            request.Email,
+            request.Password,
+            request.ConfirmPassword);
     }
 }

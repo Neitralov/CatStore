@@ -1,6 +1,6 @@
 namespace WebAPI.Contracts.User;
 
 public record CreateUserRequest(
-    string email,
-    string password,
-    string confirmPassword);
+    string Email,
+    string Password,
+    string ConfirmPassword);
