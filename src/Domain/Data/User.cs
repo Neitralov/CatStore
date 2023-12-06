@@ -9,6 +9,8 @@ public class User
     public DateTime DateCreated { get; private set; }
     public string Role { get; private set; } = "customer";
 
+    public const int MinPasswordLength = 4;
+
     private User() { }
 
     public static ErrorOr<User> Create(
@@ -18,6 +20,12 @@ public class User
         Guid? userId = null)
     {
         List<Error> errors = new();
+
+        if (email.Contains('@') is false)
+            errors.Add(Errors.User.InvalidEmail);
+
+        if (password.Length < MinPasswordLength)
+            errors.Add(Errors.User.InvalidPassword);
 
         if (password != confirmPassword)
             errors.Add(Errors.User.PasswordsDontMatch);
