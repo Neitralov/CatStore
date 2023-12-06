@@ -41,7 +41,7 @@ var builder = WebApplication.CreateBuilder(args);
         };
 
         options.AddSecurityDefinition(jwtSecurityScheme.Scheme, jwtSecurityScheme);
-        options.OperationFilter<SecurityRequirementsOperationFilter>(true, "Bearer");
+        options.OperationFilter<SecurityRequirementsOperationFilter>(true, JwtBearerDefaults.AuthenticationScheme);
     });
 }
 
