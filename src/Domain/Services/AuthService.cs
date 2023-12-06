@@ -40,12 +40,10 @@ public class AuthService
         var user = _repository.FindUserByEmail(email);
 
         if (user is null)
-            return "Error";
-            // Вернуть ошибку NotFound
+            return Errors.Login.IncorrectEmailOrPassword;
 
         if (VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt) is false)
-            return "Error";
-            // Вернуть ошибку PasswordIncorrect
+            return Errors.Login.IncorrectEmailOrPassword;
 
         return CreateToken(user);
     }
