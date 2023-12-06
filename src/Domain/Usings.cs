@@ -3,3 +3,7 @@ global using Domain.Data;
 global using Domain.Interfaces;
 global using Domain.ServiceErrors;
 global using System.Text.RegularExpressions;
+global using System.Security.Claims;
+global using System.IdentityModel.Tokens.Jwt;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.IdentityModel.Tokens;

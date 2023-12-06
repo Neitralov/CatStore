@@ -24,6 +24,14 @@ public class AuthController : ApiController
         return createUserResult.Match(_ => NoContent(), Problem);
     }
 
+    [HttpPost("login")]
+    public IActionResult Login(LoginUserRequest request)
+    {
+        ErrorOr<string> loginUserResult = _authService.Login(request.Email, request.Password);
+
+        return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
+    }
+
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)
     {
         return Domain.Data.User.Create(

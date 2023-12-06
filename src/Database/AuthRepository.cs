@@ -14,6 +14,11 @@ public class AuthRepository : IAuthRepository
         _database.Add(user);
     }
 
+    public User? FindUserByEmail(string email)
+    {
+        return _database.Users.FirstOrDefault(user => user.Email == email);
+    }
+
     public bool IsUserExists(string email)
     {
         return _database.Users.Any(user => user.Email == email);
