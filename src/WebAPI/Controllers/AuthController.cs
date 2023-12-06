@@ -32,6 +32,16 @@ public class AuthController : ApiController
         return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
     }
 
+    [HttpDelete, Authorize]
+    public IActionResult DeleteAccount()
+    {
+        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        ErrorOr<Deleted> deletedUserResult = _authService.DeleteUserById(userId);
+
+        return deletedUserResult.Match(_ => NoContent(), Problem);
+    }
+
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)
     {
         return Domain.Data.User.Create(

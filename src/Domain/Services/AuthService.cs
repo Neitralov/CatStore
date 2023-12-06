@@ -22,6 +22,19 @@ public class AuthService
         return Result.Created;
     }
 
+    public ErrorOr<Deleted> DeleteUserById(Guid userId)
+    {
+        var user = _repository.FindUserById(userId);
+
+        if (user is null)
+            return Errors.User.NotFound;
+
+        _repository.RemoveUser(user);
+        _repository.SaveChanges();
+
+        return Result.Deleted;
+    }
+
     public ErrorOr<string> Login(string email, string password)
     {
         var user = _repository.FindUserByEmail(email);

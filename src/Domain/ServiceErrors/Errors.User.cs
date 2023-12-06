@@ -4,6 +4,10 @@ public static partial class Errors
 {
     public static class User
     {
+        public static Error NotFound => Error.NotFound(
+            code: "User.NotFound",
+            description: "User not found");
+
         public static Error AlreadyExists => Error.Validation(
             code: "User.AlreadyExists",
             description: "User with the same email is already exists");

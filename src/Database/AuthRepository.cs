@@ -14,9 +14,19 @@ public class AuthRepository : IAuthRepository
         _database.Add(user);
     }
 
+    public void RemoveUser(User user)
+    {
+        _database.Remove(user);
+    }
+
     public User? FindUserByEmail(string email)
     {
-        return _database.Users.FirstOrDefault(user => user.Email == email);
+        return _database.Users.SingleOrDefault(user => user.Email == email);
+    }
+
+    public User? FindUserById(Guid userId)
+    {
+        return _database.Users.SingleOrDefault(user => user.UserId == userId);
     }
 
     public bool IsUserExists(string email)
