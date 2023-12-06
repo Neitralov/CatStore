@@ -10,7 +10,39 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddTransient<AuthService>();
     
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();    
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                    .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true
+            };
+        });
+
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "CatStore.WebAPI", Version = "v1" } );
+
+        var jwtSecurityScheme = new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter JWT token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
+        };
+
+        options.AddSecurityDefinition(jwtSecurityScheme.Scheme, jwtSecurityScheme);
+        options.OperationFilter<SecurityRequirementsOperationFilter>(true, "Bearer");
+    });
 }
 
 var app = builder.Build();

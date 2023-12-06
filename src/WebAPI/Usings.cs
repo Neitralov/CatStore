@@ -7,6 +7,7 @@ global using Domain.Interfaces;
 global using WebAPI.Contracts.Cat;
 global using WebAPI.Contracts.User;
 global using Database;
+global using Swashbuckle.AspNetCore.Filters;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
