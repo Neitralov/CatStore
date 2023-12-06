@@ -45,6 +45,19 @@ public class User
         };
     }
 
+    public ErrorOr<Success> ChangePassword(string newPassword)
+    {
+        if (newPassword.Length < MinPasswordLength)
+            return Errors.User.InvalidPassword;
+
+        CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+
+        return Result.Success;
+    }
+
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using var hmac = new System.Security.Cryptography.HMACSHA512();

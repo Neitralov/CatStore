@@ -48,6 +48,30 @@ public class AuthService
         return CreateToken(user);
     }
 
+    public ErrorOr<Success> ChangeUserPassword(Guid userId, string oldPassword, string newPassword, string confirmNewPassword)
+    {
+        var user = _repository.FindUserById(userId);
+
+        if (user is null)
+            return Errors.User.NotFound;
+
+        if (VerifyPasswordHash(oldPassword, user.PasswordHash, user.PasswordSalt) is false)
+            return Errors.Login.IncorrectEmailOrPassword;
+
+        if (newPassword != confirmNewPassword)
+            return Errors.User.PasswordsDontMatch;
+
+        if (newPassword == oldPassword)
+            return Errors.User.NewAndOldPasswordAreTheSame;
+
+        var result = user.ChangePassword(newPassword);
+
+        if (result == Result.Success)
+            _repository.SaveChanges();
+
+        return result;
+    }
+
     public bool IsUserExists(string email)
     {
         return _repository.IsUserExists(email);

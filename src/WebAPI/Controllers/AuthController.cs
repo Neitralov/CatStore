@@ -42,6 +42,16 @@ public class AuthController : ApiController
         return deletedUserResult.Match(_ => NoContent(), Problem);
     }
 
+    [HttpPatch("change-password"), Authorize]
+    public IActionResult ChangePassword(ChangeUserPasswordRequest request)
+    {
+        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        ErrorOr<Success> changeUserPasswordResult = _authService.ChangeUserPassword(userId, request.OldPassword, request.NewPassword, request.ConfirmNewPassword);
+
+        return changeUserPasswordResult.Match(_ => NoContent(), Problem);
+    }
+
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)
     {
         return Domain.Data.User.Create(

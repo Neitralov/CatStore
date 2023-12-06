@@ -23,5 +23,9 @@ public static partial class Errors
         public static Error PasswordsDontMatch => Error.Validation(
             code: "User.PasswordsDontMatch",
             description: "The password and confirm password fields must match");
+
+        public static Error NewAndOldPasswordAreTheSame => Error.Validation(
+            code: "User.NewAndOldPasswordAreTheSame",
+            description: "The new password must not be the same as the old one");
     }
 }
