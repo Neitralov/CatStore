@@ -9,7 +9,7 @@ public class CatsController : ApiController
         _catService = catService;
     }
     
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "admin")]
     public IActionResult CreateCat(CreateCatRequest request)
     {
         ErrorOr<Cat> requestToCatResult = CreateCatFrom(request);
@@ -31,7 +31,7 @@ public class CatsController : ApiController
         return getCatResult.Match(cat => Ok(MapCatResponse(cat)), Problem);
     }
     
-    [HttpPut("{catId:guid}")]
+    [HttpPut("{catId:guid}"), Authorize(Roles = "admin")]
     public IActionResult UpdateCat(Guid catId, UpdateCatRequest request)
     {
         ErrorOr<Cat> requestToCatResult = CreateCatFrom(catId, request);
@@ -45,7 +45,7 @@ public class CatsController : ApiController
         return upsertedCatResult.Match(_ => NoContent(), Problem);
     }
     
-    [HttpDelete("{catId:guid}")]
+    [HttpDelete("{catId:guid}"), Authorize(Roles = "admin")]
     public IActionResult DeleteCat(Guid catId)
     {
         ErrorOr<Deleted> deletedCatResult = _catService.DeleteCat(catId);
