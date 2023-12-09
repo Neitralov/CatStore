@@ -3,10 +3,12 @@ namespace Domain.Services;
 public class CartService
 {
     private readonly ICartRepository _repository;
+    private readonly ICatRepository _catRepository;
    
-    public CartService(ICartRepository repository)
+    public CartService(ICartRepository repository, ICatRepository catRepository)
     {
         _repository = repository;
+        _catRepository = catRepository;
     }
 
     public ErrorOr<Created> StoreCartItem(CartItem cartItem)
@@ -14,7 +16,12 @@ public class CartService
         var sameCartItem = _repository.GetSameCartItem(cartItem);
 
         if (sameCartItem is null)
+        {
+            if (_catRepository.IsCatExists(cartItem.CatId) is false)
+                return Errors.Cat.NotFound;
+
             _repository.StoreCartItem(cartItem);
+        }
         else
             sameCartItem.IncreaseQuantity();
 

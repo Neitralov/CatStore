@@ -8,5 +8,6 @@ public interface ICatRepository
     bool DeleteCat(Guid catId);
     IEnumerable<Cat> GetAllCats();
     bool IsCatExists(string name);
+    bool IsCatExists(Guid catId);
     void SaveChanges();
 }

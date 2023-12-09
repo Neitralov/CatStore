@@ -49,5 +49,10 @@ public class CatRepository : ICatRepository
         return _database.Cats.Any(cat => cat.Name == name);
     }
 
+    public bool IsCatExists(Guid catId)
+    {
+        return _database.Cats.Any(cat => cat.CatId == catId);
+    }
+
     public void SaveChanges() => _database.SaveChanges();
 }
