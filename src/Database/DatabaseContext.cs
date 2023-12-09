@@ -10,6 +10,9 @@ public class DatabaseContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Cat>()
+            .HasKey(entity => new { entity.CatId, entity.Name });
+
         modelBuilder.Entity<CartItem>()
             .HasKey(entity => new { entity.UserId, entity.CatId });
 

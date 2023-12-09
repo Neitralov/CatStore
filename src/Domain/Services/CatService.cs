@@ -11,6 +11,9 @@ public class CatService
     
     public ErrorOr<Created> StoreCat(Cat cat)
     {
+        if (_repository.IsCatExists(cat.Name))
+            return Errors.Cat.AlreadyExists;
+
         _repository.AddCat(cat);
         _repository.SaveChanges();
         

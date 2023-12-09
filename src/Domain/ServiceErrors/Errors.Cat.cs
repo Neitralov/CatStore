@@ -24,5 +24,9 @@ public static partial class Errors
         public static Error InvalidCost => Error.Validation(
             code: "Cat.InvalidCost",
             description: "Сat can't be free.");
+
+        public static Error AlreadyExists => Error.Validation(
+            code: "Cat.AlreadyExists",
+            description: "Cat with the same name is already exists");
     }
 }
