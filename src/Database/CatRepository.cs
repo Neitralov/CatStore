@@ -41,7 +41,7 @@ public class CatRepository : ICatRepository
 
     public IEnumerable<Cat> GetAllCats()
     {
-        return _database.Cats.ToList();
+        return _database.Cats;
     }
 
     public void SaveChanges() => _database.SaveChanges();
