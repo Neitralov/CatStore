@@ -6,6 +6,7 @@ global using Domain.Data;
 global using Domain.Interfaces;
 global using WebAPI.Contracts.Cat;
 global using WebAPI.Contracts.User;
+global using WebAPI.Contracts.CartItem;
 global using Database;
 global using Swashbuckle.AspNetCore.Filters;
 global using Microsoft.EntityFrameworkCore;
