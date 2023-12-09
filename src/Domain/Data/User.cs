@@ -7,7 +7,7 @@ public class User
     public byte[] PasswordHash { get; private set; }
     public byte[] PasswordSalt { get; private set; }
     public DateTime DateCreated { get; private set; }
-    public string Role { get; private set; } = "customer";
+    public string Role { get; private set; }
 
     public const int MinPasswordLength = 4;
 
@@ -17,6 +17,7 @@ public class User
         string email,
         string password,
         string confirmPassword,
+        string role = "customer",
         Guid? userId = null)
     {
         List<Error> errors = new();
@@ -41,7 +42,8 @@ public class User
             Email = email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
-            DateCreated = DateTime.UtcNow
+            DateCreated = DateTime.UtcNow,
+            Role = role
         };
     }
 

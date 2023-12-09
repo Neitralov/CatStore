@@ -12,5 +12,14 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.Entity<CartItem>()
             .HasKey(entity => new { entity.UserId, entity.CatId });
+
+        var admin = User.Create(
+            email: "admin@gmail.com",
+            password: "admin",
+            confirmPassword: "admin",
+            role: "admin")
+            .Value;
+
+        modelBuilder.Entity<User>().HasData(admin);
     }
 }
