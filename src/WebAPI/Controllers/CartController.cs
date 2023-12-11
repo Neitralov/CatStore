@@ -15,7 +15,7 @@ public class CartController : ApiController
     [HttpPost, Authorize]
     public IActionResult CreateCartItem(CreateCartItemRequest request)
     {
-        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserGuid();
 
         ErrorOr<CartItem> requestToCartItemResult = CreateCartItemFrom(request, userId);
 
@@ -31,7 +31,7 @@ public class CartController : ApiController
     [HttpGet, Authorize]
     public IActionResult GetAllUsersCartItems()
     {
-        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserGuid();
 
         ErrorOr<IEnumerable<CartItem>> getAllUserCartItemsResult = _cartService.GetAllUserCartItems(userId);
         
@@ -41,7 +41,7 @@ public class CartController : ApiController
     [HttpDelete("{catId:guid}"), Authorize]
     public IActionResult RemoveCartItem(Guid catId)
     {
-        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserGuid();
 
         ErrorOr<Deleted> removedCartItemResult = _cartService.RemoveCartItem(userId, catId);
 
@@ -51,7 +51,7 @@ public class CartController : ApiController
     [HttpPatch("update-quantity"), Authorize]
     public IActionResult UpdateCartItemQuantity(UpdateCartItemQuantityRequest request)
     {
-        throw new NotImplementedException();
+        var userId = GetUserGuid();
     }
 
     [HttpGet("count"), Authorize]
@@ -73,4 +73,6 @@ public class CartController : ApiController
             cartItem.CatId,
             cartItem.Quantity);
     }
+
+    private Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }
