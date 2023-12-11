@@ -41,7 +41,11 @@ public class CartController : ApiController
     [HttpDelete("{catId:guid}"), Authorize]
     public IActionResult RemoveCartItem(Guid catId)
     {
-        throw new NotImplementedException();
+        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        ErrorOr<Deleted> removedCartItemResult = _cartService.RemoveCartItem(userId, catId);
+
+        return removedCartItemResult.Match(_ => NoContent(), Problem);
     }
 
     [HttpPatch("update-quantity"), Authorize]

@@ -34,4 +34,12 @@ public class CartService
     {
         return _repository.GetAllUserCartItems(userId).ToList();
     }
+
+    public ErrorOr<Deleted> RemoveCartItem(Guid userId, Guid catId)
+    {
+        var result = _repository.RemoveCartItem(userId, catId);
+        _repository.SaveChanges();
+
+        return result ? Result.Deleted : Errors.CartItem.NotFound;
+    }
 }

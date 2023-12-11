@@ -14,6 +14,18 @@ public class CartRepository : ICartRepository
         _database.Add(cartItem);
     }
 
+    public bool RemoveCartItem(Guid userId, Guid catId)
+    {
+        var cartItem = _database.CartItems.SingleOrDefault(cartItem =>
+            cartItem.UserId == userId &&
+            cartItem.CatId == catId);
+
+        if (cartItem is { })
+            _database.Remove(cartItem);
+
+        return cartItem is { };
+    }
+
     public CartItem? GetSameCartItem(CartItem cartItem)
     {
         return _database.CartItems.SingleOrDefault(item =>
