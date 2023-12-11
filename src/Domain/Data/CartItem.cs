@@ -10,7 +10,8 @@ public class CartItem
 
     public static ErrorOr<CartItem> Create(
         Guid userId,
-        Guid catId)
+        Guid catId,
+        int quantity = 1)
     {
         List<Error> errors = new();
 
@@ -22,9 +23,20 @@ public class CartItem
         return new CartItem
         {
             UserId = userId,
-            CatId = catId
+            CatId = catId,
+            Quantity = quantity
         };
     }
 
     public void IncreaseQuantity() => Quantity++;
+
+    public ErrorOr<Updated> UpdateQuantity(int quantity)
+    {
+        if (quantity < 1)
+            return Errors.CartItem.InvalidQuantity;
+
+        Quantity = quantity;
+
+        return Result.Updated;
+    }
 }

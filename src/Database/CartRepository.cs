@@ -25,8 +25,8 @@ public class CartRepository : ICartRepository
 
         return cartItem is { };
     }
-
-    public CartItem? GetSameCartItem(CartItem cartItem)
+    
+    public CartItem? FindCartItem(CartItem cartItem)
     {
         return _database.CartItems.SingleOrDefault(item =>
             item.UserId == cartItem.UserId &&

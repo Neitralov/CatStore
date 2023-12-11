@@ -13,7 +13,7 @@ public class CartService
 
     public ErrorOr<Created> StoreCartItem(CartItem cartItem)
     {
-        var sameCartItem = _repository.GetSameCartItem(cartItem);
+        var sameCartItem = _repository.FindCartItem(cartItem);
 
         if (sameCartItem is null)
         {
@@ -41,5 +41,20 @@ public class CartService
         _repository.SaveChanges();
 
         return result ? Result.Deleted : Errors.CartItem.NotFound;
+    }
+
+    public ErrorOr<Updated> UpdateQuantity(CartItem cartItem)
+    {
+        var dbCartItem = _repository.FindCartItem(cartItem);
+
+        if (dbCartItem is null)
+            return Errors.CartItem.NotFound;
+
+        var result = dbCartItem.UpdateQuantity(cartItem.Quantity);
+
+        if (result == Result.Updated)
+            _repository.SaveChanges();
+
+        return result;
     }
 }

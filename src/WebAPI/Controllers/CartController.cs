@@ -52,6 +52,16 @@ public class CartController : ApiController
     public IActionResult UpdateCartItemQuantity(UpdateCartItemQuantityRequest request)
     {
         var userId = GetUserGuid();
+
+        ErrorOr<CartItem> requestToCartItemResult = CreateCartItemFrom(request, userId);
+
+        if (requestToCartItemResult.IsError)
+            return Problem(requestToCartItemResult.Errors);
+
+        var cartItem = requestToCartItemResult.Value;
+        ErrorOr<Updated> updateCartItemQuantityResult = _cartService.UpdateQuantity(cartItem);
+
+        return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
 
     [HttpGet("count"), Authorize]
@@ -65,6 +75,14 @@ public class CartController : ApiController
         return CartItem.Create(
             userId,
             request.CatId);
+    }
+
+    private static ErrorOr<CartItem> CreateCartItemFrom(UpdateCartItemQuantityRequest request, Guid userId)
+    {
+        return CartItem.Create(
+            userId,
+            request.CatId,
+            request.Quantity);
     }
 
     private static CartItemResponse MapCartItemResponse(CartItem cartItem)
