@@ -57,4 +57,11 @@ public class CartService
 
         return result;
     }
+
+    public ErrorOr<int> GetUserCartItemsCount(Guid userId)
+    {
+        var result = _repository.GetUserCartItemsCount(userId);
+
+        return result;
+    }
 }

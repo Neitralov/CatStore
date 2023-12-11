@@ -65,9 +65,13 @@ public class CartController : ApiController
     }
 
     [HttpGet("count"), Authorize]
-    public IActionResult GetTotalNumberOfItemsInCart()
+    public IActionResult GetCartItemsCount()
     {
-        throw new NotImplementedException();
+        var userId = GetUserGuid();
+
+        ErrorOr<int> getCartItemsCountResult = _cartService.GetUserCartItemsCount(userId);
+
+        return getCartItemsCountResult.Match(count => Ok(new TotalNumberOfCartItemsResponse(count)), Problem);
     }
 
     private static ErrorOr<CartItem> CreateCartItemFrom(CreateCartItemRequest request, Guid userId)

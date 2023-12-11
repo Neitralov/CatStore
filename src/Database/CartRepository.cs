@@ -38,6 +38,11 @@ public class CartRepository : ICartRepository
         return _database.CartItems.Where(cartItem => cartItem.UserId == userId);
     }
 
+    public int GetUserCartItemsCount(Guid userId)
+    {
+        return _database.CartItems.Count(item => item.UserId == userId);
+    }
+
     public void SaveChanges()
     {
         _database.SaveChanges();
