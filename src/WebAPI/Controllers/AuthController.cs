@@ -35,7 +35,7 @@ public class AuthController : ApiController
     [HttpDelete, Authorize]
     public IActionResult DeleteAccount()
     {
-        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserGuid();
 
         ErrorOr<Deleted> deletedUserResult = _authService.DeleteUserById(userId);
 
@@ -45,7 +45,7 @@ public class AuthController : ApiController
     [HttpPatch("change-password"), Authorize]
     public IActionResult ChangePassword(ChangeUserPasswordRequest request)
     {
-        var userId = Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserGuid();
 
         ErrorOr<Success> changeUserPasswordResult = _authService.ChangeUserPassword(userId, request.OldPassword, request.NewPassword, request.ConfirmNewPassword);
 

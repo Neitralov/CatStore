@@ -107,6 +107,4 @@ public class OrdersController : ApiController
             orderItem.Quantity,
             orderItem.TotalPrice);
     }
-
-    private Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }

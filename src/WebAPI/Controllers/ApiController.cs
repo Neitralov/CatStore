@@ -35,4 +35,6 @@ public class ApiController : ControllerBase
             statusCode: statusCode,
             title: firstError.Description);    
     }
+
+    protected Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }

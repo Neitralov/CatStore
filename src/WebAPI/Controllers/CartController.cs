@@ -95,6 +95,4 @@ public class CartController : ApiController
             cartItem.CatId,
             cartItem.Quantity);
     }
-
-    private Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }
