@@ -56,7 +56,11 @@ public class OrdersController : ApiController
     [HttpGet, Authorize]
     public IActionResult GetOrders()
     {
-        throw new NotImplementedException();
+        var userId = GetUserGuid();
+
+        ErrorOr<IEnumerable<Order>> getAllUserOrdersResult = _orderService.GetAllUserOrders(userId);
+
+        return getAllUserOrdersResult.Match(orders => Ok(new { Orders = orders.Select(MapOrderResponse) }), Problem);
     }
     
     [HttpGet("{orderId:guid}"), Authorize]
@@ -73,5 +77,13 @@ public class OrdersController : ApiController
             totalPrice);
     }
     
+    private static OrderResponse MapOrderResponse(Order order)
+    {
+        return new OrderResponse(
+            order.OrderId,
+            order.OrderDate,
+            order.TotalPrice);
+    }
+
     private Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }

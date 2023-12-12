@@ -24,4 +24,9 @@ public class OrderService
 
         return Result.Created;
     }
+
+    public ErrorOr<IEnumerable<Order>> GetAllUserOrders(Guid userId)
+    {
+        return _orderRepository.GetAllUserOrders(userId).ToList();
+    }
 }
