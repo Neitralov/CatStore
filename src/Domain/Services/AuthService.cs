@@ -89,9 +89,9 @@ public class AuthService
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.Role, user.Role)
+            new (ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new (ClaimTypes.Name, user.Email),
+            new (ClaimTypes.Role, user.Role)
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
