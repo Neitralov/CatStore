@@ -4,12 +4,10 @@ namespace WebAPI.Controllers;
 public class CartController : ApiController
 {
     private readonly CartService _cartService;
-    private readonly CatService _catService;
     
-    public CartController(CartService cartService, CatService catService)
+    public CartController(CartService cartService)
     {
         _cartService = cartService;
-        _catService = catService;
     }
 
     [HttpPost, Authorize]
