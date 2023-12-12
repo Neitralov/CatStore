@@ -11,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddTransient<AuthService>();
     builder.Services.AddTransient<ICartRepository, CartRepository>();
     builder.Services.AddTransient<CartService>();
-    
+    builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+    builder.Services.AddTransient<OrderService>();
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 

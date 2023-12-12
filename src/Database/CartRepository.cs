@@ -25,7 +25,27 @@ public class CartRepository : ICartRepository
 
         return cartItem is { };
     }
-    
+
+    public bool RemoveCartItems(List<CartItem> items)
+    {
+        var dbCartItems = new List<CartItem>();
+
+        foreach (var item in items)
+        {
+            var dbCartItem = _database.CartItems.SingleOrDefault(dbItem =>
+                dbItem.UserId == item.UserId &&
+                dbItem.CatId == item.CatId);
+
+            if (dbCartItem is { })
+                dbCartItems.Add(dbCartItem);
+            else
+                return false;
+        }
+
+        _database.CartItems.RemoveRange(dbCartItems);
+        return true;
+    }
+
     public CartItem? FindCartItem(CartItem cartItem)
     {
         return _database.CartItems.SingleOrDefault(item =>
