@@ -14,6 +14,11 @@ public class OrderRepository : IOrderRepository
         _database.Add(order);
     }
 
+    public Order? GetOrder(Guid orderId)
+    {
+        return _database.Orders.Include(order => order.OrderItems).SingleOrDefault(order => order.OrderId == orderId);
+    }
+
     public IEnumerable<Order> GetAllUserOrders(Guid userId)
     {
         return _database.Orders.Where(order => order.UserId == userId);

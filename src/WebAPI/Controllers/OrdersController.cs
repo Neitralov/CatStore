@@ -64,9 +64,13 @@ public class OrdersController : ApiController
     }
     
     [HttpGet("{orderId:guid}"), Authorize]
-    public IActionResult GetOrderDetails()
+    public IActionResult GetOrderDetails(Guid orderId)
     {
-        throw new NotImplementedException();
+        var userId = GetUserGuid();
+
+        ErrorOr<Order> getOrderResult = _orderService.GetOrder(orderId, userId);
+
+        return getOrderResult.Match(order => Ok(MapOrderDetailsResponse(order)), Problem);
     }
     
     private static ErrorOr<Order> CreateOrderFrom(Guid userId, List<OrderItem> orderItems, decimal totalPrice)
@@ -83,6 +87,25 @@ public class OrdersController : ApiController
             order.OrderId,
             order.OrderDate,
             order.TotalPrice);
+    }
+
+    private static OrderDetailsResponse MapOrderDetailsResponse(Order order)
+    {
+        var orderDetailsCatResponses = order.OrderItems.Select(MapOrderDetailsCatResponse);
+
+        return new OrderDetailsResponse(
+            order.OrderId,
+            order.OrderDate,
+            order.TotalPrice,
+            orderDetailsCatResponses);
+    }
+
+    private static OrderDetailsCatResponse MapOrderDetailsCatResponse(OrderItem orderItem)
+    {
+        return new OrderDetailsCatResponse(
+            orderItem.CatId,
+            orderItem.Quantity,
+            orderItem.TotalPrice);
     }
 
     private Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
