@@ -15,7 +15,8 @@ public class CartItem
     {
         List<Error> errors = new();
 
-        // Проверки
+        if (quantity < 1)
+            errors.Add(Errors.CartItem.InvalidQuantity);
 
         if (errors.Count > 0)
             return errors;
