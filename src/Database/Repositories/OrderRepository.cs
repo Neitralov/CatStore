@@ -16,7 +16,9 @@ public class OrderRepository : IOrderRepository
 
     public Order? GetOrder(Guid orderId)
     {
-        return _database.Orders.Include(order => order.OrderItems).SingleOrDefault(order => order.OrderId == orderId);
+        return _database.Orders
+            .Include(order => order.OrderItems)
+            .SingleOrDefault(order => order.OrderId == orderId);
     }
 
     public IEnumerable<Order> GetAllUserOrders(Guid userId)
