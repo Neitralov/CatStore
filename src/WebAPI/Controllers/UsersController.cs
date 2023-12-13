@@ -1,6 +1,5 @@
 namespace WebAPI.Controllers;
 
-[Route("api/Users")]
 public class UsersController : ApiController
 {
     private readonly UserService _userService;
