@@ -1,13 +1,13 @@
 namespace WebAPI.Controllers;
 
 [Route("api/Users")]
-public class AuthController : ApiController
+public class UsersController : ApiController
 {
-    private readonly AuthService _authService;
+    private readonly UserService _userService;
 
-    public AuthController(AuthService authService)
+    public UsersController(UserService userService)
     {
-        _authService = authService;
+        _userService = userService;
     }
     
     [HttpPost]
@@ -19,7 +19,7 @@ public class AuthController : ApiController
             return Problem(requestToUserResult.Errors);
 
         var user = requestToUserResult.Value;
-        ErrorOr<Created> createUserResult = _authService.StoreUser(user);
+        ErrorOr<Created> createUserResult = _userService.StoreUser(user);
 
         return createUserResult.Match(_ => NoContent(), Problem);
     }
@@ -27,7 +27,7 @@ public class AuthController : ApiController
     [HttpPost("login")]
     public IActionResult Login(LoginUserRequest request)
     {
-        ErrorOr<string> loginUserResult = _authService.Login(request.Email, request.Password);
+        ErrorOr<string> loginUserResult = _userService.Login(request.Email, request.Password);
 
         return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
     }
@@ -37,7 +37,7 @@ public class AuthController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deletedUserResult = _authService.DeleteUserById(userId);
+        ErrorOr<Deleted> deletedUserResult = _userService.DeleteUserById(userId);
 
         return deletedUserResult.Match(_ => NoContent(), Problem);
     }
@@ -47,7 +47,7 @@ public class AuthController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Success> changeUserPasswordResult = _authService.ChangeUserPassword(userId, request.OldPassword, request.NewPassword, request.ConfirmNewPassword);
+        ErrorOr<Success> changeUserPasswordResult = _userService.ChangeUserPassword(userId, request.OldPassword, request.NewPassword, request.ConfirmNewPassword);
 
         return changeUserPasswordResult.Match(_ => NoContent(), Problem);
     }

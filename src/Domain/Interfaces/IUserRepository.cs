@@ -1,6 +1,6 @@
 namespace Domain.Interfaces;
 
-public interface IAuthRepository
+public interface IUserRepository
 {
     void AddUser(User user);
     void RemoveUser(User user);

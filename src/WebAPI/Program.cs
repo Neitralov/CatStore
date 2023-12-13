@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddTransient<ICatRepository, CatRepository>();
     builder.Services.AddTransient<CatService>();
-    builder.Services.AddTransient<IAuthRepository, AuthRepository>();
-    builder.Services.AddTransient<AuthService>();
+    builder.Services.AddTransient<IUserRepository, UserRepository>();
+    builder.Services.AddTransient<UserService>();
     builder.Services.AddTransient<ICartRepository, CartRepository>();
     builder.Services.AddTransient<CartService>();
     builder.Services.AddTransient<IOrderRepository, OrderRepository>();

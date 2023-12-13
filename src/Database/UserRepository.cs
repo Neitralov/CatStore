@@ -1,10 +1,10 @@
 namespace Database;
 
-public class AuthRepository : IAuthRepository
+public class UserRepository : IUserRepository
 {
     private readonly DatabaseContext _database;
 
-    public AuthRepository(IDbContextFactory<DatabaseContext> factory)
+    public UserRepository(IDbContextFactory<DatabaseContext> factory)
     {
         _database = factory.CreateDbContext();
     }

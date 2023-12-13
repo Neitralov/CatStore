@@ -1,11 +1,11 @@
 namespace Domain.Services;
 
-public class AuthService
+public class UserService
 {
-    private readonly IAuthRepository _repository;
+    private readonly IUserRepository _repository;
     private readonly IConfiguration _configuration;
 
-    public AuthService(IAuthRepository repository, IConfiguration configuration)
+    public UserService(IUserRepository repository, IConfiguration configuration)
     {
         _repository = repository;
         _configuration = configuration;
