@@ -6,5 +6,4 @@ public record CatResponse(
      string SkinColor,
      string EyeColor,
      bool IsMale,
-     decimal Cost
-);
+     decimal Cost);
