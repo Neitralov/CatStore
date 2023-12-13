@@ -75,9 +75,9 @@ public class CatsController : ApiController
     private CreatedAtActionResult CreatedAtGetCat(Cat cat)
     {
         return CreatedAtAction(
-            actionName: nameof(GetCat),
+            actionName:  nameof(GetCat),
             routeValues: new { catId = cat.CatId },
-            value: MapCatResponse(cat));
+            value:       MapCatResponse(cat));
     }
     
     private static ErrorOr<Cat> CreateCatFrom(CreateCatRequest request)

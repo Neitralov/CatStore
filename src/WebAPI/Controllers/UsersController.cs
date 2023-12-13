@@ -46,7 +46,11 @@ public class UsersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Success> changeUserPasswordResult = _userService.ChangeUserPassword(userId, request.OldPassword, request.NewPassword, request.ConfirmNewPassword);
+        ErrorOr<Success> changeUserPasswordResult = _userService.ChangeUserPassword(
+            userId,
+            request.OldPassword,
+            request.NewPassword,
+            request.ConfirmNewPassword);
 
         return changeUserPasswordResult.Match(_ => NoContent(), Problem);
     }

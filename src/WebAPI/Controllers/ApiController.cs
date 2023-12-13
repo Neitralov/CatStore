@@ -33,7 +33,7 @@ public class ApiController : ControllerBase
 
         return Problem(
             statusCode: statusCode,
-            title: firstError.Description);    
+            title:      firstError.Description);    
     }
 
     protected Guid GetUserGuid() => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);

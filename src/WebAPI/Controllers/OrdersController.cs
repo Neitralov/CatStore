@@ -35,8 +35,8 @@ public class OrdersController : ApiController
             var cat = getCatResult.Value;
             
             var orderItem = OrderItem.Create(
-                catId: cat.CatId ,
-                quantity: item.Quantity,
+                catId:      cat.CatId ,
+                quantity:   item.Quantity,
                 totalPrice: cat.Cost * item.Quantity);
             
             orderItems.Add(orderItem.Value);
