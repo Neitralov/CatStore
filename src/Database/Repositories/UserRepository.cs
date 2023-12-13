@@ -1,4 +1,4 @@
-namespace Database;
+namespace Database.Repositories;
 
 public class UserRepository : IUserRepository
 {

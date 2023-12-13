@@ -12,6 +12,7 @@ global using ErrorOr;
 global using Swashbuckle.AspNetCore.Filters;
 
 global using Database;
+global using Database.Repositories;
 global using Domain.Data;
 global using Domain.Services;
 global using Domain.Interfaces;
