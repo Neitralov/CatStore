@@ -41,9 +41,9 @@ public class CartsController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> removedCartItemResult = _cartService.DeleteCartItem(userId, catId);
+        ErrorOr<Deleted> deleteCartItemResult = _cartService.DeleteCartItem(userId, catId);
 
-        return removedCartItemResult.Match(_ => NoContent(), Problem);
+        return deleteCartItemResult.Match(_ => NoContent(), Problem);
     }
 
     [HttpPatch("update-quantity"), Authorize]

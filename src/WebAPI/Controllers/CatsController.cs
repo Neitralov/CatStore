@@ -40,44 +40,25 @@ public class CatsController : ApiController
             return Problem(requestToCatResult.Errors);
         
         var cat = requestToCatResult.Value;
-        ErrorOr<Updated> upsertedCatResult = _catService.UpdateCat(cat);
+        ErrorOr<Updated> upsertCatResult = _catService.UpdateCat(cat);
         
-        return upsertedCatResult.Match(_ => NoContent(), Problem);
+        return upsertCatResult.Match(_ => NoContent(), Problem);
     }
     
     [HttpDelete("{catId:guid}"), Authorize(Roles = "admin")]
     public IActionResult DeleteCat(Guid catId)
     {
-        ErrorOr<Deleted> deletedCatResult = _catService.DeleteCat(catId);
+        ErrorOr<Deleted> deleteCatResult = _catService.DeleteCat(catId);
         
-        return deletedCatResult.Match(_ => NoContent(), Problem);
+        return deleteCatResult.Match(_ => NoContent(), Problem);
     }
     
     [HttpGet]
     public IActionResult GetAllCats()
     {
-        ErrorOr<IEnumerable<Cat>> getAllCatResult = _catService.GetAllCats();
+        ErrorOr<IEnumerable<Cat>> getAllCatsResult = _catService.GetAllCats();
 
-        return getAllCatResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
-    }
-    
-    private static CatResponse MapCatResponse(Cat cat)
-    {
-        return new CatResponse(
-            cat.CatId,
-            cat.Name,
-            cat.SkinColor,
-            cat.EyeColor,
-            cat.IsMale,
-            cat.Cost);
-    }
-    
-    private CreatedAtActionResult CreatedAtGetCat(Cat cat)
-    {
-        return CreatedAtAction(
-            actionName:  nameof(GetCat),
-            routeValues: new { catId = cat.CatId },
-            value:       MapCatResponse(cat));
+        return getAllCatsResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
     }
     
     private static ErrorOr<Cat> CreateCatFrom(CreateCatRequest request)
@@ -99,5 +80,24 @@ public class CatsController : ApiController
             request.IsMale,
             request.Cost,
             catId);
+    }
+
+    private CreatedAtActionResult CreatedAtGetCat(Cat cat)
+    {
+        return CreatedAtAction(
+            actionName:  nameof(GetCat),
+            routeValues: new { catId = cat.CatId },
+            value:       MapCatResponse(cat));
+    }
+
+    private static CatResponse MapCatResponse(Cat cat)
+    {
+        return new CatResponse(
+            cat.CatId,
+            cat.Name,
+            cat.SkinColor,
+            cat.EyeColor,
+            cat.IsMale,
+            cat.Cost);
     }
 }

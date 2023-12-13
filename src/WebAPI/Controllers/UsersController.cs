@@ -36,9 +36,9 @@ public class UsersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deletedUserResult = _userService.DeleteUserById(userId);
+        ErrorOr<Deleted> deleteUserResult = _userService.DeleteUserById(userId);
 
-        return deletedUserResult.Match(_ => NoContent(), Problem);
+        return deleteUserResult.Match(_ => NoContent(), Problem);
     }
 
     [HttpPatch("change-password"), Authorize]
