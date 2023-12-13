@@ -2,12 +2,12 @@ namespace Domain.Services;
 
 public class UserService
 {
-    private readonly IUserRepository _repository;
+    private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
-    public UserService(IUserRepository repository, IConfiguration configuration)
+    public UserService(IUserRepository userRepository, IConfiguration configuration)
     {
-        _repository = repository;
+        _userRepository = userRepository;
         _configuration = configuration;
     }
 
@@ -16,28 +16,28 @@ public class UserService
         if (IsUserExists(user.Email))
             return Errors.User.AlreadyExists;
 
-        _repository.AddUser(user);
-        _repository.SaveChanges();
+        _userRepository.AddUser(user);
+        _userRepository.SaveChanges();
 
         return Result.Created;
     }
 
     public ErrorOr<Deleted> DeleteUserById(Guid userId)
     {
-        var user = _repository.FindUserById(userId);
+        var user = _userRepository.FindUserById(userId);
 
         if (user is null)
             return Errors.User.NotFound;
 
-        _repository.RemoveUser(user);
-        _repository.SaveChanges();
+        _userRepository.RemoveUser(user);
+        _userRepository.SaveChanges();
 
         return Result.Deleted;
     }
 
     public ErrorOr<string> Login(string email, string password)
     {
-        var user = _repository.FindUserByEmail(email);
+        var user = _userRepository.FindUserByEmail(email);
 
         if (user is null)
             return Errors.Login.IncorrectEmailOrPassword;
@@ -50,7 +50,7 @@ public class UserService
 
     public ErrorOr<Success> ChangeUserPassword(Guid userId, string oldPassword, string newPassword, string confirmNewPassword)
     {
-        var user = _repository.FindUserById(userId);
+        var user = _userRepository.FindUserById(userId);
 
         if (user is null)
             return Errors.User.NotFound;
@@ -67,14 +67,14 @@ public class UserService
         var result = user.ChangePassword(newPassword);
 
         if (result == Result.Success)
-            _repository.SaveChanges();
+            _userRepository.SaveChanges();
 
         return result;
     }
 
     public bool IsUserExists(string email)
     {
-        return _repository.IsUserExists(email);
+        return _userRepository.IsUserExists(email);
     }
 
     private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)

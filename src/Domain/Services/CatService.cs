@@ -2,50 +2,50 @@ namespace Domain.Services;
 
 public class CatService
 {
-    private readonly ICatRepository _repository;
+    private readonly ICatRepository _catRepository;
     
-    public CatService(ICatRepository repository)
+    public CatService(ICatRepository catRepository)
     {
-        _repository = repository;
+        _catRepository = catRepository;
     }
     
     public ErrorOr<Created> StoreCat(Cat cat)
     {
-        if (_repository.IsCatExists(cat.Name))
+        if (_catRepository.IsCatExists(cat.Name))
             return Errors.Cat.AlreadyExists;
 
-        _repository.AddCat(cat);
-        _repository.SaveChanges();
+        _catRepository.AddCat(cat);
+        _catRepository.SaveChanges();
         
         return Result.Created;
     }
     
     public ErrorOr<Cat> GetCat(Guid catId)
     {
-        var result = _repository.GetCat(catId);
+        var result = _catRepository.GetCat(catId);
         
         return result is { } ? result : Errors.Cat.NotFound;
     }
     
     public ErrorOr<Updated> UpdateCat(Cat cat)
     {
-        var result = _repository.UpdateCat(cat);
-        _repository.SaveChanges();
+        var result = _catRepository.UpdateCat(cat);
+        _catRepository.SaveChanges();
         
         return result ? Result.Updated : Errors.Cat.NotFound;
     }
     
     public ErrorOr<Deleted> DeleteCat(Guid catId)
     {
-        var result = _repository.DeleteCat(catId);
-        _repository.SaveChanges();
+        var result = _catRepository.DeleteCat(catId);
+        _catRepository.SaveChanges();
         
         return result ? Result.Deleted : Errors.Cat.NotFound;
     }
 
     public ErrorOr<IEnumerable<Cat>> GetAllCats()
     {
-        var result = _repository.GetAllCats();
+        var result = _catRepository.GetAllCats();
         
         return result.ToList();
     }
