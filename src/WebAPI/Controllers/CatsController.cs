@@ -31,6 +31,14 @@ public class CatsController : ApiController
         return getCatResult.Match(cat => Ok(MapCatResponse(cat)), Problem);
     }
     
+    [HttpGet]
+    public IActionResult GetAllCats()
+    {
+        ErrorOr<IEnumerable<Cat>> getAllCatsResult = _catService.GetAllCats();
+
+        return getAllCatsResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
+    }
+
     [HttpPut("{catId:guid}"), Authorize(Roles = "admin")]
     public IActionResult UpdateCat(Guid catId, UpdateCatRequest request)
     {
@@ -51,14 +59,6 @@ public class CatsController : ApiController
         ErrorOr<Deleted> deleteCatResult = _catService.DeleteCat(catId);
         
         return deleteCatResult.Match(_ => NoContent(), Problem);
-    }
-    
-    [HttpGet]
-    public IActionResult GetAllCats()
-    {
-        ErrorOr<IEnumerable<Cat>> getAllCatsResult = _catService.GetAllCats();
-
-        return getAllCatsResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
     }
     
     private static ErrorOr<Cat> CreateCatFrom(CreateCatRequest request)

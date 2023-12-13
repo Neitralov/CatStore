@@ -23,24 +23,6 @@ public class UsersController : ApiController
         return createUserResult.Match(_ => NoContent(), Problem);
     }
 
-    [HttpPost("login")]
-    public IActionResult Login(LoginUserRequest request)
-    {
-        ErrorOr<string> loginUserResult = _userService.Login(request.Email, request.Password);
-
-        return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
-    }
-
-    [HttpDelete, Authorize]
-    public IActionResult DeleteAccount()
-    {
-        var userId = GetUserGuid();
-
-        ErrorOr<Deleted> deleteUserResult = _userService.DeleteUserById(userId);
-
-        return deleteUserResult.Match(_ => NoContent(), Problem);
-    }
-
     [HttpPatch("change-password"), Authorize]
     public IActionResult ChangePassword(ChangeUserPasswordRequest request)
     {
@@ -53,6 +35,24 @@ public class UsersController : ApiController
             request.ConfirmNewPassword);
 
         return changeUserPasswordResult.Match(_ => NoContent(), Problem);
+    }
+
+    [HttpDelete, Authorize]
+    public IActionResult DeleteAccount()
+    {
+        var userId = GetUserGuid();
+
+        ErrorOr<Deleted> deleteUserResult = _userService.DeleteUserById(userId);
+
+        return deleteUserResult.Match(_ => NoContent(), Problem);
+    }
+
+    [HttpPost("login")]
+    public IActionResult Login(LoginUserRequest request)
+    {
+        ErrorOr<string> loginUserResult = _userService.Login(request.Email, request.Password);
+
+        return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
     }
 
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)

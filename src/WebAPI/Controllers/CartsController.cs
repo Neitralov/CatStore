@@ -36,14 +36,14 @@ public class CartsController : ApiController
         return getAllUserCartItemsResult.Match(cartItems => Ok(new { CartItems = cartItems.Select(MapCartItemResponse) }), Problem);
     }
 
-    [HttpDelete("{catId:guid}"), Authorize]
-    public IActionResult DeleteCartItem(Guid catId)
+    [HttpGet("count"), Authorize]
+    public IActionResult GetCartItemsCount()
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deleteCartItemResult = _cartService.DeleteCartItem(userId, catId);
+        ErrorOr<int> getCartItemsCountResult = _cartService.GetUserCartItemsCount(userId);
 
-        return deleteCartItemResult.Match(_ => NoContent(), Problem);
+        return getCartItemsCountResult.Match(count => Ok(new TotalNumberOfCartItemsResponse(count)), Problem);
     }
 
     [HttpPatch("update-quantity"), Authorize]
@@ -62,14 +62,14 @@ public class CartsController : ApiController
         return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
 
-    [HttpGet("count"), Authorize]
-    public IActionResult GetCartItemsCount()
+    [HttpDelete("{catId:guid}"), Authorize]
+    public IActionResult DeleteCartItem(Guid catId)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<int> getCartItemsCountResult = _cartService.GetUserCartItemsCount(userId);
+        ErrorOr<Deleted> deleteCartItemResult = _cartService.DeleteCartItem(userId, catId);
 
-        return getCartItemsCountResult.Match(count => Ok(new TotalNumberOfCartItemsResponse(count)), Problem);
+        return deleteCartItemResult.Match(_ => NoContent(), Problem);
     }
 
     private static ErrorOr<CartItem> CreateCartItemFrom(CreateCartItemRequest request, Guid userId)
