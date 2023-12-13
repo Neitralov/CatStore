@@ -18,7 +18,11 @@ public class Order
     {
         List<Error> errors = new();
 
-        // Проверки
+        if (orderItems.Count <= 0)
+            errors.Add(Errors.Order.EmptyOrder);
+
+        if (totalPrice <= 0)
+            errors.Add(Errors.Order.InvalidPrice);
 
         if (errors.Count > 0)
             return errors;
