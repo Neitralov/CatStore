@@ -23,7 +23,9 @@ public class CartRepository : ICartRepository
 
     public IEnumerable<CartItem> GetAllUserCartItems(Guid userId)
     {
-        return _database.CartItems.Where(cartItem => cartItem.UserId == userId);
+        return _database.CartItems
+            .AsNoTracking()
+            .Where(cartItem => cartItem.UserId == userId);
     }
 
     public int GetUserCartItemsCount(Guid userId)

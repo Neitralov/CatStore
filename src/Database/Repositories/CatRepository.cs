@@ -16,12 +16,14 @@ public class CatRepository : ICatRepository
 
     public Cat? GetCat(Guid catId)
     {
-        return _database.Cats.Find(catId);
+        return _database.Cats
+            .AsNoTracking()
+            .SingleOrDefault(cat => cat.CatId == catId);
     }
 
     public IEnumerable<Cat> GetAllCats()
     {
-        return _database.Cats;
+        return _database.Cats.AsNoTracking();
     }
 
     public bool UpdateCat(Cat cat)

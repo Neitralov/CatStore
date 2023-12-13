@@ -17,13 +17,16 @@ public class OrderRepository : IOrderRepository
     public Order? GetOrder(Guid orderId)
     {
         return _database.Orders
+            .AsNoTracking()
             .Include(order => order.OrderItems)
             .SingleOrDefault(order => order.OrderId == orderId);
     }
 
     public IEnumerable<Order> GetAllUserOrders(Guid userId)
     {
-        return _database.Orders.Where(order => order.UserId == userId);
+        return _database.Orders
+            .AsNoTracking()
+            .Where(order => order.UserId == userId);
     }
 
     public void SaveChanges() => _database.SaveChanges();
