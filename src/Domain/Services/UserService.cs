@@ -48,7 +48,11 @@ public class UserService
         return CreateToken(user);
     }
 
-    public ErrorOr<Success> ChangeUserPassword(Guid userId, string oldPassword, string newPassword, string confirmNewPassword)
+    public ErrorOr<Success> ChangeUserPassword(
+        Guid userId,
+        string oldPassword,
+        string newPassword,
+        string confirmNewPassword)
     {
         var user = _userRepository.FindUserById(userId);
 
@@ -77,7 +81,10 @@ public class UserService
         return _userRepository.IsUserExists(email);
     }
 
-    private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+    private static bool VerifyPasswordHash(
+        string password,
+        byte[] passwordHash,
+        byte[] passwordSalt)
     {
         using var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt);
 

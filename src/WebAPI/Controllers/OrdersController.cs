@@ -6,7 +6,10 @@ public class OrdersController : ApiController
     private readonly CartService _cartService;
     private readonly CatService _catService;
     
-    public OrdersController(OrderService orderService, CartService cartService, CatService catService)
+    public OrdersController(
+        OrderService orderService,
+        CartService cartService,
+        CatService catService)
     {
         _orderService = orderService;
         _cartService = cartService;
@@ -73,7 +76,10 @@ public class OrdersController : ApiController
         return getOrderResult.Match(order => Ok(MapOrderDetailsResponse(order)), Problem);
     }
     
-    private static ErrorOr<Order> CreateOrderFrom(Guid userId, List<OrderItem> orderItems, decimal totalPrice)
+    private static ErrorOr<Order> CreateOrderFrom(
+        Guid userId,
+        List<OrderItem> orderItems,
+        decimal totalPrice)
     {
         return Order.Create(
             userId,
