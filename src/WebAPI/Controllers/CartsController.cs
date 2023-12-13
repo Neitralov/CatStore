@@ -1,11 +1,11 @@
 namespace WebAPI.Controllers;
 
 [Route("/api/cart-items")]
-public class CartController : ApiController
+public class CartsController : ApiController
 {
     private readonly CartService _cartService;
     
-    public CartController(CartService cartService)
+    public CartsController(CartService cartService)
     {
         _cartService = cartService;
     }
