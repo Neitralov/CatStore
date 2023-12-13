@@ -9,9 +9,26 @@ public class CartRepository : ICartRepository
         _database = factory.CreateDbContext();
     }
 
-    public void StoreCartItem(CartItem cartItem)
+    public void AddCartItem(CartItem cartItem)
     {
         _database.Add(cartItem);
+    }
+
+    public CartItem? FindCartItem(CartItem cartItem)
+    {
+        return _database.CartItems.SingleOrDefault(item =>
+            item.UserId == cartItem.UserId &&
+            item.CatId == cartItem.CatId);
+    }
+
+    public IEnumerable<CartItem> GetAllUserCartItems(Guid userId)
+    {
+        return _database.CartItems.Where(cartItem => cartItem.UserId == userId);
+    }
+
+    public int GetUserCartItemsCount(Guid userId)
+    {
+        return _database.CartItems.Count(item => item.UserId == userId);
     }
 
     public bool RemoveCartItem(Guid userId, Guid catId)
@@ -46,25 +63,5 @@ public class CartRepository : ICartRepository
         return true;
     }
 
-    public CartItem? FindCartItem(CartItem cartItem)
-    {
-        return _database.CartItems.SingleOrDefault(item =>
-            item.UserId == cartItem.UserId &&
-            item.CatId == cartItem.CatId);
-    }
-
-    public IEnumerable<CartItem> GetAllUserCartItems(Guid userId)
-    {
-        return _database.CartItems.Where(cartItem => cartItem.UserId == userId);
-    }
-
-    public int GetUserCartItemsCount(Guid userId)
-    {
-        return _database.CartItems.Count(item => item.UserId == userId);
-    }
-
-    public void SaveChanges()
-    {
-        _database.SaveChanges();
-    }
+    public void SaveChanges() => _database.SaveChanges();
 }

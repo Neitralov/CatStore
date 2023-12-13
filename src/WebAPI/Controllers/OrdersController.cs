@@ -51,7 +51,7 @@ public class OrdersController : ApiController
             return Problem(orderItemsToOrderResult.Errors);
         
         var order = orderItemsToOrderResult.Value;
-        ErrorOr<Created> createOrderResult = _orderService.CreateOrder(order, cartItems);
+        ErrorOr<Created> createOrderResult = _orderService.StoreOrder(order, cartItems);
         
         return createOrderResult.Match(_ => NoContent(), Problem);
     }

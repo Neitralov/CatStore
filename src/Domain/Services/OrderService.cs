@@ -11,7 +11,7 @@ public class OrderService
         _cartRepository = cartRepository;
     }
 
-    public ErrorOr<Created> CreateOrder(Order order, List<CartItem> cartItems)
+    public ErrorOr<Created> StoreOrder(Order order, List<CartItem> cartItems)
     {
         _orderRepository.AddOrder(order);
         

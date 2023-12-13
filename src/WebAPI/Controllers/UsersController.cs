@@ -46,7 +46,7 @@ public class UsersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Success> changeUserPasswordResult = _userService.ChangeUserPassword(
+        ErrorOr<Updated> changeUserPasswordResult = _userService.ChangeUserPassword(
             userId,
             request.OldPassword,
             request.NewPassword,

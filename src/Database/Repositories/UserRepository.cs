@@ -14,9 +14,9 @@ public class UserRepository : IUserRepository
         _database.Add(user);
     }
 
-    public void RemoveUser(User user)
+    public User? FindUserById(Guid userId)
     {
-        _database.Remove(user);
+        return _database.Users.SingleOrDefault(user => user.UserId == userId);
     }
 
     public User? FindUserByEmail(string email)
@@ -24,9 +24,9 @@ public class UserRepository : IUserRepository
         return _database.Users.SingleOrDefault(user => user.Email == email);
     }
 
-    public User? FindUserById(Guid userId)
+    public void RemoveUser(User user)
     {
-        return _database.Users.SingleOrDefault(user => user.UserId == userId);
+        _database.Remove(user);
     }
 
     public bool IsUserExists(string email)

@@ -37,7 +37,7 @@ public class CatService
     
     public ErrorOr<Deleted> DeleteCat(Guid catId)
     {
-        var result = _catRepository.DeleteCat(catId);
+        var result = _catRepository.RemoveCat(catId);
         _catRepository.SaveChanges();
         
         return result ? Result.Deleted : Errors.Cat.NotFound;

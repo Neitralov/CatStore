@@ -48,7 +48,7 @@ public class UserService
         return CreateToken(user);
     }
 
-    public ErrorOr<Success> ChangeUserPassword(
+    public ErrorOr<Updated> ChangeUserPassword(
         Guid userId,
         string oldPassword,
         string newPassword,
@@ -70,7 +70,7 @@ public class UserService
 
         var result = user.ChangePassword(newPassword);
 
-        if (result == Result.Success)
+        if (result == Result.Updated)
             _userRepository.SaveChanges();
 
         return result;

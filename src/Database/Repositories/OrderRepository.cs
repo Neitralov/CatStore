@@ -24,8 +24,5 @@ public class OrderRepository : IOrderRepository
         return _database.Orders.Where(order => order.UserId == userId);
     }
 
-    public void SaveChanges()
-    {
-        _database.SaveChanges();
-    }
+    public void SaveChanges() => _database.SaveChanges();
 }

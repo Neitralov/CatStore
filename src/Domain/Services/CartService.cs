@@ -20,7 +20,7 @@ public class CartService
             if (_catRepository.IsCatExists(cartItem.CatId) is false)
                 return Errors.Cat.NotFound;
 
-            _cartRepository.StoreCartItem(cartItem);
+            _cartRepository.AddCartItem(cartItem);
         }
         else
             sameCartItem.IncreaseQuantity();
@@ -35,7 +35,7 @@ public class CartService
         return _cartRepository.GetAllUserCartItems(userId).ToList();
     }
 
-    public ErrorOr<Deleted> RemoveCartItem(Guid userId, Guid catId)
+    public ErrorOr<Deleted> DeleteCartItem(Guid userId, Guid catId)
     {
         var result = _cartRepository.RemoveCartItem(userId, catId);
         _cartRepository.SaveChanges();

@@ -47,7 +47,7 @@ public class User
         };
     }
 
-    public ErrorOr<Success> ChangePassword(string newPassword)
+    public ErrorOr<Updated> ChangePassword(string newPassword)
     {
         if (newPassword.Length < MinPasswordLength)
             return Errors.User.InvalidPassword;
@@ -57,7 +57,7 @@ public class User
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
 
-        return Result.Success;
+        return Result.Updated;
     }
 
     private static void CreatePasswordHash(

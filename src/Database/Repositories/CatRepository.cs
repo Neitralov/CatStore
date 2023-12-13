@@ -19,6 +19,11 @@ public class CatRepository : ICatRepository
         return _database.Cats.Find(catId);
     }
 
+    public IEnumerable<Cat> GetAllCats()
+    {
+        return _database.Cats;
+    }
+
     public bool UpdateCat(Cat cat)
     {
         var storedCat = _database.Cats.Find(cat.CatId);
@@ -29,7 +34,7 @@ public class CatRepository : ICatRepository
         return storedCat is { };
     }
 
-    public bool DeleteCat(Guid catId)
+    public bool RemoveCat(Guid catId)
     {
         var storedCat = _database.Cats.Find(catId);
 
@@ -37,11 +42,6 @@ public class CatRepository : ICatRepository
             _database.Remove(storedCat);
 
         return storedCat is { };
-    }
-
-    public IEnumerable<Cat> GetAllCats()
-    {
-        return _database.Cats;
     }
 
     public bool IsCatExists(string name)

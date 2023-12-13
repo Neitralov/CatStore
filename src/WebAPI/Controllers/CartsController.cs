@@ -37,11 +37,11 @@ public class CartsController : ApiController
     }
 
     [HttpDelete("{catId:guid}"), Authorize]
-    public IActionResult RemoveCartItem(Guid catId)
+    public IActionResult DeleteCartItem(Guid catId)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> removedCartItemResult = _cartService.RemoveCartItem(userId, catId);
+        ErrorOr<Deleted> removedCartItemResult = _cartService.DeleteCartItem(userId, catId);
 
         return removedCartItemResult.Match(_ => NoContent(), Problem);
     }
