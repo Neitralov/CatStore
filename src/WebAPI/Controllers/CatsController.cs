@@ -1,16 +1,22 @@
 namespace WebAPI.Controllers;
 
+/// <inheritdoc />
 public class CatsController : ApiController
 {
     private readonly CatService _catService;
     
+    /// <inheritdoc />
     public CatsController(CatService catService)
     {
         _catService = catService;
     }
     
-    [HttpPost, Authorize(Roles = "admin")]
-    public IActionResult CreateCat(CreateCatRequest request)
+    /// <summary>Добавить нового кота в магазин (требуемая роль = админ)</summary>
+    /// <response code="201">Кот создан</response>
+    /// <response code="400">Неправильная длинна имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
+    [HttpPost, Authorize("admin")]
+    [ProducesResponseType(typeof(CatResponse), 201)]
+    public IActionResult CreateCat([Required] CreateCatRequest request)
     {
         ErrorOr<Cat> requestToCatResult = CreateCatFrom(request);
         
@@ -23,7 +29,12 @@ public class CatsController : ApiController
         return createCatResult.Match(_ => CreatedAtGetCat(cat), Problem);
     }
     
+    /// <summary>Получить данные о коте из магазина</summary>
+    /// <param name="catId">Guid кота, которого нужно найти</param>
+    /// <response code="200">Кот найден</response>
+    /// <response code="404">Not found</response>
     [HttpGet("{catId:guid}")]
+    [ProducesResponseType(typeof(CatResponse), 200)]
     public IActionResult GetCat(Guid catId)
     {
         ErrorOr<Cat> getCatResult = _catService.GetCat(catId);
@@ -31,16 +42,26 @@ public class CatsController : ApiController
         return getCatResult.Match(cat => Ok(MapCatResponse(cat)), Problem);
     }
     
+    /// <summary>Получить всех котов из магазина</summary>
+    /// <response code="200">Список котов</response>
     [HttpGet]
+    [ProducesResponseType(typeof(List<CatResponse>), 200)]
     public IActionResult GetAllCats()
     {
         ErrorOr<IEnumerable<Cat>> getAllCatsResult = _catService.GetAllCats();
 
-        return getAllCatsResult.Match(cats => Ok(new { Cats = cats.Select(MapCatResponse) } ), Problem);
+        return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
     }
 
+    /// <summary>Обновить данные существующего кота (требуемая роль = админ)</summary>
+    /// <param name="catId">Guid кота, данные которого нужно обновить</param>
+    /// <param name="request"/>
+    /// <response code="204">Данные успешно обновлены</response>
+    /// <response code="400">Неправильная длинна имени, цвет указан в некорректном формате, цена указана некорректно</response>
+    /// <response code="404">Not found</response>
     [HttpPut("{catId:guid}"), Authorize(Roles = "admin")]
-    public IActionResult UpdateCat(Guid catId, UpdateCatRequest request)
+    [ProducesResponseType(204)]
+    public IActionResult UpdateCat(Guid catId, [Required] UpdateCatRequest request)
     {
         ErrorOr<Cat> requestToCatResult = CreateCatFrom(catId, request);
         
@@ -53,7 +74,12 @@ public class CatsController : ApiController
         return upsertCatResult.Match(_ => NoContent(), Problem);
     }
     
+    /// <summary>Удалить кота из магазина (требуемая роль = админ)</summary>
+    /// <param name="catId">Guid кота, которого нужно удалить</param>
+    /// <response code="204">Кот удален успешно</response>
+    /// <response code="404">Not found</response>
     [HttpDelete("{catId:guid}"), Authorize(Roles = "admin")]
+    [ProducesResponseType(204)]
     public IActionResult DeleteCat(Guid catId)
     {
         ErrorOr<Deleted> deleteCatResult = _catService.DeleteCat(catId);

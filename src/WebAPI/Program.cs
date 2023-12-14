@@ -36,6 +36,9 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "CatStore.WebAPI", Version = "v1" } );
 
+        var xmlDocPath = Path.Combine(AppContext.BaseDirectory, "WebAPI.xml");
+        options.IncludeXmlComments(xmlDocPath);
+
         var jwtSecurityScheme = new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,

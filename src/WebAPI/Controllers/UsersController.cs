@@ -1,16 +1,24 @@
 namespace WebAPI.Controllers;
 
+/// <inheritdoc />
 public class UsersController : ApiController
 {
     private readonly UserService _userService;
 
+    /// <inheritdoc />
     public UsersController(UserService userService)
     {
         _userService = userService;
     }
     
+    /// <summary>Зарегистрировать новый аккаунт</summary>
+    /// <response code="204">Регистрация прошла успешно</response>
+    /// <response code="400">
+    ///     Некорректный адрес электронной почты, слишком короткий пароль, пароли не совпадают, пользователь с такой электронной почтой уже существует
+    /// </response>
     [HttpPost]
-    public IActionResult CreateUser(CreateUserRequest request)
+    [ProducesResponseType(204)]
+    public IActionResult CreateUser([Required] CreateUserRequest request)
     {
         ErrorOr<User> requestToUserResult = CreateUserFrom(request);
 
@@ -23,8 +31,12 @@ public class UsersController : ApiController
         return createUserResult.Match(_ => NoContent(), Problem);
     }
 
+    /// <summary>Сменить пароль текущего пользователя</summary>
+    /// <response code="204">Пароль успешно изменен</response>
+    /// <response code="400">Слишком короткий пароль, пароли не совпадают, новый пароль не может совпадать со старым</response>
     [HttpPatch("change-password"), Authorize]
-    public IActionResult ChangePassword(ChangeUserPasswordRequest request)
+    [ProducesResponseType(204)]
+    public IActionResult ChangePassword([Required] ChangeUserPasswordRequest request)
     {
         var userId = GetUserGuid();
 
@@ -37,7 +49,11 @@ public class UsersController : ApiController
         return changeUserPasswordResult.Match(_ => NoContent(), Problem);
     }
 
+    /// <summary>Удалить аккаунт текущего пользователя</summary>
+    /// <response code="204">Аккаунт успешно удален</response>
+    /// <response code="404">Not found</response>
     [HttpDelete, Authorize]
+    [ProducesResponseType(204)]
     public IActionResult DeleteAccount()
     {
         var userId = GetUserGuid();
@@ -47,8 +63,12 @@ public class UsersController : ApiController
         return deleteUserResult.Match(_ => NoContent(), Problem);
     }
 
+    /// <summary>Войти в аккаунт</summary>
+    /// <response code="200">Вход произведен успешно</response>
+    /// <response code="400">Логин или пароль указан некорректно</response>
     [HttpPost("login")]
-    public IActionResult Login(LoginUserRequest request)
+    [ProducesResponseType(typeof(LoginUserResponse), 200)]
+    public IActionResult Login([Required] LoginUserRequest request)
     {
         ErrorOr<string> loginUserResult = _userService.Login(request.Email, request.Password);
 
