@@ -4,10 +4,10 @@ public class User
 {
     public Guid UserId { get; private set; }
     public string Email { get; private set; } = string.Empty;
-    public byte[] PasswordHash { get; private set; }
-    public byte[] PasswordSalt { get; private set; }
+    public byte[] PasswordHash { get; private set; } = default!;
+    public byte[] PasswordSalt { get; private set; } = default!;
     public DateTime DateCreated { get; private set; }
-    public string Role { get; private set; }
+    public string Role { get; private set; } = string.Empty;
 
     public const int MinPasswordLength = 4;
 
