@@ -1,6 +1,6 @@
 namespace WebAPI.Controllers;
 
-[Route("/api/cart-items")]
+[Route("/api/cart-items"), Tags("CartItems")]
 public class CartsController : ApiController
 {
     private readonly CartService _cartService;
