@@ -20,11 +20,11 @@ public class OrdersController : ApiController
     
     /// <summary>Оформить заказ пользователя</summary>
     /// <remarks>Заказ будет сформирован на основе товаров из корзины. После этого действия корзина будет очищена.</remarks>
-    /// <response code="204">Заказ успешно сформирован</response>
+    /// <response code="201">Заказ успешно сформирован</response>
     /// <response code="400">Заказ не содержит товаров, стоимость заказа некорректна</response>
     /// <response code="404">Не удается найти товар, чтобы сформировать заказ</response>
     [HttpPost, Authorize]
-    [ProducesResponseType(204)]
+    [ProducesResponseType(typeof(OrderDetailsResponse), 201)]
     public IActionResult CreateOrder()
     {
         var userId = GetUserGuid();
@@ -61,7 +61,7 @@ public class OrdersController : ApiController
         var order = orderItemsToOrderResult.Value;
         ErrorOr<Created> createOrderResult = _orderService.StoreOrder(order, cartItems);
         
-        return createOrderResult.Match(_ => NoContent(), Problem);
+        return createOrderResult.Match(_ => CreatedAtGetOrderDetails(order), Problem);
     }
     
     /// <summary>Получить список заказов пользователя</summary>
@@ -103,6 +103,14 @@ public class OrdersController : ApiController
             totalPrice);
     }
     
+    private CreatedAtActionResult CreatedAtGetOrderDetails(Order order)
+    {
+        return CreatedAtAction(
+            actionName:  nameof(GetOrderDetails),
+            routeValues: new { orderId = order.OrderId },
+            value:       MapOrderDetailsResponse(order));
+    }
+
     private static OrderResponse MapOrderResponse(Order order)
     {
         return new OrderResponse(
