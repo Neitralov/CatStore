@@ -13,7 +13,7 @@ public class CatsController : ApiController
     
     /// <summary>Добавить нового кота в магазин (требуемая роль = админ)</summary>
     /// <response code="201">Кот создан</response>
-    /// <response code="400">Неправильная длинна имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
+    /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
     [HttpPost, Authorize("admin")]
     [ProducesResponseType(typeof(CatResponse), 201)]
     public IActionResult CreateCat([Required] CreateCatRequest request)
@@ -57,7 +57,7 @@ public class CatsController : ApiController
     /// <param name="catId">Guid кота, данные которого нужно обновить</param>
     /// <param name="request"/>
     /// <response code="204">Данные успешно обновлены</response>
-    /// <response code="400">Неправильная длинна имени, цвет указан в некорректном формате, цена указана некорректно</response>
+    /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
     /// <response code="404">Not found</response>
     [HttpPut("{catId:guid}"), Authorize(Roles = "admin")]
     [ProducesResponseType(204)]
