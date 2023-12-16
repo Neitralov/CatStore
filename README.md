@@ -28,4 +28,4 @@ WebAPI интернет магазина по продаже виртуальн�
 * [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 
 # Лицензия:
-Программа распространяется под лицензией MIT.
+Программа распространяется под лицензией [MIT](https://github.com/Neitralov/CatStore/blob/master/LICENSE).
