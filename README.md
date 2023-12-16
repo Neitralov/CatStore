@@ -27,5 +27,5 @@ WebAPI интернет магазина по продаже виртуальн�
 * [ErrorOr](https://github.com/amantinband/error-or)
 * [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 
-Лицензия:
+# Лицензия:
 Программа распространяется под лицензией MIT.
