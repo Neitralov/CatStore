@@ -1,16 +1,16 @@
 openapi: 3.0.0
 info:
-  description: "Cat store API."
-  version: 1.0.0
+  description: "Cat store WebAPI."
+  version: 0.1.0
   title: CatStore.WebAPI
   contact:
     email: example@gmail.com
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    name: MIT
+    url: https://github.com/Neitralov/CatStore/blob/master/LICENSE
     
 servers:
-  - url: http://localhost:5183
+  - url: http://localhost:8000
   
 tags:
   - name: Cats
