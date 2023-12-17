@@ -16,6 +16,8 @@ RESTful веб-сервис интернет магазина по продаж�
 
 # 📑 Документация
 * [Спецификация по WebAPI](https://github.com/Neitralov/CatStore/blob/master/docs/CatStore.WebAPI.yaml)
+* [Схема архитектуры проекта](https://github.com/Neitralov/CatStore/blob/master/docs/CatStore-arch.png)
+* [ER-модель](https://github.com/Neitralov/CatStore/blob/master/docs/CatStore%20ER-model.png)
 * [Ограничения по стилю кода](https://github.com/Neitralov/CatStore/blob/master/docs/Code%20style.md)
 
 # 🛠️ Сборка
