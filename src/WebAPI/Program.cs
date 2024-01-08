@@ -25,7 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                    .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+                    .GetBytes(builder.Configuration["AppSettings:Token"] ?? throw new NullReferenceException())),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateLifetime = true

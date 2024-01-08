@@ -3,7 +3,7 @@
 cd src/WebAPI
 
 echo "Компилируется проект..."
-dotnet build -c Release
+dotnet build -c Debug
 
 echo "Остановка предыдущего контейнера..."
 podman stop test
@@ -18,7 +18,7 @@ podman run \
 -p 8000:80 \
 -v database:/app/Database:Z \
 -e ASPNETCORE_ENVIRONMENT=Development \
+-e AppSettings:Token="My secret key. 128 bit at least." \
+-e ConnectionStrings:DefaultConnection="Data Source=Database/Database.db" \
 --name test \
 webapitest
-
-echo "Готово"

@@ -101,7 +101,9 @@ public class UserService
             new (ClaimTypes.Role, user.Role)
         };
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+        var configToken = _configuration["AppSettings:Token"] ?? throw new NullReferenceException();
+
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configToken));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
