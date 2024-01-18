@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddRouting(options => options.LowercaseUrls = true);
     builder.Services.AddControllers();
+    builder.Services.AddHealthChecks();
     
     builder.Services.AddDbContextFactory<DatabaseContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -67,5 +68,6 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapHealthChecks("/health");
     app.Run();    
 }
