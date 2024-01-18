@@ -60,9 +60,13 @@ var app = builder.Build();
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
     }
-    
-    app.UseExceptionHandler("/error");
+    else
+    {
+        app.UseExceptionHandler("/error");
+    }
+
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
