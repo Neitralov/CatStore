@@ -1,43 +1,34 @@
 namespace Domain.Services;
 
-public class UserService
+public class UserService(IUserRepository userRepository, IConfiguration configuration)
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IConfiguration _configuration;
-
-    public UserService(IUserRepository userRepository, IConfiguration configuration)
-    {
-        _userRepository = userRepository;
-        _configuration = configuration;
-    }
-
     public ErrorOr<Created> StoreUser(User user)
     {
         if (IsUserExists(user.Email))
             return Errors.User.AlreadyExists;
 
-        _userRepository.AddUser(user);
-        _userRepository.SaveChanges();
+        userRepository.AddUser(user);
+        userRepository.SaveChanges();
 
         return Result.Created;
     }
 
     public ErrorOr<Deleted> DeleteUserById(Guid userId)
     {
-        var user = _userRepository.FindUserById(userId);
+        var user = userRepository.FindUserById(userId);
 
         if (user is null)
             return Errors.User.NotFound;
 
-        _userRepository.RemoveUser(user);
-        _userRepository.SaveChanges();
+        userRepository.RemoveUser(user);
+        userRepository.SaveChanges();
 
         return Result.Deleted;
     }
 
     public ErrorOr<string> Login(string email, string password)
     {
-        var user = _userRepository.FindUserByEmail(email);
+        var user = userRepository.FindUserByEmail(email);
 
         if (user is null)
             return Errors.Login.IncorrectEmailOrPassword;
@@ -54,7 +45,7 @@ public class UserService
         string newPassword,
         string confirmNewPassword)
     {
-        var user = _userRepository.FindUserById(userId);
+        var user = userRepository.FindUserById(userId);
 
         if (user is null)
             return Errors.User.NotFound;
@@ -71,14 +62,14 @@ public class UserService
         var result = user.ChangePassword(newPassword);
 
         if (result == Result.Updated)
-            _userRepository.SaveChanges();
+            userRepository.SaveChanges();
 
         return result;
     }
 
     public bool IsUserExists(string email)
     {
-        return _userRepository.IsUserExists(email);
+        return userRepository.IsUserExists(email);
     }
 
     private static bool VerifyPasswordHash(
@@ -94,14 +85,14 @@ public class UserService
 
     private string CreateToken(User user)
     {
-        List<Claim> claims = new List<Claim>
+        var claims = new List<Claim>
         {
             new (ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new (ClaimTypes.Name, user.Email),
             new (ClaimTypes.Role, user.Role)
         };
 
-        var configToken = _configuration["AppSettings:Token"] ?? throw new NullReferenceException();
+        var configToken = configuration["AppSettings:Token"] ?? throw new NullReferenceException();
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configToken));
 

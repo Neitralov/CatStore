@@ -1,33 +1,24 @@
 namespace Domain.Services;
 
-public class OrderService
+public class OrderService(IOrderRepository orderRepository, ICartRepository cartRepository)
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly ICartRepository _cartRepository;
-
-    public OrderService(IOrderRepository orderRepository, ICartRepository cartRepository)
-    {
-        _orderRepository = orderRepository;
-        _cartRepository = cartRepository;
-    }
-
     public ErrorOr<Created> StoreOrder(Order order, List<CartItem> cartItems)
     {
-        _orderRepository.AddOrder(order);
+        orderRepository.AddOrder(order);
         
-        var result = _cartRepository.RemoveCartItems(cartItems);
+        var result = cartRepository.RemoveCartItems(cartItems);
         if (result is false)
             return Errors.CartItem.NotFound;
 
-        _orderRepository.SaveChanges();
-        _cartRepository.SaveChanges();
+        orderRepository.SaveChanges();
+        cartRepository.SaveChanges();
 
         return Result.Created;
     }
 
     public ErrorOr<Order> GetOrder(Guid orderId, Guid userId)
     {
-        var result = _orderRepository.GetOrder(orderId);
+        var result = orderRepository.GetOrder(orderId);
 
         if (result is not { } || result.UserId != userId)
             return Errors.Order.NotFound;
@@ -37,6 +28,6 @@ public class OrderService
 
     public ErrorOr<IEnumerable<Order>> GetAllUserOrders(Guid userId)
     {
-        return _orderRepository.GetAllUserOrders(userId).ToList();
+        return orderRepository.GetAllUserOrders(userId).ToList();
     }
 }

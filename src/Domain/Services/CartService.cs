@@ -1,51 +1,42 @@
 namespace Domain.Services;
 
-public class CartService
+public class CartService(ICartRepository cartRepository, ICatRepository catRepository)
 {
-    private readonly ICartRepository _cartRepository;
-    private readonly ICatRepository _catRepository;
-   
-    public CartService(ICartRepository cartRepository, ICatRepository catRepository)
-    {
-        _cartRepository = cartRepository;
-        _catRepository = catRepository;
-    }
-
     public ErrorOr<Created> StoreCartItem(CartItem cartItem)
     {
-        var sameCartItem = _cartRepository.FindCartItem(cartItem);
+        var sameCartItem = cartRepository.FindCartItem(cartItem);
 
         if (sameCartItem is null)
         {
-            if (_catRepository.IsCatExists(cartItem.CatId) is false)
+            if (catRepository.IsCatExists(cartItem.CatId) is false)
                 return Errors.Cat.NotFound;
 
-            _cartRepository.AddCartItem(cartItem);
+            cartRepository.AddCartItem(cartItem);
         }
         else
             sameCartItem.IncreaseQuantity();
 
-        _cartRepository.SaveChanges();
+        cartRepository.SaveChanges();
 
         return Result.Created;
     }
 
     public ErrorOr<IEnumerable<CartItem>> GetAllUserCartItems(Guid userId)
     {
-        return _cartRepository.GetAllUserCartItems(userId).ToList();
+        return cartRepository.GetAllUserCartItems(userId).ToList();
     }
 
     public ErrorOr<Deleted> DeleteCartItem(Guid userId, Guid catId)
     {
-        var result = _cartRepository.RemoveCartItem(userId, catId);
-        _cartRepository.SaveChanges();
+        var result = cartRepository.RemoveCartItem(userId, catId);
+        cartRepository.SaveChanges();
 
         return result ? Result.Deleted : Errors.CartItem.NotFound;
     }
 
     public ErrorOr<Updated> UpdateQuantity(CartItem cartItem)
     {
-        var dbCartItem = _cartRepository.FindCartItem(cartItem);
+        var dbCartItem = cartRepository.FindCartItem(cartItem);
 
         if (dbCartItem is null)
             return Errors.CartItem.NotFound;
@@ -53,14 +44,14 @@ public class CartService
         var result = dbCartItem.UpdateQuantity(cartItem.Quantity);
 
         if (result == Result.Updated)
-            _cartRepository.SaveChanges();
+            cartRepository.SaveChanges();
 
         return result;
     }
 
     public ErrorOr<int> GetUserCartItemsCount(Guid userId)
     {
-        var result = _cartRepository.GetUserCartItemsCount(userId);
+        var result = cartRepository.GetUserCartItemsCount(userId);
 
         return result;
     }

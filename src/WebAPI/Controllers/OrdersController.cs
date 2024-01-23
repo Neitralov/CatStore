@@ -1,23 +1,11 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
-public class OrdersController : ApiController
+public class OrdersController(
+    OrderService orderService,
+    CartService cartService,
+    CatService catService) : ApiController
 {
-    private readonly OrderService _orderService;
-    private readonly CartService _cartService;
-    private readonly CatService _catService;
-    
-    /// <inheritdoc />
-    public OrdersController(
-        OrderService orderService,
-        CartService cartService,
-        CatService catService)
-    {
-        _orderService = orderService;
-        _cartService = cartService;
-        _catService = catService;
-    }
-    
     /// <summary>Оформить заказ пользователя</summary>
     /// <remarks>Заказ будет сформирован на основе товаров из корзины. После этого действия корзина будет очищена.</remarks>
     /// <response code="201">Заказ успешно сформирован</response>
@@ -29,13 +17,13 @@ public class OrdersController : ApiController
     {
         var userId = GetUserGuid();
         
-        var cartItems = _cartService.GetAllUserCartItems(userId).Value.ToList();
+        var cartItems = cartService.GetAllUserCartItems(userId).Value.ToList();
         
         var orderItems = new List<OrderItem>();
         
         foreach (var item in cartItems)
         {
-            ErrorOr<Cat> getCatResult = _catService.GetCat(item.CatId);
+            ErrorOr<Cat> getCatResult = catService.GetCat(item.CatId);
             
             if (getCatResult.IsError)
                 return Problem(getCatResult.Errors);
@@ -59,7 +47,7 @@ public class OrdersController : ApiController
             return Problem(orderItemsToOrderResult.Errors);
         
         var order = orderItemsToOrderResult.Value;
-        ErrorOr<Created> createOrderResult = _orderService.StoreOrder(order, cartItems);
+        ErrorOr<Created> createOrderResult = orderService.StoreOrder(order, cartItems);
         
         return createOrderResult.Match(_ => CreatedAtGetOrderDetails(order), Problem);
     }
@@ -72,7 +60,7 @@ public class OrdersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<Order>> getAllUserOrdersResult = _orderService.GetAllUserOrders(userId);
+        ErrorOr<IEnumerable<Order>> getAllUserOrdersResult = orderService.GetAllUserOrders(userId);
 
         return getAllUserOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
     }
@@ -87,7 +75,7 @@ public class OrdersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Order> getOrderResult = _orderService.GetOrder(orderId, userId);
+        ErrorOr<Order> getOrderResult = orderService.GetOrder(orderId, userId);
 
         return getOrderResult.Match(order => Ok(MapOrderDetailsResponse(order)), Problem);
     }
