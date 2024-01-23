@@ -11,6 +11,7 @@ global using Microsoft.OpenApi.Models;
 
 global using ErrorOr;
 global using Swashbuckle.AspNetCore.Filters;
+global using Serilog;
 
 global using Database;
 global using Database.Repositories;
