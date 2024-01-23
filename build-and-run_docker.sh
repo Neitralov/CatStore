@@ -18,7 +18,7 @@ docker run \
 -p 8000:8080 \
 -v database:/app/Database:Z \
 -e ASPNETCORE_ENVIRONMENT=Development \
--e AppSettings:Token="My secret key. 128 bit at least." \
+-e AppSettings:Token="My favorite really secret key. 512 bit at least. (64 characters)." \
 -e ConnectionStrings:DefaultConnection="Data Source=Database/Database.db" \
 --name test \
 webapitest
