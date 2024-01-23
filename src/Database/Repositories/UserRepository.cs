@@ -1,38 +1,33 @@
 namespace Database.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(IDbContextFactory<DatabaseContext> factory) : IUserRepository
 {
-    private readonly DatabaseContext _database;
-
-    public UserRepository(IDbContextFactory<DatabaseContext> factory)
-    {
-        _database = factory.CreateDbContext();
-    }
+    private DatabaseContext Database { get; } = factory.CreateDbContext();
 
     public void AddUser(User user)
     {
-        _database.Add(user);
+        Database.Add(user);
     }
 
     public User? FindUserById(Guid userId)
     {
-        return _database.Users.SingleOrDefault(user => user.UserId == userId);
+        return Database.Users.SingleOrDefault(user => user.UserId == userId);
     }
 
     public User? FindUserByEmail(string email)
     {
-        return _database.Users.SingleOrDefault(user => user.Email == email);
+        return Database.Users.SingleOrDefault(user => user.Email == email);
     }
 
     public void RemoveUser(User user)
     {
-        _database.Remove(user);
+        Database.Remove(user);
     }
 
     public bool IsUserExists(string email)
     {
-        return _database.Users.Any(user => user.Email == email);
+        return Database.Users.Any(user => user.Email == email);
     }
 
-    public void SaveChanges() => _database.SaveChanges();
+    public void SaveChanges() => Database.SaveChanges();
 }

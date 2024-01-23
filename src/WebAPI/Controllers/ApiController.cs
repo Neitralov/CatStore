@@ -7,7 +7,6 @@ public class ApiController : ControllerBase
 {
     /// <summary></summary>>
     protected IActionResult Problem(List<Error> errors)
-
     {
         if (errors.All(e => e.Type == ErrorType.Validation))
         {

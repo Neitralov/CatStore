@@ -2,16 +2,8 @@ namespace WebAPI.Controllers;
 
 /// <inheritdoc />
 [Route("/api/cart-items"), Tags("CartItems")]
-public class CartsController : ApiController
+public class CartsController(CartService cartService) : ApiController
 {
-    private readonly CartService _cartService;
-    
-    /// <inheritdoc />
-    public CartsController(CartService cartService)
-    {
-        _cartService = cartService;
-    }
-
     /// <summary>Добавить товар в корзину пользователя</summary>
     /// <response code="204">Товар успешно добавлен в корзину</response>
     /// <response code="400">У товара указано количество меньше единицы</response>
@@ -28,7 +20,7 @@ public class CartsController : ApiController
             return Problem(requestToCartItemResult.Errors);
 
         var cartItem = requestToCartItemResult.Value;
-        ErrorOr<Created> createCartItemResult = _cartService.StoreCartItem(cartItem);
+        ErrorOr<Created> createCartItemResult = cartService.StoreCartItem(cartItem);
 
         return createCartItemResult.Match(_ => NoContent(), Problem);
     }
@@ -41,7 +33,7 @@ public class CartsController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<CartItem>> getAllUserCartItemsResult = _cartService.GetAllUserCartItems(userId);
+        ErrorOr<IEnumerable<CartItem>> getAllUserCartItemsResult = cartService.GetAllUserCartItems(userId);
         
         return getAllUserCartItemsResult.Match(cartItems => Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse))), Problem);
     }
@@ -54,7 +46,7 @@ public class CartsController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<int> getCartItemsCountResult = _cartService.GetUserCartItemsCount(userId);
+        ErrorOr<int> getCartItemsCountResult = cartService.GetUserCartItemsCount(userId);
 
         return getCartItemsCountResult.Match(count => Ok(new TotalNumberOfCartItemsResponse(count)), Problem);
     }
@@ -75,7 +67,7 @@ public class CartsController : ApiController
             return Problem(requestToCartItemResult.Errors);
 
         var cartItem = requestToCartItemResult.Value;
-        ErrorOr<Updated> updateCartItemQuantityResult = _cartService.UpdateQuantity(cartItem);
+        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(cartItem);
 
         return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
@@ -90,7 +82,7 @@ public class CartsController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deleteCartItemResult = _cartService.DeleteCartItem(userId, catId);
+        ErrorOr<Deleted> deleteCartItemResult = cartService.DeleteCartItem(userId, catId);
 
         return deleteCartItemResult.Match(_ => NoContent(), Problem);
     }

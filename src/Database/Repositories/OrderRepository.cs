@@ -1,22 +1,17 @@
 namespace Database.Repositories;
 
-public class OrderRepository : IOrderRepository
+public class OrderRepository(IDbContextFactory<DatabaseContext> factory) : IOrderRepository
 {
-    private readonly DatabaseContext _database;
-
-    public OrderRepository(IDbContextFactory<DatabaseContext> factory)
-    {
-        _database = factory.CreateDbContext();
-    }
+    private DatabaseContext Database { get; } = factory.CreateDbContext();
     
     public void AddOrder(Order order)
     {
-        _database.Add(order);
+        Database.Add(order);
     }
 
     public Order? GetOrder(Guid orderId)
     {
-        return _database.Orders
+        return Database.Orders
             .AsNoTracking()
             .Include(order => order.OrderItems)
             .SingleOrDefault(order => order.OrderId == orderId);
@@ -24,10 +19,10 @@ public class OrderRepository : IOrderRepository
 
     public IEnumerable<Order> GetAllUserOrders(Guid userId)
     {
-        return _database.Orders
+        return Database.Orders
             .AsNoTracking()
             .Where(order => order.UserId == userId);
     }
 
-    public void SaveChanges() => _database.SaveChanges();
+    public void SaveChanges() => Database.SaveChanges();
 }

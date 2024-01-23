@@ -1,16 +1,8 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
-public class UsersController : ApiController
+public class UsersController(UserService userService) : ApiController
 {
-    private readonly UserService _userService;
-
-    /// <inheritdoc />
-    public UsersController(UserService userService)
-    {
-        _userService = userService;
-    }
-    
     /// <summary>Зарегистрировать новый аккаунт</summary>
     /// <response code="204">Регистрация прошла успешно</response>
     /// <response code="400">
@@ -26,7 +18,7 @@ public class UsersController : ApiController
             return Problem(requestToUserResult.Errors);
 
         var user = requestToUserResult.Value;
-        ErrorOr<Created> createUserResult = _userService.StoreUser(user);
+        ErrorOr<Created> createUserResult = userService.StoreUser(user);
 
         return createUserResult.Match(_ => NoContent(), Problem);
     }
@@ -40,7 +32,7 @@ public class UsersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Updated> changeUserPasswordResult = _userService.ChangeUserPassword(
+        ErrorOr<Updated> changeUserPasswordResult = userService.ChangeUserPassword(
             userId,
             request.OldPassword,
             request.NewPassword,
@@ -58,7 +50,7 @@ public class UsersController : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deleteUserResult = _userService.DeleteUserById(userId);
+        ErrorOr<Deleted> deleteUserResult = userService.DeleteUserById(userId);
 
         return deleteUserResult.Match(_ => NoContent(), Problem);
     }
@@ -70,7 +62,7 @@ public class UsersController : ApiController
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
     public IActionResult Login([Required] LoginUserRequest request)
     {
-        ErrorOr<string> loginUserResult = _userService.Login(request.Email, request.Password);
+        ErrorOr<string> loginUserResult = userService.Login(request.Email, request.Password);
 
         return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
     }

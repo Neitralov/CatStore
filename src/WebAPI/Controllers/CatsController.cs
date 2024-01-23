@@ -1,16 +1,8 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
-public class CatsController : ApiController
+public class CatsController(CatService catService) : ApiController
 {
-    private readonly CatService _catService;
-    
-    /// <inheritdoc />
-    public CatsController(CatService catService)
-    {
-        _catService = catService;
-    }
-    
     /// <summary>Добавить нового кота в магазин (требуемая роль = админ)</summary>
     /// <response code="201">Кот создан</response>
     /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
@@ -24,7 +16,7 @@ public class CatsController : ApiController
             return Problem(requestToCatResult.Errors);
         
         var cat = requestToCatResult.Value;
-        ErrorOr<Created> createCatResult = _catService.StoreCat(cat);
+        ErrorOr<Created> createCatResult = catService.StoreCat(cat);
         
         return createCatResult.Match(_ => CreatedAtGetCat(cat), Problem);
     }
@@ -37,7 +29,7 @@ public class CatsController : ApiController
     [ProducesResponseType(typeof(CatResponse), 200)]
     public IActionResult GetCat(Guid catId)
     {
-        ErrorOr<Cat> getCatResult = _catService.GetCat(catId);
+        ErrorOr<Cat> getCatResult = catService.GetCat(catId);
         
         return getCatResult.Match(cat => Ok(MapCatResponse(cat)), Problem);
     }
@@ -48,7 +40,7 @@ public class CatsController : ApiController
     [ProducesResponseType(typeof(List<CatResponse>), 200)]
     public IActionResult GetAllCats()
     {
-        ErrorOr<IEnumerable<Cat>> getAllCatsResult = _catService.GetAllCats();
+        ErrorOr<IEnumerable<Cat>> getAllCatsResult = catService.GetAllCats();
 
         return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
     }
@@ -69,7 +61,7 @@ public class CatsController : ApiController
             return Problem(requestToCatResult.Errors);
         
         var cat = requestToCatResult.Value;
-        ErrorOr<Updated> upsertCatResult = _catService.UpdateCat(cat);
+        ErrorOr<Updated> upsertCatResult = catService.UpdateCat(cat);
         
         return upsertCatResult.Match(_ => NoContent(), Problem);
     }
@@ -82,7 +74,7 @@ public class CatsController : ApiController
     [ProducesResponseType(204)]
     public IActionResult DeleteCat(Guid catId)
     {
-        ErrorOr<Deleted> deleteCatResult = _catService.DeleteCat(catId);
+        ErrorOr<Deleted> deleteCatResult = catService.DeleteCat(catId);
         
         return deleteCatResult.Match(_ => NoContent(), Problem);
     }

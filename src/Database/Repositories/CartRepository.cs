@@ -1,46 +1,41 @@
 namespace Database.Repositories;
 
-public class CartRepository : ICartRepository
+public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartRepository
 {
-    private readonly DatabaseContext _database;
-
-    public CartRepository(IDbContextFactory<DatabaseContext> factory)
-    {
-        _database = factory.CreateDbContext();
-    }
+    private DatabaseContext Database { get; } = factory.CreateDbContext();
 
     public void AddCartItem(CartItem cartItem)
     {
-        _database.Add(cartItem);
+        Database.Add(cartItem);
     }
 
     public CartItem? FindCartItem(CartItem cartItem)
     {
-        return _database.CartItems.SingleOrDefault(item =>
+        return Database.CartItems.SingleOrDefault(item =>
             item.UserId == cartItem.UserId &&
             item.CatId == cartItem.CatId);
     }
 
     public IEnumerable<CartItem> GetAllUserCartItems(Guid userId)
     {
-        return _database.CartItems
+        return Database.CartItems
             .AsNoTracking()
             .Where(cartItem => cartItem.UserId == userId);
     }
 
     public int GetUserCartItemsCount(Guid userId)
     {
-        return _database.CartItems.Count(item => item.UserId == userId);
+        return Database.CartItems.Count(item => item.UserId == userId);
     }
 
     public bool RemoveCartItem(Guid userId, Guid catId)
     {
-        var cartItem = _database.CartItems.SingleOrDefault(cartItem =>
+        var cartItem = Database.CartItems.SingleOrDefault(cartItem =>
             cartItem.UserId == userId &&
             cartItem.CatId == catId);
 
         if (cartItem is { })
-            _database.Remove(cartItem);
+            Database.Remove(cartItem);
 
         return cartItem is { };
     }
@@ -51,7 +46,7 @@ public class CartRepository : ICartRepository
 
         foreach (var item in items)
         {
-            var dbCartItem = _database.CartItems.SingleOrDefault(dbItem =>
+            var dbCartItem = Database.CartItems.SingleOrDefault(dbItem =>
                 dbItem.UserId == item.UserId &&
                 dbItem.CatId == item.CatId);
 
@@ -61,9 +56,9 @@ public class CartRepository : ICartRepository
                 return false;
         }
 
-        _database.CartItems.RemoveRange(dbCartItems);
+        Database.CartItems.RemoveRange(dbCartItems);
         return true;
     }
 
-    public void SaveChanges() => _database.SaveChanges();
+    public void SaveChanges() => Database.SaveChanges();
 }
