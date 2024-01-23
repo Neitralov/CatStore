@@ -55,6 +55,7 @@ P.S. установите переменную окружения `ASPNETCORE_EN
 
 * [ErrorOr](https://github.com/amantinband/error-or)
 * [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
+* [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore)
 
 # 📃 Лицензия:
 Программа распространяется под лицензией [MIT](https://github.com/Neitralov/CatStore/blob/master/LICENSE).
