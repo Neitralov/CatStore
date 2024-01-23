@@ -48,7 +48,7 @@ P.S. установите переменную окружения `ASPNETCORE_EN
 
 # 🧰 Стек технологий
 * Веб-фреймворк: [ASP.NET Core 8](https://dotnet.microsoft.com/en-us/apps/aspnet)
-* ORM: [EF Core 7](https://learn.microsoft.com/ru-ru/ef/core/)
+* ORM: [EF Core 8](https://learn.microsoft.com/ru-ru/ef/core/)
 * СУБД: [SQLite](https://www.sqlite.org/about.html)
 
 Дополнительные пакеты:
