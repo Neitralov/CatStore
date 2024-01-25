@@ -19,6 +19,7 @@ global using Domain.Data;
 global using Domain.Services;
 global using Domain.Interfaces;
 
+global using WebAPI;
 global using WebAPI.Contracts.Cat;
 global using WebAPI.Contracts.User;
 global using WebAPI.Contracts.CartItem;
