@@ -1,13 +1,11 @@
 namespace Database;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {
     public DbSet<Cat> Cats => Set<Cat>();
     public DbSet<User> Users => Set<User>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Order> Orders => Set<Order>();
-    
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) => Database.EnsureCreated();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

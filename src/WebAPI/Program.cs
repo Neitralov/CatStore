@@ -92,7 +92,8 @@ try
         app.UseAuthorization();
         app.MapControllers();
         app.MapHealthChecks("/health");
-        app.Run();
+        await app.MigrateDatabaseAsync();
+        await app.RunAsync();
     }
 }
 catch (Exception exception)

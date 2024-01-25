@@ -1,5 +1,6 @@
 .idea
 .fleet
+obj/
 src/Database/bin/
 src/Database/obj/
 src/Domain/bin/
@@ -8,4 +9,5 @@ src/WebAPI/bin/
 src/WebAPI/obj/
 src/WebAPI.Contracts/bin/
 src/WebAPI.Contracts/obj/
+src/WebAPI/CatStore
 *.db*
