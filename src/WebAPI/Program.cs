@@ -68,6 +68,7 @@ try
             };
 
             options.AddSecurityDefinition(jwtSecurityScheme.Scheme, jwtSecurityScheme);
+            options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, JwtBearerDefaults.AuthenticationScheme);
         });
 
