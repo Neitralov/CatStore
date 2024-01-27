@@ -76,7 +76,7 @@ try
         {
             options.AddPolicy(
                 name: "CanEditCats",
-                policyBuilder => policyBuilder.RequireClaim("CanEditCats", "True"));
+                policyBuilder => policyBuilder.RequireClaim(nameof(User.CanEditCats), true.ToString()));
         });
     }
 

@@ -76,7 +76,7 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         {
             new (ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new (ClaimTypes.Name, user.Email),
-            new ("CanEditCats", user.CanEditCats.ToString())
+            new (nameof(user.CanEditCats), user.CanEditCats.ToString())
         };
 
         var configToken = configuration["AppSettings:Token"] ?? throw new NullReferenceException();
