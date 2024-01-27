@@ -40,21 +40,7 @@ public class UsersController(UserService userService) : ApiController
 
         return changeUserPasswordResult.Match(_ => NoContent(), Problem);
     }
-
-    /// <summary>Удалить аккаунт текущего пользователя</summary>
-    /// <response code="204">Аккаунт успешно удален</response>
-    /// <response code="404">Not found</response>
-    [HttpDelete, Authorize]
-    [ProducesResponseType(204)]
-    public IActionResult DeleteAccount()
-    {
-        var userId = GetUserGuid();
-
-        ErrorOr<Deleted> deleteUserResult = userService.DeleteUserById(userId);
-
-        return deleteUserResult.Match(_ => NoContent(), Problem);
-    }
-
+    
     /// <summary>Войти в аккаунт</summary>
     /// <response code="200">Вход произведен успешно</response>
     /// <response code="400">Логин или пароль указан некорректно</response>

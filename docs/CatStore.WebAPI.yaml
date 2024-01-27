@@ -151,21 +151,6 @@ paths:
           description: Регистрация прошла успешно
         "400":
           description: Некорректный адрес электронной почты, слишком короткий пароль, пароли не совпадают, пользователь с такой электронной почтой уже существует 
-    delete:
-      tags:
-        - Users
-      summary: Удалить аккаунт текущего пользователя
-      description: "Пользователь будет удален по своему Guid, взятому из JWT токена"
-      operationId: deleteUser
-      security:
-        - bearer: []
-      responses:
-        "204":
-          description: Аккаунт успешно удален
-        "401": 
-          description: Unauthorized
-        "404":
-          description: Not found
   /api/users/login:
     post:
       tags:
