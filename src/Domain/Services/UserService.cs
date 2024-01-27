@@ -13,19 +13,6 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         return Result.Created;
     }
 
-    public ErrorOr<Deleted> DeleteUserById(Guid userId)
-    {
-        var user = userRepository.FindUserById(userId);
-
-        if (user is null)
-            return Errors.User.NotFound;
-
-        userRepository.RemoveUser(user);
-        userRepository.SaveChanges();
-
-        return Result.Deleted;
-    }
-
     public ErrorOr<string> Login(string email, string password)
     {
         var user = userRepository.FindUserByEmail(email);
