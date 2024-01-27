@@ -19,7 +19,7 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
             email: "admin@gmail.com",
             password: "admin",
             confirmPassword: "admin",
-            role: "admin")
+            canEditCats: true)
             .Value;
 
         modelBuilder.Entity<User>().HasData(admin);

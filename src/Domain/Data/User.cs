@@ -7,7 +7,8 @@ public class User
     public byte[] PasswordHash { get; private set; } = default!;
     public byte[] PasswordSalt { get; private set; } = default!;
     public DateTime DateCreated { get; private set; }
-    public string Role { get; private set; } = string.Empty;
+
+    public bool CanEditCats { get; private set; }
 
     public const int MinPasswordLength = 4;
 
@@ -17,7 +18,7 @@ public class User
         string email,
         string password,
         string confirmPassword,
-        string role = "customer",
+        bool canEditCats = false,
         Guid? userId = null)
     {
         List<Error> errors = new();
@@ -43,7 +44,7 @@ public class User
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             DateCreated = DateTime.UtcNow,
-            Role = role
+            CanEditCats = canEditCats
         };
     }
 

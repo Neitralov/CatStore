@@ -70,6 +70,13 @@ try
             options.AddSecurityDefinition(jwtSecurityScheme.Scheme, jwtSecurityScheme);
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, JwtBearerDefaults.AuthenticationScheme);
         });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                name: "CanEditCats",
+                policyBuilder => policyBuilder.RequireClaim("CanEditCats", "True"));
+        });
     }
 
     var app = builder.Build();
