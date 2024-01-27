@@ -3,10 +3,10 @@ namespace WebAPI.Controllers;
 /// <inheritdoc />
 public class CatsController(CatService catService) : ApiController
 {
-    /// <summary>Добавить нового кота в магазин (требуемая роль = админ)</summary>
+    /// <summary>Добавить нового кота в магазин</summary>
     /// <response code="201">Кот создан</response>
     /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
-    [HttpPost, Authorize(Roles = "admin")]
+    [HttpPost, Authorize("CanEditCats")]
     [ProducesResponseType(typeof(CatResponse), 201)]
     public IActionResult CreateCat([Required] CreateCatRequest request)
     {
@@ -45,13 +45,13 @@ public class CatsController(CatService catService) : ApiController
         return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
     }
 
-    /// <summary>Обновить данные существующего кота (требуемая роль = админ)</summary>
+    /// <summary>Обновить данные существующего кота</summary>
     /// <param name="catId">Guid кота, данные которого нужно обновить</param>
     /// <param name="request"/>
     /// <response code="204">Данные успешно обновлены</response>
     /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
     /// <response code="404">Not found</response>
-    [HttpPut("{catId:guid}"), Authorize(Roles = "admin")]
+    [HttpPut("{catId:guid}"), Authorize("CanEditCats")]
     [ProducesResponseType(204)]
     public IActionResult UpdateCat(Guid catId, [Required] UpdateCatRequest request)
     {
@@ -66,11 +66,11 @@ public class CatsController(CatService catService) : ApiController
         return upsertCatResult.Match(_ => NoContent(), Problem);
     }
     
-    /// <summary>Удалить кота из магазина (требуемая роль = админ)</summary>
+    /// <summary>Удалить кота из магазина</summary>
     /// <param name="catId">Guid кота, которого нужно удалить</param>
     /// <response code="204">Кот удален успешно</response>
     /// <response code="404">Not found</response>
-    [HttpDelete("{catId:guid}"), Authorize(Roles = "admin")]
+    [HttpDelete("{catId:guid}"), Authorize("CanEditCats")]
     [ProducesResponseType(204)]
     public IActionResult DeleteCat(Guid catId)
     {
