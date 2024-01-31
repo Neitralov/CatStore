@@ -21,19 +21,8 @@ tags:
     description: Users cart items
   - name: Orders
     description: Users orders
-  - name: Default
   
 paths:
-  /api/health:
-    get:
-      tags:
-        - Default
-      summary: Get service health status
-      description: " "
-      operationId: checkHealth
-      responses:
-        "200":
-          description: OK
   /api/cats:
     post:
       tags:
@@ -183,6 +172,33 @@ paths:
           description: Слишком короткий пароль, пароли не совпадают, новый пароль не может совпадать со старым
         "401": 
           description: Unauthorized
+  /api/users/refresh-tokens:
+    post:
+      tags:
+        - Users
+      summary: Обновить access и refresh токен
+      description: " "
+      operationId: refresh-tokens
+      parameters:
+        - name: access token
+          in: header
+          description: access token, выданный при авторизации или последнем обновлении токенов
+          required: true
+          schema:
+            type: string
+            format: string
+        - name: refresh token
+          in: cookie
+          description: refresh token, выданный при авторизации или последнем обновлении токенов
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          $ref: "#/components/responses/LoginUserResponse"
+        "400":
+          description: Срок действия refresh токена истек, refresh токен недействителен
   /api/cart-items:
     post:
       tags:
@@ -399,6 +415,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/LoginUserResponse"
+      headers:
+        Set-Cookie:
+          schema:
+            $ref: "#/components/schemas/RefreshTokenSchema"
+          description: "refresh token"
       description: Вход произведен успешно
     CartItemArrayResponse:
       content:
@@ -524,6 +545,9 @@ components:
       properties:
         token:
           type: string
+    RefreshTokenSchema:
+      type: string
+      format: string
     ChangeUserPasswordRequest:
       type: object
       properties:
