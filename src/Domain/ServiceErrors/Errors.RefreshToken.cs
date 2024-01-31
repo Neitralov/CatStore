@@ -9,7 +9,7 @@ public static partial class Errors
             description: "Refresh token not found");
         
         public static Error TokenIsInvalid => Error.Validation(
-            code: "RefreshToken.TokenIsInvalid",
+            code:        "RefreshToken.TokenIsInvalid",
             description: "Refresh token is invalid");
     }
 }

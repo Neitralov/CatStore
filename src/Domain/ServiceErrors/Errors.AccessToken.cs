@@ -9,7 +9,7 @@ public static partial class Errors
             description: "Access token not found");
 
         public static Error TokenIsInvalid => Error.Validation(
-            code: "AccessToken.TokenIsInvalid",
+            code:        "AccessToken.TokenIsInvalid",
             description: "Access token is invalid");
     }
 }
