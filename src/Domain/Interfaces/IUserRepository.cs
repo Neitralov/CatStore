@@ -16,7 +16,6 @@ public interface IUserRepository
     //Update
 
     //Delete
-    void RemoveUser(User user);
     void RemoveAllUsersRefreshTokenSessions(Guid userId);
 
     //Other

@@ -36,12 +36,7 @@ public class UserRepository(IDbContextFactory<DatabaseContext> factory) : IUserR
             refreshTokenSession.Token == oldRefreshToken &&
             refreshTokenSession.ExpirationDate >= DateTime.UtcNow);
     }
-
-    public void RemoveUser(User user)
-    {
-        Database.Remove(user);
-    }
-
+    
     public void RemoveAllUsersRefreshTokenSessions(Guid userId)
     {
         var usersRefreshTokenSessions = Database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId);
