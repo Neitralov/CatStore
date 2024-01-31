@@ -46,7 +46,8 @@ try
                         .GetBytes(builder.Configuration["AppSettings:Token"] ?? throw new NullReferenceException())),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 

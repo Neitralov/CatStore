@@ -48,9 +48,52 @@ public class UsersController(UserService userService) : ApiController
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
     public IActionResult Login([Required] LoginUserRequest request)
     {
-        ErrorOr<string> loginUserResult = userService.Login(request.Email, request.Password);
+        ErrorOr<(string accessToken, string refreshToken)> loginUserResult = userService.Login(request.Email, request.Password);
 
-        return loginUserResult.Match(token => Ok(new LoginUserResponse(token)), Problem);
+        if (loginUserResult.IsError)
+            return Problem(loginUserResult.Errors);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Path = "/api/users",
+            Expires = DateTime.UtcNow.AddDays(RefreshTokenSession.ExpiresInDays)
+        };
+
+        var accessToken = loginUserResult.Value.accessToken;
+        var refreshToken = loginUserResult.Value.refreshToken;
+
+        Response.Cookies.Append("RefreshToken", refreshToken, cookieOptions);
+        return Ok(new LoginUserResponse(accessToken));
+    }
+
+    /// <summary>Обновить access и refresh токены</summary>
+    /// <response code="200">Токены обновлены успешно</response>
+    /// <response code="400">Срок действия refresh токена истек, refresh токен недействителен, access токен недействителен</response>
+    /// <response code="404">Владелец токена (пользователь) не найден</response>
+    [HttpPost("refresh-tokens")]
+    [ProducesResponseType(typeof(LoginUserResponse), 200)]
+    public IActionResult LoginByTokens([FromHeader] string? expiredAccessToken)
+    {
+        var refreshToken = HttpContext.Request.Cookies["RefreshToken"];
+
+        ErrorOr<(string accessToken, string refreshToken)> refreshTokensResult = userService.RefreshTokens(expiredAccessToken, refreshToken);
+
+        if (refreshTokensResult.IsError)
+            return Problem(refreshTokensResult.Errors);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Path = "/api/users",
+            Expires = DateTime.UtcNow.AddDays(RefreshTokenSession.ExpiresInDays)
+        };
+
+        var newAccessToken = refreshTokensResult.Value.accessToken;
+        var newRefreshToken = refreshTokensResult.Value.refreshToken;
+
+        Response.Cookies.Append("RefreshToken", newRefreshToken, cookieOptions);
+        return Ok(new LoginUserResponse(newAccessToken));
     }
 
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)

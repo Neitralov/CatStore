@@ -6,6 +6,7 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
     public DbSet<User> Users => Set<User>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Order> Orders => Set<Order>();
+    public DbSet<RefreshTokenSession> RefreshTokenSessions => Set<RefreshTokenSession>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -14,6 +15,9 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 
         modelBuilder.Entity<OrderItem>()
             .HasKey(entity => new { entity.OrderId, entity.CatId });
+
+        modelBuilder.Entity<RefreshTokenSession>()
+            .HasKey(entity => entity.SessionId);
 
         var admin = User.Create(
             email: "admin@gmail.com",
