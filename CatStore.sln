@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "src\WebAPI\WebAPI.csproj", "{DCE35A43-69BD-40C0-8077-68ABB1B2E4EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "src\Server\WebAPI\WebAPI.csproj", "{DCE35A43-69BD-40C0-8077-68ABB1B2E4EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{F7499C63-ACF9-4437-B915-C78FC5970A42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Server\Domain\Domain.csproj", "{F7499C63-ACF9-4437-B915-C78FC5970A42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "src\Database\Database.csproj", "{200FAB26-1284-47E9-9457-E7DFEC4F2236}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "src\Server\Database\Database.csproj", "{200FAB26-1284-47E9-9457-E7DFEC4F2236}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI.Contracts", "src\WebAPI.Contracts\WebAPI.Contracts.csproj", "{CA5C2B65-27D7-4DC3-95CE-880E76E81D70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI.Contracts", "src\Server\WebAPI.Contracts\WebAPI.Contracts.csproj", "{CA5C2B65-27D7-4DC3-95CE-880E76E81D70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
