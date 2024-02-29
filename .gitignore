@@ -10,4 +10,7 @@ src/Server/WebAPI/obj/
 src/Server/WebAPI.Contracts/bin/
 src/Server/WebAPI.Contracts/obj/
 src/Server/WebAPI/CatStore
+src/Client/bin/
+src/Client/obj/
+src/Client/node_modules/
 *.db*
