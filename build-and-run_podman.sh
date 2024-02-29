@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd src/WebAPI
+cd src/Server/WebAPI
 
 echo "Компилируется backend..."
 dotnet build -c Debug
@@ -21,3 +21,8 @@ podman run \
 -e ConnectionStrings:DefaultConnection="Data Source=Database/Database.db" \
 --name test \
 webapitest
+
+cd ../../Client
+
+echo "Запускается frontend (hot-reload)"
+bun tailwindcss -i wwwroot/tailwind.css -o wwwroot/app.css --watch | dotnet watch run
