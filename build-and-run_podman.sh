@@ -2,16 +2,15 @@
 
 cd src/WebAPI
 
-echo "Компилируется проект..."
+echo "Компилируется backend..."
 dotnet build -c Debug
 
-echo "Остановка предыдущего контейнера..."
 podman stop test
 
-echo "Собирается Docker образ программы..."
+echo "Собирается Docker образ backend-a..."
 podman build . -t webapitest
 
-echo "Запускается контейнер с программой..."
+echo "Запускается контейнер с backend-ом..."
 podman run \
 -d \
 --rm \
