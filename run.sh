@@ -25,4 +25,4 @@ webapitest
 cd ../../Client
 
 echo "Запускается frontend (hot-reload)"
-bun tailwindcss -i wwwroot/tailwind.css -o wwwroot/app.css --watch | dotnet watch run
+bun tailwindcss -i wwwroot/css/tailwind.css -o wwwroot/css/app.css --watch | dotnet watch run
