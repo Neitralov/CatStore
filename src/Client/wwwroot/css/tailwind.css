@@ -5,7 +5,11 @@
 @layer base {
     * {
         @apply font-sans;
-        outline: unset;
+
+    }
+
+    input:focus {
+        @apply outline outline-primary outline-2;
     }
 }
 
