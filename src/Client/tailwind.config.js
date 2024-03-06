@@ -2,11 +2,15 @@
 module.exports = {
     content: [ "./Components/**/*.razor" ],
     theme: {
+        container: {
+            center: true
+        },
+        screens: {
+            "md": "768px",
+            "lg": "960px",
+            "xl": "1280px"
+        },
         extend: {
-            screens: {
-                "lg": "960px",
-                "xl": "1280px"
-            },
             colors: {
                 "primary": "#fb8b24",
                 "neutral": "#ffffff",
