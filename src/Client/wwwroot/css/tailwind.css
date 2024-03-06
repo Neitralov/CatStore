@@ -11,6 +11,10 @@
     input:focus {
         @apply outline outline-primary outline-2;
     }
+
+    html, body {
+        height: 100%;
+    }
 }
 
 @font-face {
