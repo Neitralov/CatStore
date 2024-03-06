@@ -8,8 +8,8 @@
 
     }
 
-    input:focus {
-        @apply outline outline-primary outline-2;
+    input:focus, select:focus {
+        @apply outline-none;
     }
 
     html, body {
