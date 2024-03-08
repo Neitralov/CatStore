@@ -1,0 +1,36 @@
+@page "/profile"
+@layout ProfileLayout
+
+<PageTitle>Профиль — CatStore</PageTitle>
+
+<div class="flex flex-col gap-3 xl:px-5 px-4 xl:py-4 py-3 bg-neutral rounded-lg shadow text-sm">
+    <div class="flex flex-col gap-2">
+        <h2 class="text-sm">Электронная почта</h2>
+        <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg">example@gmail.com</p>
+    </div>
+    
+    <hr />
+    
+    <div class="flex flex-col gap-2">
+        <h1>Изменить пароль</h1>
+        
+        <div class="flex flex-col gap-2">
+            <h2 class="text-muted text-xs">Старый пароль</h2>
+            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="password" placeholder="password" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <h2 class="text-muted text-xs">Новый пароль</h2>
+            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="password" placeholder="password" />
+        </div>
+        
+        <div class="flex flex-col gap-2">
+            <h2 class="text-muted text-xs">Повторите новый пароль</h2>
+            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="password" placeholder="password" />
+        </div>
+
+        <p class="text-attention text-xs">* Пароли не совпадают</p>
+
+        <div class="flex justify-center items-center w-full rounded-lg h-9 bg-primary text-white">Изменить</div>
+    </div>
+</div>
