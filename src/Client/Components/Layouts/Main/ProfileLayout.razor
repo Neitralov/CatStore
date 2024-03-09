@@ -1,24 +1,11 @@
 @inherits LayoutComponentBase
+@layout MainLayout
 
-<div class="flex flex-col min-h-full bg-background">
-    <Header />
-
-    <main class="xl:container w-full grow xl:py-5 py-4 xl:px-[50px] px-4">
-        <div class="grid grid-cols-12 xl:gap-5 gap-4">
-            <div class="xl:col-span-3 col-span-12">
-                <NavMenu />    
-            </div>
-            <div class="xl:col-span-9 col-span-12">
-                @Body
-            </div>
-        </div>
-    </main>
-
-    <Footer />
-</div>
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+<div class="grid grid-cols-12 xl:gap-5 gap-4">
+    <div class="xl:col-span-3 col-span-12">
+        <NavMenu />
+    </div>
+    <div class="flex flex-col xl:col-span-9 col-span-12 xl:gap-5 gap-4">
+        @Body
+    </div>
 </div>
