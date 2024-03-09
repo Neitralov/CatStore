@@ -1,0 +1,6 @@
+<div class="flex justify-center items-center w-full border-solid border-second border rounded-lg h-9 bg-neutral text-muted">@ChildContent</div>
+
+@code {
+    [Parameter]
+	public RenderFragment? ChildContent { get; set; }
+}

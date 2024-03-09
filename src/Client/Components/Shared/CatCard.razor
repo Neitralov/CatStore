@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center xl:px-5 px-4 xl:py-4 py-3 gap-3 bg-neutral rounded-lg shadow">
+<Panel CssClasses="flex flex-col items-center gap-3">
     <div>
         @if (IsMale)
         {
@@ -49,11 +49,11 @@
 
         }
     </div>
-    
+
     <h2 class="text-sm align-center">
         @Name
     </h2>
-    
+
     <div class="flex justify-between items-center w-full rounded-lg bg-background h-8 pl-3">
         <p class="text-sm font-bold">
             @if (Discount > 0)
@@ -77,7 +77,7 @@
             </svg>
         </div>
     </div>
-</div>
+</Panel>
 
 @code {
     [Parameter]

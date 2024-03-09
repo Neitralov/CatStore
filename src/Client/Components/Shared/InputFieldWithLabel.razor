@@ -1,0 +1,21 @@
+<div class="@CssClasses flex flex-col gap-2 w-full">
+    <h2>@Label</h2>
+    <input
+        class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted"
+        type="@InputType"
+        placeholder="@Placeholder" />
+</div>
+
+@code {
+    [Parameter]
+    public string CssClasses { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string InputType { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+}

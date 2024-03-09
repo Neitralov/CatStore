@@ -1,0 +1,15 @@
+<input
+    class="@CssClasses border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted"
+    type="@InputType"
+    placeholder="@Placeholder" />
+
+@code {
+    [Parameter]
+    public string CssClasses { get; set; } = string.Empty;
+
+    [Parameter]
+    public string InputType { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+}

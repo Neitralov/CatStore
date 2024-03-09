@@ -3,14 +3,44 @@
 <PageTitle>Главная — CatStore</PageTitle>
 
 <div class="grid grid-cols-12 xl:gap-5 gap-4">
-    <div class="lg:block hidden col-span-3">
-        <FilterPanel />
-    </div>
+    <Panel CssClasses="flex flex-col xl:gap-4 gap-3 lg:flex hidden col-span-3">
+        <div class="flex flex-col gap-2">
+            <h2>Цена</h2>
+            <InputField InputType="number" Placeholder="От 199"/>
+            <InputField InputType="number" Placeholder="До 499"/>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <h2>Пол</h2>
+            <RadioButton Text="Любой" Name="gender" Checked />
+            <RadioButton Text="Мальчик" Name="gender" />
+            <RadioButton Text="Девочка" Name="gender" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <h2 >Цвет</h2>
+            <RadioButton Text="Любой" Name="color" Checked />
+            <RadioButton Text="Черный" Name="color" />
+            <RadioButton Text="Белый" Name="color" />
+            <RadioButton Text="Красный" Name="color" />
+            <RadioButton Text="Оранжевый" Name="color" />
+            <RadioButton Text="Желтый" Name="color" />
+            <RadioButton Text="Зеленый" Name="color" />
+            <RadioButton Text="Синий" Name="color" />
+            <RadioButton Text="Фиолетовый" Name="color" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <ApplyButton>Применить</ApplyButton>
+            <Button>Сбросить</Button>
+        </div>
+    </Panel>
 
     <div class="lg:col-span-9 col-span-12 flex flex-col xl:gap-5 gap-4">
-        <div class="h-16 xl:px-5 px-4 xl:py-4 py-3 bg-neutral rounded-lg shadow">
+        <Panel CssClasses="h-16">
             <div class="w-52"><SortDropDown /></div>
-        </div>
+        </Panel>
+
         <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
             <CatCard Name="Персик" FurColor="#f0ad6f" EarColor="#ffcea1" EyeColor="#7aab54" IsMale="true" Cost="249" Discount="50" />
             <CatCard Name="Клубничка" FurColor="#f86464" EarColor="#ff8e8e" EyeColor="#4682dc" IsMale="false" Cost="269" Discount="70" />

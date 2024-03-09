@@ -3,15 +3,15 @@
 <PageTitle>Корзина — CatStore</PageTitle>
 
 <div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 gap-4">
-    <div class="lg:col-span-9 col-span-12 flex flex-col h-fit xl:px-5 px-4 xl:py-4 py-3 gap-2 bg-neutral rounded-lg shadow">
+    <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
         <CartItem Name="Персик" Cost="249" Discount="50" Quantity="2"/>
         <hr class="last:hidden" />
         <CartItem Name="Дымок" Cost="249" Discount="0" Quantity="1"/>
         <hr class="last:hidden" />
-    </div>
+    </Panel>
     
-    <div class="lg:col-span-3 col-span-12 flex flex-col xl:px-5 px-4 xl:py-4 py-3 gap-2 bg-neutral rounded-lg shadow">
-        <div class="flex justify-center items-center rounded-lg h-9 bg-primary text-white">К оформлению</div>
+    <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
+        <ApplyButton>К оформлению</ApplyButton>
         <div class="flex justify-between text-sm">
             <span>Итого</span>
             <span>647 $</span>
@@ -25,5 +25,5 @@
             <span>Скидка</span>
             <span class="text-primary">- 100 $</span>
         </div>
-    </div>
+    </Panel>
 </div>

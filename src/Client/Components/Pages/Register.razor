@@ -4,29 +4,18 @@
 <PageTitle>Регистрация — CatStore</PageTitle>
 
 <div class="xl:container w-full grid grid-cols-12 xl:gap-5 gap-4 content-center grow">
-    <div class="xl:col-span-4 col-span-6 xl:col-start-5 col-start-4 flex flex-col gap-3 xl:px-5 px-4 xl:py-4 py-3 bg-neutral rounded-lg shadow text-sm">
+    <Panel CssClasses="xl:col-span-4 col-span-6 xl:col-start-5 col-start-4 flex flex-col gap-3">
         <h1 class="text-xl text-center">Регистрация</h1>
 
-        <div class="flex flex-col gap-2">
-            <h2>Электронная почта</h2>
-            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="email" placeholder="example@gmail.com" />
-        </div>
-
-        <div class="flex flex-col gap-2">
-            <h2>Пароль</h2>
-            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="password" placeholder="password" />
-        </div>
-        
-        <div class="flex flex-col gap-2">
-            <h2>Повторите пароль</h2>
-            <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted" type="password" placeholder="password" />
-        </div>
+        <InputFieldWithLabel Label="Электронная почта" InputType="email" Placeholder="example@gmail.com" />
+        <InputFieldWithLabel Label="Пароль" InputType="password" Placeholder="password" />
+        <InputFieldWithLabel Label="Повторите пароль" InputType="password" Placeholder="password" />
 
         <p class="text-attention">* Пароли не совпадают</p>
-        
+
         <div class="flex justify-between gap-3">
-            <div class="flex justify-center items-center w-full rounded-lg h-9 bg-primary text-white">Зарегистрироваться</div>
-            <div class="flex justify-center items-center w-full border-solid border-second border rounded-lg h-9 bg-neutral text-muted">Назад</div>
+            <ApplyButton>Зарегистрироваться</ApplyButton>
+            <Button>Назад</Button>
         </div>
-    </div>
+    </Panel>
 </div>
