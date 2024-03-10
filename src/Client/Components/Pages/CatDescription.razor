@@ -8,40 +8,24 @@
     </Panel>
 
     <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Имя</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">Персик</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Цвет шерсти</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">#f0ad6f</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Цвет глаз</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">#7aab54</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Цвет ушей</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">#ffcea1</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Пол</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">@(IsMale ? "Мальчик" : "Девочка")</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-sm">Цена</h2>
-            <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg font-mono">
-                @if (Discount > 0)
-                {
-                    <span class="text-primary">@(Cost - Discount) $</span>
-                    <span class="line-through text-xs">@Cost $</span>
-                }
-                else
-                {
-                    <span>@Cost $</span>    
-                }    
-            </p>
-        </div>
+        <ValueFieldWithLabel Label="Имя">Персик</ValueFieldWithLabel>
+        <ValueFieldWithLabel Label="Цвет шерсти">#f0ad6f</ValueFieldWithLabel>
+        <ValueFieldWithLabel Label="Цвет глаз">#7aab54</ValueFieldWithLabel>
+        <ValueFieldWithLabel Label="Цвет ушей">#ffcea1</ValueFieldWithLabel>
+        <ValueFieldWithLabel Label="Пол">
+            @(IsMale ? "Мальчик" : "Девочка")
+        </ValueFieldWithLabel>
+        <ValueFieldWithLabel Label="Цена">
+            @if (Discount > 0)
+            {
+                <span class="text-primary">@(Cost - Discount) $</span>
+                <span class="line-through text-xs">@Cost $</span>
+            }
+            else
+            {
+                <span>@Cost $</span>
+            }
+        </ValueFieldWithLabel>
     </Panel>
 </div>
 
