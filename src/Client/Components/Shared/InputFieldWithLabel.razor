@@ -1,6 +1,7 @@
 <div class="@CssClasses flex flex-col gap-2 w-full">
     <h2>@Label</h2>
-    <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted hover:shadow-md" type="@InputType" placeholder="@Placeholder" />
+    <input class="border-solid border-second border rounded-lg h-9 indent-3 placeholder:text-muted hover:shadow-md" type="@InputType" placeholder="@Placeholder"
+        value="@Value" @onchange="OnValueChanged"/>
 </div>
 
 @code {
@@ -15,4 +16,16 @@
 
     [Parameter]
     public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString()!;
+        await ValueChanged.InvokeAsync(Value);
+    }
 }

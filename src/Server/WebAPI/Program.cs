@@ -17,6 +17,12 @@ try
         builder.Host.UseSerilog((_, _, configuration) => configuration
             .ReadFrom.Configuration(loggerConfiguration));
 
+        builder.Services.AddCors(
+            options => options.AddPolicy("AllowCatStoreApp", policy =>
+                policy.WithOrigins("http://localhost:5229")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()));
+
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
         builder.Services.AddControllers();
         builder.Services.AddHealthChecks();
@@ -97,6 +103,7 @@ try
         }
 
         app.UseHttpsRedirection();
+        app.UseCors("AllowCatStoreApp");
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();

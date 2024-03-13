@@ -6,6 +6,6 @@ public static partial class Errors
     {
         public static Error IncorrectEmailOrPassword => Error.Validation(
             code:        "User.IncorrectEmailOrPassword",
-            description: "Email or password is incorrect");
+            description: "Email или пароль указан неверно");
     }
 }

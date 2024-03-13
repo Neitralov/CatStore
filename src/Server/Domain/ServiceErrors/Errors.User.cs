@@ -6,26 +6,26 @@ public static partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             code:        "User.NotFound",
-            description: "User not found");
+            description: "Пользователь не найден");
 
         public static Error InvalidEmail => Error.Validation(
             code:        "User.InvalidEmail",
-            description: "This is not an email address");
+            description: "Email указан некорректно");
 
         public static Error InvalidPassword => Error.Validation(
             code:        "User.InvalidPassword",
-            description: $"Password must be at least {Data.User.MinPasswordLength} characters long");
+            description: $"Пароль должен быть не короче {Data.User.MinPasswordLength} символов");
         
         public static Error AlreadyExists => Error.Validation(
             code:        "User.AlreadyExists",
-            description: "User with the same email is already exists");
+            description: "Пользователь с таким email уже существует");
         
         public static Error PasswordsDontMatch => Error.Validation(
             code:        "User.PasswordsDontMatch",
-            description: "The password and confirm password fields must match");
+            description: "Пароли в полях должны совпадать");
 
         public static Error NewAndOldPasswordAreTheSame => Error.Validation(
             code:        "User.NewAndOldPasswordAreTheSame",
-            description: "The new password must not be the same as the old one");
+            description: "Новый пароль не может совпадать со старым");
     }
 }

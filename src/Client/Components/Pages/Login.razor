@@ -1,15 +1,55 @@
 @page "/login"
+@using System.Text.Json.Serialization
+@using Blazored.LocalStorage
+@using WebAPI.Contracts.User
 @layout EmptyLayout
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Авторизация — CatStore</PageTitle>
 
 <div class="xl:container w-full grid grid-cols-12 xl:gap-5 gap-4 content-center grow">
     <Panel CssClasses="xl:col-span-4 col-span-6 xl:col-start-5 col-start-4 flex flex-col gap-3">
         <h1 class="text-xl text-center">Авторизация</h1>
-        <InputFieldWithLabel Label="Электронная почта" InputType="email" Placeholder="example@gmail.com" />
-        <InputFieldWithLabel Label="Пароль" InputType="password" Placeholder="password" />
-        <p class="text-attention">* Логин или пароль указаны неверно</p>
-        <ApplyButton>Войти</ApplyButton>
-        <p class="text-xs text-center">Нет аккаунта? <a class="text-primary hover:cursor-pointer" href="/register">Регистрация</a></p>
+        <InputFieldWithLabel Label="Электронная почта" InputType="email" @bind-Value="Email"/>
+        <InputFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
+        <p class="text-attention">@ErrorMessage</p>
+        <ApplyButton OnClick="HandleLogin">Войти</ApplyButton>
+        <p class="text-xs text-center">Нет аккаунта? <a class="text-primary hover:cursor-pointer hover:underline" href="/register">Регистрация</a></p>
     </Panel>
 </div>
+
+@code {
+    private string Email { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        var request = new LoginUserRequest(Email, Password);
+        var response = await HttpClient.PostAsJsonAsync("/api/users/login", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginUserResponse>();
+
+            await LocalStorage.SetItemAsStringAsync("AccessToken", result?.AccessToken!);
+            await LocalStorage.SetItemAsStringAsync("RefreshToken", result?.RefreshToken!);
+
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            ErrorMessage = result!.GetFirstErrorMessage();
+
+            Email = string.Empty;
+            Password = string.Empty;
+        }
+    }
+}

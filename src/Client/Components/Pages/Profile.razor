@@ -1,10 +1,13 @@
 @page "/profile"
 @layout ProfileLayout
+@using Microsoft.AspNetCore.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
 
 <PageTitle>Профиль — CatStore</PageTitle>
 
 <Panel CssClasses="flex flex-col gap-3">
-    <ValueFieldWithLabel Label="Электронная почта">example@gmail.com</ValueFieldWithLabel>
+    <ValueFieldWithLabel Label="Электронная почта">@UserEmail</ValueFieldWithLabel>
 
     <hr />
 
@@ -20,3 +23,14 @@
         <ApplyButton>Изменить</ApplyButton>
     </div>
 </Panel>
+
+@code {
+    private string UserEmail { get; set; } = string.Empty;     
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        UserEmail = authState.User.Identity?.Name!;
+    }
+
+}

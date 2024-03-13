@@ -53,18 +53,10 @@ public class UsersController(UserService userService) : ApiController
         if (loginUserResult.IsError)
             return Problem(loginUserResult.Errors);
 
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Path = "/api/users",
-            Expires = DateTime.UtcNow.AddDays(RefreshTokenSession.ExpiresInDays)
-        };
-
         var accessToken = loginUserResult.Value.accessToken;
         var refreshToken = loginUserResult.Value.refreshToken;
 
-        Response.Cookies.Append("RefreshToken", refreshToken, cookieOptions);
-        return Ok(new LoginUserResponse(accessToken));
+        return Ok(new LoginUserResponse(accessToken, refreshToken));
     }
 
     /// <summary>Обновить access и refresh токены</summary>
@@ -73,27 +65,17 @@ public class UsersController(UserService userService) : ApiController
     /// <response code="404">Владелец токена (пользователь) не найден</response>
     [HttpPost("refresh-tokens")]
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
-    public IActionResult LoginByTokens([FromHeader] string? expiredAccessToken)
+    public IActionResult LoginByTokens([Required] RefreshUserTokensRequest request)
     {
-        var refreshToken = HttpContext.Request.Cookies["RefreshToken"];
-
-        ErrorOr<(string accessToken, string refreshToken)> refreshTokensResult = userService.RefreshTokens(expiredAccessToken, refreshToken);
+        ErrorOr<(string accessToken, string refreshToken)> refreshTokensResult = userService.RefreshTokens(request.ExpiredAccessToken,  request.RefreshToken);
 
         if (refreshTokensResult.IsError)
             return Problem(refreshTokensResult.Errors);
 
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Path = "/api/users",
-            Expires = DateTime.UtcNow.AddDays(RefreshTokenSession.ExpiresInDays)
-        };
-
         var newAccessToken = refreshTokensResult.Value.accessToken;
         var newRefreshToken = refreshTokensResult.Value.refreshToken;
-
-        Response.Cookies.Append("RefreshToken", newRefreshToken, cookieOptions);
-        return Ok(new LoginUserResponse(newAccessToken));
+        
+        return Ok(new LoginUserResponse(newAccessToken, newRefreshToken));
     }
 
     private static ErrorOr<User> CreateUserFrom(CreateUserRequest request)
