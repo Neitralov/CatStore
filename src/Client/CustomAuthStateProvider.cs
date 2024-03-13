@@ -1,11 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.LocalStorage;
-using WebAPI.Contracts.User;
-
 namespace Client;
 
 public class CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient httpClient) : AuthenticationStateProvider

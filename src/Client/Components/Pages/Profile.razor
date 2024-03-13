@@ -1,6 +1,5 @@
 @page "/profile"
 @layout ProfileLayout
-@using Microsoft.AspNetCore.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
@@ -8,18 +7,13 @@
 
 <Panel CssClasses="flex flex-col gap-3">
     <ValueFieldWithLabel Label="Электронная почта">@UserEmail</ValueFieldWithLabel>
-
     <hr />
-
     <div class="flex flex-col gap-2">
         <h1>Изменить пароль</h1>
-
         <InputFieldWithLabel CssClasses="text-xs text-muted" Label="Старый пароль" InputType="password" Placeholder="password" />
         <InputFieldWithLabel CssClasses="text-xs text-muted" Label="Новый пароль" InputType="password" Placeholder="password" />
         <InputFieldWithLabel CssClasses="text-xs text-muted" Label="Повторите новый пароль" InputType="password" Placeholder="password" />
-
-        <p class="text-attention text-xs">* Пароли не совпадают</p>
-
+        <p class="text-attention text-xs">* Пароли не совпадают</p
         <ApplyButton>Изменить</ApplyButton>
     </div>
 </Panel>
