@@ -13,7 +13,10 @@
         <InputFieldWithLabel Label="Электронная почта" InputType="email" @bind-Value="Email"/>
         <InputFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
         <p class="text-attention">@ErrorMessage</p>
-        <ApplyButton OnClick="HandleLogin">Войти</ApplyButton>
+        <div class="flex justify-between gap-3">
+            <ApplyButton OnClick="HandleLogin">Войти</ApplyButton>
+            <Button OnClick="Back">Назад</Button>
+        </div>
         <p class="text-xs text-center">Нет аккаунта? <a class="text-primary hover:cursor-pointer hover:underline" href="/register">Регистрация</a></p>
     </Panel>
 </div>
@@ -48,5 +51,10 @@
             Email = string.Empty;
             Password = string.Empty;
         }
+    }
+
+    private void Back()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }
