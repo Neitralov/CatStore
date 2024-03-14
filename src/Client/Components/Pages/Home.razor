@@ -42,20 +42,29 @@
             <div class="w-52"><SortDropDown /></div>
         </Panel>
 
-        <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
-            @foreach(var cat in Cats)
-            {
-                <CatCard Cat="cat" EarColor="#ffcea1" Discount="0" />
-            }
-        </div>
+        @if (Cats.Count > 0)
+        {
+            <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
+                @foreach(var cat in Cats)
+                {
+                    <CatCard Cat="cat" EarColor="#ffcea1" Discount="0" />
+                }
+            </div>
+        }
+        else if (HasDataLoaded)
+        {
+            <h1>Каталог пуст. Перейдите на страницу <a class="text-primary hover:cursor-pointer hover:underline" href="/products">управления товарами</a>, чтобы добавить котов.</h1>
+        }
     </div>
 </div>
 
 @code {
     public List<CatResponse> Cats { get; set; } = new();
+    public bool HasDataLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/Cats") ?? new List<CatResponse>();
+        HasDataLoaded = true;
     }
 }
