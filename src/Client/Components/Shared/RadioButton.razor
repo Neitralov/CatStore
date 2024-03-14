@@ -13,5 +13,5 @@
     [Parameter]
     public bool Checked { get; set; }
     
-    private string For { get; set; } = Guid.NewGuid().ToString();
+    private string For { get; set; } = "a" + Guid.NewGuid();
 }

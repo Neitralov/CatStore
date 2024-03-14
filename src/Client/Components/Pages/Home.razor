@@ -59,12 +59,12 @@
 </div>
 
 @code {
-    public List<CatResponse> Cats { get; set; } = new();
-    public bool HasDataLoaded { get; set; }
+    private List<CatResponse> Cats { get; set; } = new();
+    private bool HasDataLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/Cats") ?? new List<CatResponse>();
+        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
         HasDataLoaded = true;
     }
 }

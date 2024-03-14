@@ -22,9 +22,6 @@ public class CatService(ICatRepository catRepository)
     
     public ErrorOr<Updated> UpdateCat(Cat cat)
     {
-        if (catRepository.IsCatExists(cat.Name))
-            return Errors.Cat.AlreadyExists;
-        
         var result = catRepository.UpdateCat(cat);
         catRepository.SaveChanges();
         

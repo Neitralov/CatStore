@@ -10,8 +10,8 @@
 <div class="xl:container w-full grid grid-cols-12 xl:gap-5 gap-4 content-center grow">
     <Panel CssClasses="xl:col-span-4 col-span-6 xl:col-start-5 col-start-4 flex flex-col gap-3">
         <h1 class="text-xl text-center">Авторизация</h1>
-        <InputFieldWithLabel Label="Электронная почта" InputType="email" @bind-Value="Email"/>
-        <InputFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
+        <InputTextFieldWithLabel Label="Электронная почта" InputType="email" @bind-Value="Email"/>
+        <InputTextFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
         <p class="text-attention">@ErrorMessage</p>
         <div class="flex justify-between gap-3">
             <ApplyButton OnClick="HandleLogin">Войти</ApplyButton>
