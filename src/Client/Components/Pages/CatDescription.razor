@@ -1,56 +1,53 @@
-@page "/cat/{id:int}"
+@page "/cat/{Id:guid}"
+@inject HttpClient HttpClient
 
 <PageTitle>Описание товара — CatStore</PageTitle>
 
-<div class="grid grid-cols-12 xl:gap-5 gap-4">
-    <Panel CssClasses="xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12">
-        <CatPreview FurColor="#F6F6F6" EyeColor="#46C1DC" EarColor="#FFD9D9" IsMale="false"/>
-    </Panel>
+@if (Cat is not null)
+{
+    <div class="grid grid-cols-12 xl:gap-5 gap-4">
+        <Panel CssClasses="xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12">
+            <CatPreview FurColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="#FFD9D9" IsMale="@Cat.IsMale"/>
+        </Panel>
 
-    <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
-        <ValueFieldWithLabel Label="Имя">Персик</ValueFieldWithLabel>
-        <ValueFieldWithLabel Label="Цвет шерсти">#f0ad6f</ValueFieldWithLabel>
-        <ValueFieldWithLabel Label="Цвет глаз">#7aab54</ValueFieldWithLabel>
-        <ValueFieldWithLabel Label="Цвет ушей">#ffcea1</ValueFieldWithLabel>
-        <ValueFieldWithLabel Label="Пол">
-            @(IsMale ? "Мальчик" : "Девочка")
-        </ValueFieldWithLabel>
-        <ValueFieldWithLabel Label="Цена">
-            @if (Discount > 0)
-            {
-                <span class="text-primary">@(Cost - Discount) $</span>
-                <span class="line-through text-xs">@Cost $</span>
-            }
-            else
-            {
-                <span>@Cost $</span>
-            }
-        </ValueFieldWithLabel>
-    </Panel>
-</div>
+        <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
+            <ValueFieldWithLabel Label="Имя">@Cat.Name</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет шерсти">@Cat.SkinColor</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет глаз">@Cat.EyeColor</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет ушей">#ffcea1</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Пол">
+                @(Cat.IsMale ? "Мальчик" : "Девочка")
+            </ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цена">
+                @if (Discount > 0)
+                {
+                    <span class="text-primary">@($"{Cat.Cost:F0 - Discount:F0}") $</span>
+                    <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
+                }
+                else
+                {
+                    <span>@($"{Cat.Cost:F0}") $</span>
+                }
+            </ValueFieldWithLabel>
+        </Panel>
+    </div>
+}
 
 @code {
     [Parameter]
-    public int Id { get; set; }
-    
-    [Parameter]
-    public string Name { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 
     [Parameter]
-    public string FurColor { get; set; } = string.Empty;
+    public CatResponse? Cat { get; set; }
 
     [Parameter]
     public string EarColor { get; set; } = string.Empty;
 
     [Parameter]
-    public string EyeColor { get; set; } = string.Empty;
+    public int Discount { get; set; }
 
-    [Parameter]
-    public bool IsMale { get; set; }
-
-    [Parameter]
-    public int Cost { get; set; }
-
-    [Parameter]
-    public int Discount { get; set; }     
+    protected override async Task OnInitializedAsync()
+    {
+        Cat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{Id}");
+    }
 }

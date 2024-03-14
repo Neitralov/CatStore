@@ -1,6 +1,8 @@
+@inject NavigationManager NavigationManager
+
 @if (Cat is not null)
 {
-    <Panel CssClasses="flex flex-col items-center gap-3">
+    <Panel CssClasses="flex flex-col items-center gap-3 hover:cursor-pointer" OnClick="OpenCatDescription">
         <div>
             @if (Cat.IsMale)
             {
@@ -90,5 +92,11 @@
     public string EarColor { get; set; } = string.Empty;
     
     [Parameter]
-    public int Discount { get; set; } 
+    public int Discount { get; set; }
+
+    private void OpenCatDescription()
+    {
+        if (Cat is not null)
+            NavigationManager.NavigateTo($"/cat/{Cat.CatId}");
+    }
 }
