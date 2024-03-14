@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject HttpClient HttpClient
 
 <PageTitle>Главная — CatStore</PageTitle>
 
@@ -42,13 +43,19 @@
         </Panel>
 
         <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
-            <CatCard Name="Персик" FurColor="#f0ad6f" EarColor="#ffcea1" EyeColor="#7aab54" IsMale="true" Cost="249" Discount="50" />
-            <CatCard Name="Клубничка" FurColor="#f86464" EarColor="#ff8e8e" EyeColor="#4682dc" IsMale="false" Cost="269" Discount="70" />
-            <CatCard Name="Коржик" FurColor="#d38d4c" EarColor="#ffcea1" EyeColor="#a6b122" IsMale="true" Cost="279" Discount="60" />
-            <CatCard Name="Дымок" FurColor="#c3c3c3" EarColor="#eaeaea" EyeColor="#7aab54" IsMale="true" Cost="249" Discount="0" />
-            <CatCard Name="Снежинка" FurColor="#f6f6f6" EarColor="#ffd9d9" EyeColor="#46c1dc" IsMale="false" Cost="299" Discount="0" />
-            <CatCard Name="Топа" FurColor="#8b8b8b" EarColor="#ffd2d2" EyeColor="#9d42e4" IsMale="false" Cost="349" Discount="0" />
-            <CatCard Name="Компот" FurColor="#fbac36" EarColor="#ffcea1" EyeColor="#c44949" IsMale="true" Cost="499" Discount="0" />
+            @foreach(var cat in Cats)
+            {
+                <CatCard Cat="cat" EarColor="#ffcea1" Discount="0" />
+            }
         </div>
     </div>
 </div>
+
+@code {
+    public List<CatResponse> Cats { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/Cats") ?? new List<CatResponse>();
+    }
+}
