@@ -16,19 +16,14 @@ public class CatRepository(IDbContextFactory<DatabaseContext> factory) : ICatRep
             .SingleOrDefault(cat => cat.CatId == catId);
     }
 
+    public Cat? FindCatById(Guid catId)
+    {
+        return Database.Cats.SingleOrDefault(cat => cat.CatId == catId);
+    }
+
     public IEnumerable<Cat> GetAllCats()
     {
         return Database.Cats.AsNoTracking();
-    }
-
-    public bool UpdateCat(Cat cat)
-    {
-        var storedCat = Database.Cats.Find(cat.CatId);
-
-        if (storedCat is { })
-            storedCat.UpdateCat(cat);
-
-        return storedCat is { };
     }
 
     public bool RemoveCat(Guid catId)

@@ -2,6 +2,7 @@
 @layout ProfileLayout
 @inject HttpClient HttpClient
 @inject CartService CartService
+@inject IJSRuntime JsRuntime
 @attribute [Authorize(Policy = "CanEditCats")]
 
 <PageTitle>Управление товарами — CatStore</PageTitle>
@@ -13,14 +14,14 @@
     
     <div class="basis-3/4 flex flex-col gap-3 w-full">
         <div class="flex justify-between gap-2">
-            <InputTextFieldWithLabel Label="Имя" InputType="text" @bind-Value="Name" />
-            <CheckBoxWithLabel Label="Пол" Text="Мальчик?" @bind-Value="IsMale" />
+            <InputTextFieldWithLabel Label="Имя" InputType="text" @bind-Value="Name" Disabled="IsEditMode" />
+            <CheckBoxWithLabel Label="Пол" Text="Мальчик?" @bind-Value="IsMale" Disabled="IsEditMode" />
         </div>
 
         <div class="flex justify-between gap-2">
-            <InputTextFieldWithLabel Label="Цвет шерсти" InputType="color" @bind-Value="SkinColor" />
-            <InputTextFieldWithLabel Label="Цвет глаз" InputType="color" @bind-Value="EyeColor" />
-            <InputTextFieldWithLabel Label="Цвет ушей" InputType="color" @bind-Value="EarColor" />
+            <InputTextFieldWithLabel Label="Цвет шерсти" InputType="color" @bind-Value="SkinColor" Disabled="IsEditMode" />
+            <InputTextFieldWithLabel Label="Цвет глаз" InputType="color" @bind-Value="EyeColor" Disabled="IsEditMode" />
+            <InputTextFieldWithLabel Label="Цвет ушей" InputType="color" @bind-Value="EarColor" Disabled="IsEditMode" />
         </div>
 
         <div class="flex justify-between gap-2">
@@ -32,7 +33,7 @@
 
         @if (IsEditMode)
         {
-            <ApplyButton OnClick="UpdateCat">Сохранить</ApplyButton>
+            <ApplyButton OnClick="UpdateCatPrice">Сохранить</ApplyButton>
         }
         else
         {
@@ -41,17 +42,23 @@
     </div>
 </Panel>
 
-<Panel CssClasses="flex flex-col gap-3">
-    <Button OnClick="BackToCreateMode">Добавить нового котика</Button>
-    @foreach(var cat in Cats)
-    {
-        <div class="flex gap-2">
-            <CatRowItem Cat="cat" OnClick="LoadDataToEditor"/>
-            <TrashBinButton LinkedWith="@cat.CatId" OnClick="DeleteCat" />
-        </div>
-    }
-</Panel>
-    
+@if (Cats.Count > 0)
+{
+    <Panel CssClasses="flex flex-col gap-3">
+        @if (IsEditMode)
+        {
+            <Button OnClick="BackToCreateMode">Перейти в режим добавления</Button>
+        }
+        @foreach(var cat in Cats)
+        {
+            <div class="flex gap-2">
+                <CatRowItem Cat="cat" OnClick="LoadDataToEditor"/>
+                <TrashBinButton LinkedWith="@cat.CatId" OnClick="DeleteCat" />
+            </div>
+        }
+    </Panel>
+}
+
 @code {
     private List<CatResponse> Cats { get; set; } = new();
 
@@ -94,11 +101,10 @@
         }
     }
 
-    private async Task UpdateCat()
+    private async Task UpdateCatPrice()
     {
-        //TODO: Наверное не стоит изменять характеристики товара кроме его цены
-        var request = new UpdateCatRequest(Name, SkinColor, EyeColor, IsMale, Cost);
-        var response = await HttpClient.PutAsJsonAsync($"/api/cats/{Id}", request);
+        var request = new UpdateCatPriceRequest(Cost);
+        var response = await HttpClient.PatchAsJsonAsync($"/api/cats/{Id}/update-price", request);
 
         if (response.IsSuccessStatusCode)
         {
@@ -110,6 +116,7 @@
                 Cats[index] = updatedCat;
             }
 
+            await JsRuntime.InvokeVoidAsync("alert", "Кот успешно сохранен");
             ErrorMessage = string.Empty;
         }
         else

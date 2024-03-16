@@ -45,25 +45,19 @@ public class CatsController(CatService catService) : ApiController
         return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
     }
 
-    /// <summary>Обновить данные существующего кота</summary>
-    /// <param name="catId">Guid кота, данные которого нужно обновить</param>
+    /// <summary>Обновить цену существующего кота</summary>
+    /// <param name="catId">Guid кота, цену которого нужно обновить</param>
     /// <param name="request"/>
-    /// <response code="204">Данные успешно обновлены</response>
-    /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
+    /// <response code="204">Цена успешно обновлена</response>
+    /// <response code="400">Цена указана некорректно</response>
     /// <response code="404">Not found</response>
-    [HttpPut("{catId:guid}"), Authorize("CanEditCats")]
+    [HttpPatch("{catId:guid}/update-price"), Authorize("CanEditCats")]
     [ProducesResponseType(204)]
-    public IActionResult UpdateCat(Guid catId, [Required] UpdateCatRequest request)
+    public IActionResult UpdateCatPrice(Guid catId, [Required] UpdateCatPriceRequest request)
     {
-        ErrorOr<Cat> requestToCatResult = CreateCatFrom(catId, request);
+        ErrorOr<Updated> updateCatPriceResult = catService.UpdateCatPrice(catId, request.Cost);
         
-        if (requestToCatResult.IsError)
-            return Problem(requestToCatResult.Errors);
-        
-        var cat = requestToCatResult.Value;
-        ErrorOr<Updated> upsertCatResult = catService.UpdateCat(cat);
-        
-        return upsertCatResult.Match(_ => NoContent(), Problem);
+        return updateCatPriceResult.Match(_ => NoContent(), Problem);
     }
     
     /// <summary>Удалить кота из магазина</summary>
@@ -89,17 +83,6 @@ public class CatsController(CatService catService) : ApiController
             request.Cost);
     }
     
-    private static ErrorOr<Cat> CreateCatFrom(Guid catId, UpdateCatRequest request)
-    {
-        return Cat.Create(
-            request.Name,
-            request.SkinColor,
-            request.EyeColor,
-            request.IsMale,
-            request.Cost,
-            catId);
-    }
-
     private CreatedAtActionResult CreatedAtGetCat(Cat cat)
     {
         return CreatedAtAction(

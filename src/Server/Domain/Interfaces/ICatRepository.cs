@@ -7,12 +7,10 @@ public interface ICatRepository
 
     //Read
     Cat? GetCat(Guid catId);
+    Cat? FindCatById(Guid catId);
     IEnumerable<Cat> GetAllCats();
     bool IsCatExists(string name);
     bool IsCatExists(Guid catId);
-
-    //Update
-    bool UpdateCat(Cat cat);
 
     //Delete
     bool RemoveCat(Guid catId);

@@ -52,12 +52,13 @@ public class Cat
        };
     }
 
-    public void UpdateCat(Cat cat)
+    public ErrorOr<Updated> UpdatePrice(decimal newPrice)
     {
-        Name      = cat.Name;
-        SkinColor = cat.SkinColor;
-        EyeColor  = cat.EyeColor;
-        IsMale    = cat.IsMale;
-        Cost      = cat.Cost; 
+        if (newPrice <= 0)
+            return Errors.Cat.InvalidCost;
+
+        Cost = newPrice;
+
+        return Result.Updated;
     }
 }

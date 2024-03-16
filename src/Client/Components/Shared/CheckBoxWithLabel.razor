@@ -1,7 +1,7 @@
-<div class="@CssClasses flex flex-col gap-2 w-full">
+<div class="@CssClasses flex flex-col gap-2 w-full has-[:disabled]:text-muted">
     <h2>@Label</h2>
-    <label class="flex items-center border-solid border-second border rounded-lg h-9 text-muted hover:cursor-pointer select-none hover:shadow-md" for="@For" onclick="document.querySelector('#@For').click()">
-        <input class="border-solid border-second border rounded-lg h-3.5 ml-3 mr-2 accent-black focus:outline-none" type="checkbox" id="@For" value="@Value" @onchange="OnValueChanged" checked="@Value" />
+    <label class="flex items-center border-solid border-second border rounded-lg h-9 text-muted has-[:enabled]:hover:cursor-pointer has-[:disabled]:hover:cursor-not-allowed select-none has-[:enabled]:hover:shadow-md has-[:disabled]:shadow-none" for="@For" onclick="document.querySelector('#@For').click()">
+        <input class="border-solid border-second border rounded-lg h-3.5 ml-3 mr-2 accent-black focus:outline-none" type="checkbox" id="@For" value="@Value" @onchange="OnValueChanged" checked="@Value" disabled="@Disabled"/>
         @Text
     </label>
 </div>
@@ -22,6 +22,9 @@
 
     [Parameter]
     public bool Value { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
 
     [Parameter]
     public EventCallback<bool> ValueChanged { get; set; }
