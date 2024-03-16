@@ -119,13 +119,18 @@ public class CartService(
         if (localCart is null)
             return;
 
-        foreach (var cartItem in localCart)
+        var dbCart = await httpClient.GetFromJsonAsync<List<CartItemResponse>>("api/cart-items") ?? new List<CartItemResponse>();
+
+        if (dbCart.Count == 0)
         {
-            //TODO: Расширить API, чтобы можно было указывать количество товара при создании записи в БД
-            var createRequest = new CreateCartItemRequest(cartItem.CatId);
-            await httpClient.PostAsJsonAsync("api/cart-items", createRequest);
-            var updateRequest = new UpdateCartItemQuantityRequest(cartItem.CatId, cartItem.Quantity);
-            await httpClient.PatchAsJsonAsync("/api/cart-items/update-quantity", updateRequest);
+            foreach (var cartItem in localCart)
+            {
+                //TODO: Расширить API, чтобы можно было указывать количество товара при создании записи в БД
+                var createRequest = new CreateCartItemRequest(cartItem.CatId);
+                await httpClient.PostAsJsonAsync("api/cart-items", createRequest);
+                var updateRequest = new UpdateCartItemQuantityRequest(cartItem.CatId, cartItem.Quantity);
+                await httpClient.PatchAsJsonAsync("/api/cart-items/update-quantity", updateRequest);
+            }
         }
         
         await localStorage.RemoveItemAsync("LocalCart");
