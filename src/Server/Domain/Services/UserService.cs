@@ -27,7 +27,7 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
             return Errors.User.NotFound;
 
         if (VerifyPasswordHash(oldPassword, user.PasswordHash, user.PasswordSalt) is false)
-            return Errors.Login.IncorrectEmailOrPassword;
+            return Errors.User.IncorrectOldPassword;
 
         if (newPassword != confirmNewPassword)
             return Errors.User.PasswordsDontMatch;

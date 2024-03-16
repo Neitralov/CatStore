@@ -16,13 +16,17 @@ public static partial class Errors
             code:        "User.InvalidPassword",
             description: $"Пароль должен быть не короче {Data.User.MinPasswordLength} символов");
         
+        public static Error IncorrectOldPassword => Error.Validation(
+            code:        "User.IncorrectOldPassword",
+            description: "Старый пароль указан неверно");
+
         public static Error AlreadyExists => Error.Validation(
             code:        "User.AlreadyExists",
             description: "Пользователь с таким email уже существует");
         
         public static Error PasswordsDontMatch => Error.Validation(
             code:        "User.PasswordsDontMatch",
-            description: "Пароли в полях должны совпадать");
+            description: "Новый пароль в полях должен совпасть");
 
         public static Error NewAndOldPasswordAreTheSame => Error.Validation(
             code:        "User.NewAndOldPasswordAreTheSame",
