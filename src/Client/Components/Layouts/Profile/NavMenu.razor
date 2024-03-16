@@ -1,7 +1,7 @@
-@using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JsRuntime
 
 <Panel CssClasses="flex xl:flex-col gap-3">
     <NavLink href="profile" class="nav-link">
@@ -48,7 +48,7 @@
         </Authorized>
     </AuthorizeView>
     
-    <div class="nav-link" @onclick="HandleLogout">
+    <div class="nav-link" @onclick="Logout">
         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_228_1082" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
                 <rect width="16" height="16" fill="#D9D9D9"/>
@@ -62,8 +62,11 @@
 </Panel>
 
 @code {
-    private async Task HandleLogout()
+    private async Task Logout()
     {
+        if (await JsRuntime.InvokeAsync<bool>("confirm", "Вы точно хотите выйти из аккаунта?") is false)
+            return;
+
         await LocalStorage.RemoveItemAsync("AccessToken");
         await LocalStorage.RemoveItemAsync("RefreshToken");
 
