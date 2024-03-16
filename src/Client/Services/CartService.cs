@@ -134,11 +134,8 @@ public class CartService(
         {
             foreach (var cartItem in localCart)
             {
-                //TODO: Расширить API, чтобы можно было указывать количество товара при создании записи в БД
-                var createRequest = new CreateCartItemRequest(cartItem.CatId);
+                var createRequest = new CreateCartItemRequest(cartItem.CatId, cartItem.Quantity);
                 await httpClient.PostAsJsonAsync("api/cart-items", createRequest);
-                var updateRequest = new UpdateCartItemQuantityRequest(cartItem.CatId, cartItem.Quantity);
-                await httpClient.PatchAsJsonAsync("/api/cart-items/update-quantity", updateRequest);
             }
         }
         

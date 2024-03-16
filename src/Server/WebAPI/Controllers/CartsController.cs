@@ -91,7 +91,8 @@ public class CartsController(CartService cartService) : ApiController
     {
         return CartItem.Create(
             userId,
-            request.CatId);
+            request.CatId,
+            request.Quantity);
     }
 
     private static ErrorOr<CartItem> CreateCartItemFrom(UpdateCartItemQuantityRequest request, Guid userId)
