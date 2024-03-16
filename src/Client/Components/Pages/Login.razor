@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CartService CartService
 
 <PageTitle>Авторизация — CatStore</PageTitle>
 
@@ -40,6 +41,8 @@
             await LocalStorage.SetItemAsStringAsync("RefreshToken", result?.RefreshToken!);
 
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            await CartService.StoreCartItemsFromLocalCart();
 
             NavigationManager.NavigateTo("/");
         }

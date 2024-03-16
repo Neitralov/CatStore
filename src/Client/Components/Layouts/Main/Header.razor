@@ -1,3 +1,9 @@
+@inject HttpClient HttpClient
+@inject CartService CartService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@implements IDisposable
+
 <header class="sticky top-0 bg-neutral flex justify-center shadow z-10">
     <div class="xl:container w-full grid grid-cols-12 xl:gap-5 gap-4 py-3.5 xl:px-[50px] px-4">
         <NavLink href="" class="col-span-3 h-13 bg-primary text-white text-2xl text-center py-2.5 rounded-lg hover:cursor-pointer hover:shadow-md">
@@ -16,9 +22,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="30">
                     <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/>
                 </svg>
-                <div class="w-4 h-4 bg-primary text-white text-[10px] flex justify-center items-center rounded-full absolute top-3">
-                    2
-                </div>
+                @if (CartItemsQuantity > 0)
+                {
+                    <div class="w-4 h-4 bg-primary text-white text-[10px] flex justify-center items-center rounded-full absolute top-3">
+                        @CartItemsQuantity
+                    </div>
+                }
             </div>
             Корзина
         </NavLink>
@@ -43,3 +52,24 @@
         </AuthorizeView>
     </div>
 </header>
+
+@code {
+    private int CartItemsQuantity { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCartItemsQuantity();
+        CartService.OnChange += GetCartItemsQuantity;
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= GetCartItemsQuantity;
+    }
+
+    private async Task GetCartItemsQuantity()
+    {
+        CartItemsQuantity = await CartService.GetCartItemsCount();
+        StateHasChanged();
+    }
+}

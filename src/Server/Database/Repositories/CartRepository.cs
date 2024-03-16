@@ -25,7 +25,9 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
 
     public int GetUserCartItemsCount(Guid userId)
     {
-        return Database.CartItems.Count(item => item.UserId == userId);
+        return Database.CartItems
+            .Where(item => item.UserId == userId)
+            .Sum(item => item.Quantity);
     }
 
     public bool RemoveCartItem(Guid userId, Guid catId)

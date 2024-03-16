@@ -1,42 +1,52 @@
-<div class="flex items-center gap-4 w-full">
-    <div class="flex justify-between w-full px-5 py-2 bg-background rounded-lg text-sm">
-        <span>@Name</span>
-        <p class="text-sm font-bold">
-            @if (Discount > 0)
-            {
-                <span class="text-primary">@(Cost - Discount) $</span>
-                <span class="line-through text-xs">@Cost $</span>
-            }
-            else
-            {
-                <span>@Cost $</span>    
-            }
-        </p> 
-    </div>
+@inject HttpClient HttpClient
 
-    <div class="flex justify-between gap-2">
-        <div class="flex justify-center items-center w-9 py-2 border-solid border-second border rounded-lg text-sm">-</div>
-        <div class="flex justify-center items-center w-16 py-2 bg-background rounded-lg text-sm">@Quantity</div>
-        <div class="flex justify-center items-center w-9 py-2 border-solid border-second border rounded-lg text-sm">+</div>  
-    </div>
+@if (Cat is not null)
+{
+    <div class="flex items-center gap-4 w-full">
+        <div class="flex justify-between w-full px-5 py-2 bg-background rounded-lg text-sm">
+            <span>@Cat.Name</span>
+            <p class="text-sm font-bold">
+                @*@if (Cat.Discount > 0)
+                {
+                    <span class="text-primary">@(Cost - Discount) $</span>
+                    <span class="line-through text-xs">@Cost $</span>
+                }
+                else
+                {
+                    <span>@Cost $</span>
+                }*@
+                <span>@($"{Cat.Cost:F0}") $</span>
+            </p>
+        </div>
 
-    <div class="flex justify-center items-center min-w-24 py-2 bg-background rounded-lg text-sm">
-        @(Quantity * (Cost - Discount)) $
-    </div>
+        <div class="flex justify-between gap-2">
+            <div class="flex justify-center items-center w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="() => OnMinusClick.InvokeAsync(Cat)">-</div>
+            <div class="flex justify-center items-center w-16 py-2 bg-background rounded-lg text-sm">@Quantity</div>
+            <div class="flex justify-center items-center w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="() => OnPlusClick.InvokeAsync(Cat)">+</div>
+        </div>
 
-    <TrashBinButton />
-</div>
+        <div class="flex justify-center items-center min-w-24 py-2 bg-background rounded-lg text-sm">
+            @*Когда-то тут появятся рассчеты скидки*@
+            @($"{Quantity * Cat.Cost:F0}") $
+        </div>
+
+        <TrashBinButton LinkedWith="Cat.CatId" OnClick="() => OnTrashBinClick.InvokeAsync(Cat.CatId)" />
+    </div>
+}
 
 @code {
     [Parameter]
-    public string Name { get; set; } = string.Empty;
-    
-    [Parameter]
-    public int Cost { get; set; }
-
-    [Parameter]
-    public int Discount { get; set; }
+    public CatResponse? Cat { get; set; }
     
     [Parameter]
     public int Quantity { get; set; }
+
+    [Parameter]
+    public EventCallback<CatResponse> OnPlusClick { get; set; }
+    
+    [Parameter]
+    public EventCallback<CatResponse> OnMinusClick { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnTrashBinClick { get; set; }
 }
