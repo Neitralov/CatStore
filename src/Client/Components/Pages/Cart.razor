@@ -1,5 +1,4 @@
 @page "/cart"
-@using System.Net
 @inject HttpClient HttpClient
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
@@ -63,8 +62,15 @@
         foreach (var cartItem in dbCartItems)
         {
             var catId = cartItem.CatId;
-            var cat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{catId}");
-            CartItems.Add((cat, cartItem.Quantity));
+            var response = await HttpClient.GetAsync($"/api/cats/{catId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var cat = await response.Content.ReadFromJsonAsync<CatResponse>();
+                CartItems.Add((cat, cartItem.Quantity));
+            }
+            else
+                await DeleteCartItem(cartItem.CatId);
         }
 
         CalculateCost();
@@ -113,7 +119,9 @@
         if (response.IsSuccessStatusCode)
         {
             var index = CartItems.FindIndex(item => item.Cat?.CatId == catId);
-            CartItems.RemoveAt(index);
+
+            if (index != -1)
+                CartItems.RemoveAt(index);
 
             CalculateCost();
         }

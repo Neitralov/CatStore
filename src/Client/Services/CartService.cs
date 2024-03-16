@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Client.Services;
 
 public class CartService(
@@ -101,6 +99,17 @@ public class CartService(
         
         async Task<int> GetDbCartItemsQuantity()
         {
+            //TODO: Сделать так, чтобы из API нельзя было получить корзину товаров, содержащую несуществующие элементы
+            //TODO: Сделать так, чтобы из API возвращалось число товаров в корзине, только существующих в каталоге
+            foreach (var cartItem in await GetCartItems())
+            {
+                var catId = cartItem.CatId;
+                var catResponse = await httpClient.GetAsync($"/api/cats/{catId}");
+
+                if (catResponse.IsSuccessStatusCode is false)
+                    await DeleteCartItem(cartItem.CatId);
+            }
+
             var response = await httpClient.GetFromJsonAsync<TotalNumberOfCartItemsResponse>("/api/cart-items/count");
             return response?.Count ?? 0;
         }
@@ -135,4 +144,6 @@ public class CartService(
         
         await localStorage.RemoveItemAsync("LocalCart");
     }
+
+    public async Task InvokeOnCartChanged() => await OnChange?.Invoke()!;
 }
