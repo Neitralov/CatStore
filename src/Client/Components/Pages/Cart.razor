@@ -9,13 +9,13 @@
 
 <div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 gap-4">
     <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
-        @if (CatWithQuantity.Count > 0)
+        @if (CartItems.Count > 0)
         {
-            @foreach(var cartItem in CatWithQuantity)
+            @foreach(var cartItem in CartItems)
             {
                 <CartItem
-                    Cat="cartItem.Item1"
-                    Quantity="cartItem.Item2"
+                    Cat="cartItem.Cat"
+                    Quantity="cartItem.Quantity"
                     OnMinusClick="DecreaseCartItemQuantity"
                     OnPlusClick="IncreaseCartItemQuantity"
                     OnTrashBinClick="DeleteCartItem" />
@@ -47,8 +47,7 @@
 </div>
 
 @code {
-    private List<CartItemResponse> CartItems { get; set; } = new();
-    private List<(CatResponse?, int)> CatWithQuantity { get; set; } = new();
+    private List<(CatResponse? Cat, int Quantity)> CartItems { get; set; } = new();
 
     private int TotalPrice { get; set; }
     private int TotalPriceWithoutDiscount { get; set; }
@@ -58,56 +57,52 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CartItems = await CartService.GetCartItems();
+        var dbCartItems = await CartService.GetCartItems();
 
-        foreach (var cartItem in CartItems)
+        //TODO: Изменить API, чтобы возвращались сразу данные котов, а не их GUID-ы, чтобы не дозагружать данные отдельно
+        foreach (var cartItem in dbCartItems)
         {
             var catId = cartItem.CatId;
             var cat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{catId}");
-            CatWithQuantity.Add((cat, cartItem.Quantity));
+            CartItems.Add((cat, cartItem.Quantity));
         }
 
-        TotalPriceWithoutDiscount = (int)CatWithQuantity.Sum(x => (x.Item1?.Cost ?? 0) * x.Item2);
-        TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
+        CalculateCost();
 
         HasDataLoaded = true;
     }
 
     private async Task DecreaseCartItemQuantity(CatResponse cat)
     {
-        var cartItem = CatWithQuantity.FirstOrDefault(item => item.Item1?.CatId == cat.CatId);
-        var request = new UpdateCartItemQuantityRequest(cartItem.Item1!.CatId, cartItem.Item2 - 1);
+        var currentItemQuantity = CartItems.FirstOrDefault(item => item.Cat?.CatId == cat.CatId).Quantity;
+        var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity - 1);
 
-        var response = await CartService.UpdateCartItemsQuantity(request);
+        var response = await CartService.UpdateCartItemQuantity(request);
 
         if (response.IsSuccessStatusCode)
         {
-            var index = CatWithQuantity.FindIndex(item => item.Item1?.CatId == cat.CatId);
-            CatWithQuantity[index] = (cartItem.Item1, cartItem.Item2 - 1);
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
+            CartItems[index] = (cat, currentItemQuantity - 1);
 
-            TotalPriceWithoutDiscount = (int)CatWithQuantity.Sum(x => (x.Item1?.Cost ?? 0) * x.Item2);
-            TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
+            CalculateCost();
         }
         else
-        {
             await DeleteCartItem(cat.CatId);
-        }
     }
 
     private async Task IncreaseCartItemQuantity(CatResponse cat)
     {
-        var cartItem = CatWithQuantity.FirstOrDefault(item => item.Item1?.CatId == cat.CatId);
-        var request = new UpdateCartItemQuantityRequest(cartItem.Item1!.CatId, cartItem.Item2 + 1);
+        var currentItemQuantity = CartItems.FirstOrDefault(item => item.Cat?.CatId == cat.CatId).Quantity;
+        var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity + 1);
 
-        var response = await CartService.UpdateCartItemsQuantity(request);
+        var response = await CartService.UpdateCartItemQuantity(request);
 
         if (response.IsSuccessStatusCode)
         {
-            var index = CatWithQuantity.FindIndex(item => item.Item1?.CatId == cat.CatId);
-            CatWithQuantity[index] = (cartItem.Item1, cartItem.Item2 + 1);
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
+            CartItems[index] = (cat, currentItemQuantity + 1);
 
-            TotalPriceWithoutDiscount = (int)CatWithQuantity.Sum(x => (x.Item1?.Cost ?? 0) * x.Item2);
-            TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
+            CalculateCost();
         }
     }
 
@@ -117,11 +112,16 @@
 
         if (response.IsSuccessStatusCode)
         {
-            var index = CatWithQuantity.FindIndex(item => item.Item1?.CatId == catId);
-            CatWithQuantity.RemoveAt(index);
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == catId);
+            CartItems.RemoveAt(index);
 
-            TotalPriceWithoutDiscount = (int)CatWithQuantity.Sum(x => (x.Item1?.Cost ?? 0) * x.Item2);
-            TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
+            CalculateCost();
         }
+    }
+
+    private void CalculateCost()
+    {
+        TotalPriceWithoutDiscount = (int)CartItems.Sum(item => (item.Cat?.Cost ?? 0) * item.Quantity);
+        TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
     }
 }

@@ -12,6 +12,7 @@ builder.Services.AddAuthorizationCore(options =>
         policyBuilder => policyBuilder.RequireClaim("CanEditCats", true.ToString()));
 });
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CartService>();
 
 await builder.Build().RunAsync();
