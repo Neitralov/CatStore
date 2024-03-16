@@ -1,48 +1,54 @@
 @page "/cart"
 @inject HttpClient HttpClient
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ILocalStorageService LocalStorage
+@inject UserService UserService
 @inject CartService CartService
 
 <PageTitle>Корзина — CatStore</PageTitle>
 
 <div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 gap-4">
-    <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
-        @if (CartItems.Count > 0)
+    @if (CartItems.Count > 0)
+    {
+        <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
+        @foreach(var cartItem in CartItems)
         {
-            @foreach(var cartItem in CartItems)
-            {
-                <CartItem
-                    Cat="cartItem.Cat"
-                    Quantity="cartItem.Quantity"
-                    OnMinusClick="DecreaseCartItemQuantity"
-                    OnPlusClick="IncreaseCartItemQuantity"
-                    OnTrashBinClick="DeleteCartItem" />
-                <hr class="last:hidden" />
-            }
+            <CartItem
+                Cat="cartItem.Cat"
+                Quantity="cartItem.Quantity"
+                OnMinusClick="DecreaseCartItemQuantity"
+                OnPlusClick="IncreaseCartItemQuantity"
+                OnTrashBinClick="DeleteCartItem" />
+            <hr class="last:hidden" />
         }
-        else if (HasDataLoaded)
+        </Panel>
+    }
+    else if (HasDataLoaded)
+    {
+        <h1 class="col-span-12 text-sm">Корзина пуста. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/">каталог</a>, чтобы добавить котов.</h1>
+        if (IsUserAuthenticated is false)
         {
-            <h1>Корзина пуста. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/">каталог</a>, чтобы добавить котов.</h1>
+            <h1 class="col-span-12 text-sm">Если в Корзине были товары, <a class="text-primary hover:cursor-pointer hover:underline" href="/login">войдите</a>, чтобы увидеть их.</h1>
         }
-    </Panel>
+    }
     
-    <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
-        <ApplyButton>К оформлению</ApplyButton>
-        <div class="flex justify-between text-sm">
-            <span>Итого</span>
-            <span>@TotalPrice $</span>
-        </div>
-        <hr />
-        <div class="flex justify-between text-sm text-muted">
-            <span>Товары</span>
-            <span>@TotalPriceWithoutDiscount $</span>
-        </div>
-        <div class="flex justify-between text-sm text-muted">
-            <span>Скидка</span>
-            <span class="text-primary">- @TotalDiscount $</span>
-        </div>
-    </Panel>
+    @if (CartItems.Count > 0)
+    {
+        <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
+            <ApplyButton>К оформлению</ApplyButton>
+            <div class="flex justify-between text-sm">
+                <span>Итого</span>
+                <span>@TotalPrice $</span>
+            </div>
+            <hr />
+            <div class="flex justify-between text-sm text-muted">
+                <span>Товары</span>
+                <span>@TotalPriceWithoutDiscount $</span>
+            </div>
+            <div class="flex justify-between text-sm text-muted">
+                <span>Скидка</span>
+                <span class="text-primary">- @TotalDiscount $</span>
+            </div>
+        </Panel>
+    }
 </div>
 
 @code {
@@ -53,9 +59,12 @@
     private int TotalDiscount { get; set; }
 
     private bool HasDataLoaded { get; set; }
+    private bool IsUserAuthenticated { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        IsUserAuthenticated = await UserService.IsUserAuthenticated();
+
         var dbCartItems = await CartService.GetCartItems();
 
         //TODO: Изменить API, чтобы возвращались сразу данные котов, а не их GUID-ы, чтобы не дозагружать данные отдельно
