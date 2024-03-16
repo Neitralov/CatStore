@@ -99,8 +99,6 @@ public class CartService(
         
         async Task<int> GetDbCartItemsQuantity()
         {
-            //TODO: Сделать так, чтобы из API нельзя было получить корзину товаров, содержащую несуществующие элементы
-            //TODO: Сделать так, чтобы из API возвращалось число товаров в корзине, только существующих в каталоге
             foreach (var cartItem in await GetCartItems())
             {
                 var catId = cartItem.CatId;

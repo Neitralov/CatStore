@@ -66,8 +66,7 @@
         IsUserAuthenticated = await UserService.IsUserAuthenticated();
 
         var dbCartItems = await CartService.GetCartItems();
-
-        //TODO: Изменить API, чтобы возвращались сразу данные котов, а не их GUID-ы, чтобы не дозагружать данные отдельно
+        
         foreach (var cartItem in dbCartItems)
         {
             var catId = cartItem.CatId;
