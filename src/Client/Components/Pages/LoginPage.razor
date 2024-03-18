@@ -15,7 +15,7 @@
         <InputTextFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
         <p class="text-attention">@ErrorMessage</p>
         <div class="flex justify-between gap-3">
-            <ApplyButton OnClick="HandleLogin">Войти</ApplyButton>
+            <ApplyButton OnClick="Login">Войти</ApplyButton>
             <Button OnClick="Back">Назад</Button>
         </div>
         <p class="text-xs text-center">Нет аккаунта? <a class="text-primary hover:cursor-pointer hover:underline" href="/register">Регистрация</a></p>
@@ -23,12 +23,15 @@
 </div>
 
 @code {
+    [SupplyParameterFromQuery]
+    private string ReturnUrl { get; set; } = string.Empty;
+
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
 
     private string ErrorMessage { get; set; } = string.Empty;
 
-    private async Task HandleLogin()
+    private async Task Login()
     {
         var request = new LoginUserRequest(Email, Password);
         var response = await HttpClient.PostAsJsonAsync("/api/users/login", request);
@@ -43,8 +46,8 @@
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
             await CartService.StoreCartItemsFromLocalCart();
-
-            NavigationManager.NavigateTo("/");
+            
+            NavigationManager.NavigateTo(ReturnUrl.StartsWith('/') ? ReturnUrl : "/");
         }
         else
         {
