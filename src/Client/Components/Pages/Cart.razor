@@ -141,7 +141,7 @@
     {
         if (await UserService.IsUserAuthenticated() is false)
         {
-            NavigationManager.NavigateTo("/login");
+            NavigationManager.NavigateTo("/login?returnUrl=/cart");
             return;
         }
 
