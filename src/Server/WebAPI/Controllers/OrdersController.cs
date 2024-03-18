@@ -12,7 +12,7 @@ public class OrdersController(
     /// <response code="400">Заказ не содержит товаров, стоимость заказа некорректна</response>
     /// <response code="404">Не удается найти товар, чтобы сформировать заказ</response>
     [HttpPost, Authorize]
-    [ProducesResponseType(typeof(OrderDetailsResponse), 201)]
+    [ProducesResponseType(typeof(OrderResponse), 201)]
     public IActionResult CreateOrder()
     {
         var userId = GetUserGuid();
@@ -31,7 +31,8 @@ public class OrdersController(
             var cat = getCatResult.Value;
             
             var orderItem = OrderItem.Create(
-                catId:      cat.CatId ,
+                catId:      cat.CatId,
+                catName:    cat.Name,
                 quantity:   item.Quantity,
                 totalPrice: cat.Cost * item.Quantity);
             
@@ -60,24 +61,24 @@ public class OrdersController(
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<Order>> getAllUserOrdersResult = orderService.GetAllUserOrders(userId);
+        ErrorOr<IEnumerable<Order>> getAllOrdersResult = orderService.GetAllUserOrders(userId);
 
-        return getAllUserOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
+        return getAllOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
     }
     
-    /// <summary>Получить подробный отчет по заказу пользователя</summary>
+    /// <summary>Получить конкретный заказ пользователя</summary>
     /// <param name="orderId">Guid заказа, по которому нужно получить отчет</param>
     /// <response code="200">Отчет по заказу</response>
     /// <response code="404">Not found</response>
     [HttpGet("{orderId:guid}"), Authorize]
-    [ProducesResponseType(typeof(OrderDetailsResponse), 200)]
-    public IActionResult GetOrderDetails(Guid orderId)
+    [ProducesResponseType(typeof(OrderResponse), 200)]
+    public IActionResult GetOrder(Guid orderId)
     {
         var userId = GetUserGuid();
 
         ErrorOr<Order> getOrderResult = orderService.GetOrder(orderId, userId);
 
-        return getOrderResult.Match(order => Ok(MapOrderDetailsResponse(order)), Problem);
+        return getOrderResult.Match(order => Ok(MapOrderResponse(order)), Problem);
     }
     
     private static ErrorOr<Order> CreateOrderFrom(
@@ -94,34 +95,27 @@ public class OrdersController(
     private CreatedAtActionResult CreatedAtGetOrderDetails(Order order)
     {
         return CreatedAtAction(
-            actionName:  nameof(GetOrderDetails),
+            actionName:  nameof(GetOrder),
             routeValues: new { orderId = order.OrderId },
-            value:       MapOrderDetailsResponse(order));
+            value:       MapOrderResponse(order));
     }
 
     private static OrderResponse MapOrderResponse(Order order)
     {
+        var orderCatResponses = order.OrderItems.Select(MapOrderCatResponse);
+
         return new OrderResponse(
             order.OrderId,
             order.OrderDate,
-            order.TotalPrice);
-    }
-
-    private static OrderDetailsResponse MapOrderDetailsResponse(Order order)
-    {
-        var orderDetailsCatResponses = order.OrderItems.Select(MapOrderDetailsCatResponse);
-
-        return new OrderDetailsResponse(
-            order.OrderId,
-            order.OrderDate,
             order.TotalPrice,
-            orderDetailsCatResponses);
+            orderCatResponses);
     }
 
-    private static OrderDetailsCatResponse MapOrderDetailsCatResponse(OrderItem orderItem)
+    private static OrderCatResponse MapOrderCatResponse(OrderItem orderItem)
     {
-        return new OrderDetailsCatResponse(
+        return new OrderCatResponse(
             orderItem.CatId,
+            orderItem.Name,
             orderItem.Quantity,
             orderItem.TotalPrice);
     }

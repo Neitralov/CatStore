@@ -4,6 +4,7 @@ public class OrderItem
 {
     public Guid OrderId { get; private set; }
     public Guid CatId { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     public int Quantity { get; private set; }
     public decimal TotalPrice { get; private set; }
 
@@ -11,6 +12,7 @@ public class OrderItem
 
     public static ErrorOr<OrderItem> Create(
         Guid catId,
+        string catName,
         int quantity,
         decimal totalPrice)
     {
@@ -28,6 +30,7 @@ public class OrderItem
         return new OrderItem
         {
             CatId = catId,
+            Name = catName,
             Quantity = quantity,
             TotalPrice = totalPrice
         };

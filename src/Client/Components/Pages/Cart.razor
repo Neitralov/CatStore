@@ -2,6 +2,8 @@
 @inject HttpClient HttpClient
 @inject UserService UserService
 @inject CartService CartService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Корзина — CatStore</PageTitle>
 
@@ -33,7 +35,7 @@
     @if (CartItems.Count > 0)
     {
         <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
-            <ApplyButton>К оформлению</ApplyButton>
+            <ApplyButton OnClick="PlaceOrder">К оформлению</ApplyButton>
             <div class="flex justify-between text-sm">
                 <span>Итого</span>
                 <span>@TotalPrice $</span>
@@ -132,6 +134,30 @@
                 CartItems.RemoveAt(index);
 
             CalculateCost();
+        }
+    }
+
+    private async Task PlaceOrder()
+    {
+        if (await UserService.IsUserAuthenticated() is false)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        var response = await HttpClient.PostAsync("/api/orders", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Заказ успешно оформлен");
+            await CartService.InvokeOnCartChanged();
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            var errorMessage = result!.GetFirstErrorMessage();
+            await JsRuntime.InvokeVoidAsync("alert", errorMessage);
         }
     }
 

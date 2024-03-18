@@ -21,7 +21,9 @@ public class OrderRepository(IDbContextFactory<DatabaseContext> factory) : IOrde
     {
         return Database.Orders
             .AsNoTracking()
-            .Where(order => order.UserId == userId);
+            .Include(order => order.OrderItems)
+            .Where(order => order.UserId == userId)
+            .OrderByDescending(order => order.OrderDate);
     }
 
     public void SaveChanges() => Database.SaveChanges();

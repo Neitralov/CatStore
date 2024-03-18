@@ -1,0 +1,49 @@
+@page "/orders"
+@layout ProfileLayout
+@inject HttpClient HttpClient
+@attribute [Authorize]
+
+<PageTitle>Заказы — CatStore</PageTitle>
+
+@if (Orders.Count > 0)
+{
+    <Panel CssClasses="flex flex-col gap-3">
+        @foreach(var order in Orders)
+        {
+            <details class="px-5 py-2 bg-background rounded-lg hover:cursor-pointer hover:shadow-md" name="order">
+                <summary class="flex justify-between">
+                    <span>Заказ @order.OrderId <span class="text-xs text-muted">от @order.OrderDate.ToShortDateString() </span></span>
+                    <span>Итого: @($"{order.TotalPrice:F0}") $</span>
+                </summary>
+
+                <div class="flex flex-col gap-2 mt-3">
+                    @foreach(var orderItem in order.Cats)
+                    {
+                        <div class="flex justify-between">
+                            <span>@orderItem.Name</span>
+                            <span><span class="text-muted">@orderItem.Quantity шт. x @($"{orderItem.TotalPrice / orderItem.Quantity:F0}") $ = </span>@($"{orderItem.TotalPrice:F0}") $</span>
+                        </div>
+                        <hr class="last:hidden" />
+                    }
+                </div>
+            </details>
+        }
+    </Panel>
+}
+else if (HasDataLoaded)
+{
+    <h1 class="col-span-12 text-sm">Вы еще не сделали ни одного заказа. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/cart">Корзину</a>, чтобы оформить заказ.</h1>
+}
+
+@code {
+    private List<OrderResponse> Orders { get; set; } = new();
+        
+    private bool HasDataLoaded { get; set; }
+        
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = await HttpClient.GetFromJsonAsync<List<OrderResponse>>("/api/orders") ?? new();
+            
+        HasDataLoaded = true;
+    }
+}
