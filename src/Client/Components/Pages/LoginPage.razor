@@ -24,7 +24,7 @@
 
 @code {
     [SupplyParameterFromQuery]
-    private string ReturnUrl { get; set; } = string.Empty;
+    private string? ReturnUrl { get; set; } = string.Empty;
 
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
@@ -47,7 +47,11 @@
 
             await CartService.StoreCartItemsFromLocalCart();
             
-            NavigationManager.NavigateTo(ReturnUrl.StartsWith('/') ? ReturnUrl : "/");
+            if (ReturnUrl is null)
+                NavigationManager.NavigateTo("/");
+            else
+                NavigationManager.NavigateTo(ReturnUrl.StartsWith('/') ? ReturnUrl : "/");
+
         }
         else
         {
