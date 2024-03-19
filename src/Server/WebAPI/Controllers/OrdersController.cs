@@ -17,7 +17,7 @@ public class OrdersController(
     {
         var userId = GetUserGuid();
         
-        var cartItems = cartService.GetAllUserCartItems(userId).Value.ToList();
+        var cartItems = cartService.GetCartItems(userId).Value.ToList();
         
         var orderItems = new List<OrderItem>();
         

@@ -30,6 +30,29 @@ public class CartService(
         }
     }
 
+    public async Task<CartItemResponse?> GetCartItem(Guid catId)
+    {
+        return await (await userService.IsUserAuthenticated() ? GetDbCartItem() : GetLocalCartItem());
+
+        async Task<CartItemResponse?> GetDbCartItem()
+        {
+            var response = await httpClient.GetAsync($"api/cart-items/{catId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<CartItemResponse>();
+            }
+
+            return null;
+        }
+
+        async Task<CartItemResponse?> GetLocalCartItem()
+        {
+            var cart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            return cart.SingleOrDefault(cartItem => cartItem.CatId == catId);
+        }
+    }
+
     public async Task<List<CartItemResponse>> GetCartItems()
     {
         return await (await userService.IsUserAuthenticated() ? GetDbCartItems() : GetLocalCartItems());
@@ -40,7 +63,7 @@ public class CartService(
         async Task<List<CartItemResponse>> GetLocalCartItems() =>
             await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
     }
-    
+
     public async Task<HttpResponseMessage> DeleteCartItem(Guid catId)
     {
         var response = await (await userService.IsUserAuthenticated() ? DeleteDbCartItem() : DeleteLocalCartItem());

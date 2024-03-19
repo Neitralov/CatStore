@@ -1,14 +1,53 @@
 @page "/cat/{Id:guid}"
 @inject HttpClient HttpClient
+@inject CartService CartService
 
 <PageTitle>Описание товара — CatStore</PageTitle>
 
 @if (Cat is not null)
 {
     <div class="grid grid-cols-12 xl:gap-5 gap-4">
-        <Panel CssClasses="xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12">
-            <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="@Cat.EarColor" IsMale="@Cat.IsMale"/>
-        </Panel>
+        <div class="flex flex-col xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12 xl:gap-5 gap-4">
+            <Panel>
+                <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="@Cat.EarColor" IsMale="@Cat.IsMale"/>
+            </Panel>
+
+            <Panel CssClasses="flex flex-col items-center w-full gap-2">
+                <p class="flex justify-center items-center w-full h-8 text-sm font-bold bg-background rounded-lg">
+                    @if (Cat.Discount > 0)
+                    {
+                        <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
+                        <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
+                    }
+                    else
+                    {
+                        <span>@($"{Cat.Cost:F0}") $</span>
+                    }
+                </p>
+                @if (CartItem is not null)
+                {
+                    <div class="flex justify-between w-full gap-2">
+                        <div class="flex justify-center items-center min-w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="DecreaseCartItemQuantity">-</div>
+                        <div class="flex justify-center items-center w-full py-2 bg-background rounded-lg text-sm">@CartItem?.Quantity</div>
+                        <div class="flex justify-center items-center min-w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="IncreaseCartItemQuantity">+</div>
+                    </div>
+                }
+                else if (HasDataLoaded)
+                {
+                    <div class="flex justify-center items-center w-full bg-primary rounded-lg px-3 py-2 gap-2 text-white text-sm hover:cursor-pointer hover:shadow-md" @onclick="AddToCart">
+                        В корзину
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_77_4234" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+                                <rect width="16" height="16" fill="#D9D9D9"/>
+                            </mask>
+                            <g mask="url(#mask0_77_4234)">
+                                <path d="M7.33333 5.99999V3.99999H5.33333V2.66666H7.33333V0.666656H8.66667V2.66666H10.6667V3.99999H8.66667V5.99999H7.33333ZM4.66667 14.6667C4.3 14.6667 3.98611 14.5361 3.725 14.275C3.46389 14.0139 3.33333 13.7 3.33333 13.3333C3.33333 12.9667 3.46389 12.6528 3.725 12.3917C3.98611 12.1305 4.3 12 4.66667 12C5.03333 12 5.34722 12.1305 5.60833 12.3917C5.86945 12.6528 6 12.9667 6 13.3333C6 13.7 5.86945 14.0139 5.60833 14.275C5.34722 14.5361 5.03333 14.6667 4.66667 14.6667ZM11.3333 14.6667C10.9667 14.6667 10.6528 14.5361 10.3917 14.275C10.1306 14.0139 10 13.7 10 13.3333C10 12.9667 10.1306 12.6528 10.3917 12.3917C10.6528 12.1305 10.9667 12 11.3333 12C11.7 12 12.0139 12.1305 12.275 12.3917C12.5361 12.6528 12.6667 12.9667 12.6667 13.3333C12.6667 13.7 12.5361 14.0139 12.275 14.275C12.0139 14.5361 11.7 14.6667 11.3333 14.6667ZM0.666668 2.66666V1.33332H2.85L5.68333 7.33332H10.35L12.95 2.66666H14.4667L11.5333 7.96666C11.4111 8.18888 11.2472 8.3611 11.0417 8.48332C10.8361 8.60555 10.6111 8.66666 10.3667 8.66666H5.4L4.66667 9.99999H12.6667V11.3333H4.66667C4.16667 11.3333 3.78611 11.1167 3.525 10.6833C3.26389 10.25 3.25556 9.8111 3.5 9.36666L4.4 7.73332L2 2.66666H0.666668Z" fill="white"/>
+                            </g>
+                        </svg>
+                    </div>
+                }
+            </Panel>
+        </div>
 
         <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
             <ValueFieldWithLabel Label="Имя">@Cat.Name</ValueFieldWithLabel>
@@ -17,17 +56,6 @@
             <ValueFieldWithLabel Label="Цвет ушей">@Cat.EarColor</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Пол">
                 @(Cat.IsMale ? "Мальчик" : "Девочка")
-            </ValueFieldWithLabel>
-            <ValueFieldWithLabel Label="Цена">
-                @if (Cat.Discount > 0)
-                {
-                    <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
-                    <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
-                }
-                else
-                {
-                    <span>@($"{Cat.Cost:F0}") $</span>
-                }
             </ValueFieldWithLabel>
         </Panel>
     </div>
@@ -40,8 +68,59 @@
     [Parameter]
     public CatResponse? Cat { get; set; }
 
+    private CartItemResponse? CartItem { get; set; }
+
+    private bool HasDataLoaded { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         Cat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{Id}");
+
+        if (Cat != null)
+            CartItem = await CartService.GetCartItem(Cat.CatId);
+
+        HasDataLoaded = true;
+    }
+
+    private async Task AddToCart()
+    {
+        var request = new CreateCartItemRequest(Cat!.CatId);
+        await CartService.AddToCart(request);
+
+        CartItem = await CartService.GetCartItem(Cat.CatId);
+    }
+
+    private async Task DecreaseCartItemQuantity()
+    {
+        if (Cat is null || CartItem is null)
+        return;
+
+        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        else
+        await DeleteCartItem();
+    }
+
+    private async Task IncreaseCartItemQuantity()
+    {
+        if (Cat is null || CartItem is null)
+        return;
+
+        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity + 1);
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity + 1);
+    }
+
+    private async Task DeleteCartItem()
+    {
+        if (Cat != null)
+        await CartService.DeleteCartItem(Cat.CatId);
+
+        CartItem = null;
     }
 }

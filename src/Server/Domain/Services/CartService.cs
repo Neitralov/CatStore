@@ -21,9 +21,16 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
         return Result.Created;
     }
 
-    public ErrorOr<IEnumerable<CartItem>> GetAllUserCartItems(Guid userId)
+    public ErrorOr<CartItem> GetCartItem(Guid userId, Guid catId)
     {
-        return cartRepository.GetAllUserCartItems(userId).ToList();
+        var result = cartRepository.GetCartItem(userId, catId);
+
+        return result is { } ? result : Errors.CartItem.NotFound;
+    }
+
+    public ErrorOr<IEnumerable<CartItem>> GetCartItems(Guid userId)
+    {
+        return cartRepository.GetCartItems(userId).ToList();
     }
 
     public ErrorOr<Deleted> DeleteCartItem(Guid userId, Guid catId)

@@ -25,17 +25,32 @@ public class CartsController(CartService cartService) : ApiController
         return createCartItemResult.Match(_ => NoContent(), Problem);
     }
 
+    /// <summary>Получить товар из корзины пользователя</summary>
+    /// <param name="catId">Guid кота, который должен быть в корзине</param>
+    /// <response code="200">Товар из корзины найден</response>
+    /// <response code="404">Not found</response>
+    [HttpGet("{catId:guid}"), Authorize]
+    [ProducesResponseType(typeof(CartItemResponse), 200)]
+    public IActionResult GetCartItem(Guid catId)
+    {
+        var userId = GetUserGuid();
+
+        ErrorOr<CartItem> getCartItemResult = cartService.GetCartItem(userId, catId);
+
+        return getCartItemResult.Match(cartItem => Ok(MapCartItemResponse(cartItem)), Problem);
+    }
+
     /// <summary>Получить список всех товаров в корзине пользователя</summary>
     /// <response code="200">Список товаров из корзины пользователя</response>
     [HttpGet, Authorize]
     [ProducesResponseType(typeof(List<CartItemResponse>), 200)]
-    public IActionResult GetAllUsersCartItems()
+    public IActionResult GetCartItems()
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<CartItem>> getAllUserCartItemsResult = cartService.GetAllUserCartItems(userId);
-        
-        return getAllUserCartItemsResult.Match(cartItems => Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse))), Problem);
+        ErrorOr<IEnumerable<CartItem>> getCartItemsResult = cartService.GetCartItems(userId);
+
+        return getCartItemsResult.Match(cartItems => Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse))), Problem);
     }
 
     /// <summary>Получить количество всех товаров в корзине пользователя</summary>

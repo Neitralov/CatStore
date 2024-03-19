@@ -16,7 +16,16 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
             item.CatId == cartItem.CatId);
     }
 
-    public IEnumerable<CartItem> GetAllUserCartItems(Guid userId)
+    public CartItem? GetCartItem(Guid userId, Guid catId)
+    {
+        return Database.CartItems
+            .AsNoTracking()
+            .SingleOrDefault(cartItem =>
+                cartItem.UserId == userId &&
+                cartItem.CatId == catId);
+    }
+
+    public IEnumerable<CartItem> GetCartItems(Guid userId)
     {
         return Database.CartItems
             .AsNoTracking()

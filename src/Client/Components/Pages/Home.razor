@@ -1,7 +1,5 @@
 ﻿@page "/"
 @inject HttpClient HttpClient
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ILocalStorageService LocalStorage
 @inject CartService CartService
 
 <PageTitle>Главная — CatStore</PageTitle>
@@ -50,7 +48,7 @@
             <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
                 @foreach(var cat in Cats)
                 {
-                    <CatCard Cat="cat" OnClick="AddToCart" />
+                    <CatCard Cat="cat" />
                 }
             </div>
         }
@@ -69,11 +67,5 @@
     {
         Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
         HasDataLoaded = true;
-    }
-
-    private async Task AddToCart(Guid catId)
-    {
-        var request = new CreateCartItemRequest(catId);
-        await CartService.AddToCart(request);
     }
 }

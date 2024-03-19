@@ -7,7 +7,8 @@ public interface ICartRepository
 
     //Read
     CartItem? FindCartItem(CartItem cartItem);
-    IEnumerable<CartItem> GetAllUserCartItems(Guid userId);
+    CartItem? GetCartItem(Guid userId, Guid catId);
+    IEnumerable<CartItem> GetCartItems(Guid userId);
     int GetUserCartItemsCount(Guid userId);
 
     //Update
