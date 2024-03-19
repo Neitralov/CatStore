@@ -6,16 +6,15 @@
         <div class="flex justify-between w-full px-5 py-2 bg-background rounded-lg text-sm">
             <span>@Cat.Name</span>
             <p class="text-sm font-bold">
-                @*@if (Cat.Discount > 0)
+                @if (Cat.Discount > 0)
                 {
-                    <span class="text-primary">@(Cost - Discount) $</span>
-                    <span class="line-through text-xs">@Cost $</span>
+                    <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
+                    <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
                 }
                 else
                 {
-                    <span>@Cost $</span>
-                }*@
-                <span>@($"{Cat.Cost:F0}") $</span>
+                    <span>@($"{Cat.Cost:F0}") $</span>
+                }
             </p>
         </div>
 
@@ -26,8 +25,7 @@
         </div>
 
         <div class="flex justify-center items-center min-w-24 py-2 bg-background rounded-lg text-sm">
-            @*Когда-то тут появятся рассчеты скидки*@
-            @($"{Quantity * Cat.Cost:F0}") $
+            @($"{Quantity * (Cat.Cost - Cat.Discount):F0}") $
         </div>
 
         <TrashBinButton LinkedWith="Cat.CatId" OnClick="() => OnTrashBinClick.InvokeAsync(Cat.CatId)" />

@@ -164,6 +164,7 @@
     private void CalculateCost()
     {
         TotalPriceWithoutDiscount = (int)CartItems.Sum(item => (item.Cat?.Cost ?? 0) * item.Quantity);
+        TotalDiscount = (int)CartItems.Sum(item => (item.Cat?.Discount ?? 0) * item.Quantity);
         TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
     }
 }

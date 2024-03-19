@@ -34,7 +34,7 @@ public class OrdersController(
                 catId:      cat.CatId,
                 catName:    cat.Name,
                 quantity:   item.Quantity,
-                totalPrice: cat.Cost * item.Quantity);
+                totalPrice: (cat.Cost - cat.Discount) * item.Quantity);
             
             orderItems.Add(orderItem.Value);
         }

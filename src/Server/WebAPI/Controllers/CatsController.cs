@@ -55,7 +55,7 @@ public class CatsController(CatService catService) : ApiController
     [ProducesResponseType(204)]
     public IActionResult UpdateCatPrice(Guid catId, [Required] UpdateCatPriceRequest request)
     {
-        ErrorOr<Updated> updateCatPriceResult = catService.UpdateCatPrice(catId, request.Cost);
+        ErrorOr<Updated> updateCatPriceResult = catService.UpdateCatPrice(catId, request.Cost, request.Discount);
         
         return updateCatPriceResult.Match(_ => NoContent(), Problem);
     }
@@ -81,7 +81,8 @@ public class CatsController(CatService catService) : ApiController
             request.EyeColor,
             request.EarColor,
             request.IsMale,
-            request.Cost);
+            request.Cost,
+            request.Discount);
     }
     
     private CreatedAtActionResult CreatedAtGetCat(Cat cat)
@@ -101,6 +102,7 @@ public class CatsController(CatService catService) : ApiController
             cat.EyeColor,
             cat.EarColor,
             cat.IsMale,
-            cat.Cost);
+            cat.Cost,
+            cat.Discount);
     }
 }

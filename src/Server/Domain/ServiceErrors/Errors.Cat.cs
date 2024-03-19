@@ -29,6 +29,10 @@ public static partial class Errors
             code:        "Cat.InvalidCost",
             description: "Кот не может быть бесплатным");
 
+        public static Error InvalidDiscount => Error.Validation(
+            code:        "Cat.InvalidDiscount",
+            description: "Скидка не может быть отрицательной");
+
         public static Error AlreadyExists => Error.Validation(
             code:        "Cat.AlreadyExists",
             description: "Кот с таким именем уже существует");

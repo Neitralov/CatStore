@@ -9,6 +9,7 @@ public class Cat
     public string EarColor { get; private set; } = string.Empty;
     public bool IsMale { get; private set; }
     public decimal Cost { get; private set; }
+    public decimal Discount { get; private set; }
     
     public const int MinNameLength = 3;
     public const int MaxNameLength = 15;
@@ -22,6 +23,7 @@ public class Cat
         string earColor,
         bool isMale,
         decimal cost,
+        decimal discount,
         Guid? catId = null)
     {
        List<Error> errors = new();
@@ -40,9 +42,12 @@ public class Cat
        if (correctHexColorPattern.IsMatch(earColor) is false)
            errors.Add(Errors.Cat.InvalidEarColor);
        
-       if (cost <= 0)
+       if (cost - discount <= 0)
            errors.Add(Errors.Cat.InvalidCost);
        
+       if (discount < 0)
+           errors.Add(Errors.Cat.InvalidDiscount);
+
        if (errors.Count > 0)
            return errors;
        
@@ -54,16 +59,21 @@ public class Cat
            EyeColor  = eyeColor,
            EarColor  = earColor,
            IsMale    = isMale,
-           Cost      = cost
+           Cost      = cost,
+           Discount  = discount
        };
     }
 
-    public ErrorOr<Updated> UpdatePrice(decimal newPrice)
+    public ErrorOr<Updated> UpdatePrice(decimal newPrice, decimal newDiscount)
     {
-        if (newPrice <= 0)
+        if (newPrice - newDiscount <= 0)
             return Errors.Cat.InvalidCost;
 
+        if (newDiscount < 0)
+            return Errors.Cat.InvalidDiscount;
+
         Cost = newPrice;
+        Discount = newDiscount;
 
         return Result.Updated;
     }

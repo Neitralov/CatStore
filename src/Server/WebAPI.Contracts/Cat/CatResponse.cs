@@ -7,7 +7,8 @@ public record CatResponse(
      string EyeColor,
      string EarColor,
      bool IsMale,
-     decimal Cost)
+     decimal Cost,
+     decimal Discount)
 {
     /// <example>Барсик</example>
     public string Name { get; init; } = Name;
@@ -21,4 +22,6 @@ public record CatResponse(
     public bool IsMale { get; init; } = IsMale;
     /// <example>100</example>
     public decimal Cost { get; init; } = Cost;
+    /// <example>0</example>
+    public decimal Discount { get; init; } = Discount;
 }

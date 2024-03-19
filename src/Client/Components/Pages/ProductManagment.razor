@@ -82,7 +82,7 @@
 
     private async Task CreateCat()
     {
-        var request = new CreateCatRequest(Name, SkinColor, EyeColor, EarColor, IsMale, Cost);
+        var request = new CreateCatRequest(Name, SkinColor, EyeColor, EarColor, IsMale, Cost, Discount);
         var response = await HttpClient.PostAsJsonAsync("/api/cats", request);
 
         if (response.IsSuccessStatusCode)
@@ -103,7 +103,7 @@
 
     private async Task UpdateCatPrice()
     {
-        var request = new UpdateCatPriceRequest(Cost);
+        var request = new UpdateCatPriceRequest(Cost, Discount);
         var response = await HttpClient.PatchAsJsonAsync($"/api/cats/{Id}/update-price", request);
 
         if (response.IsSuccessStatusCode)
@@ -160,6 +160,7 @@
         EarColor = "#ffcea1";
         IsMale = true;
         Cost = 0;
+        Discount = 0;
     }
 
     private void LoadDataToEditor(CatResponse cat)
@@ -174,5 +175,6 @@
         EarColor = cat.EarColor;
         IsMale = cat.IsMale;
         Cost = (int)cat.Cost;
+        Discount = (int)cat.Discount;
     }
 }

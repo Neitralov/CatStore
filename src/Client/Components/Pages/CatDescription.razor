@@ -19,9 +19,9 @@
                 @(Cat.IsMale ? "Мальчик" : "Девочка")
             </ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Цена">
-                @if (Discount > 0)
+                @if (Cat.Discount > 0)
                 {
-                    <span class="text-primary">@($"{Cat.Cost:F0 - Discount:F0}") $</span>
+                    <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
                     <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
                 }
                 else
@@ -39,9 +39,6 @@
 
     [Parameter]
     public CatResponse? Cat { get; set; }
-
-    [Parameter]
-    public int Discount { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

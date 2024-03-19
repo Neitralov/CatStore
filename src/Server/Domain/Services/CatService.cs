@@ -20,14 +20,14 @@ public class CatService(ICatRepository catRepository)
         return result is { } ? result : Errors.Cat.NotFound;
     }
     
-    public ErrorOr<Updated> UpdateCatPrice(Guid catId, decimal price)
+    public ErrorOr<Updated> UpdateCatPrice(Guid catId, decimal price, decimal discount)
     {
         var cat = catRepository.FindCatById(catId);
 
         if (cat is null)
             return Errors.Cat.NotFound;
 
-        var result = cat.UpdatePrice(price);
+        var result = cat.UpdatePrice(price, discount);
 
         if (result == Result.Updated)
             catRepository.SaveChanges();

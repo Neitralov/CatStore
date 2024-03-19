@@ -60,9 +60,9 @@
 
         <div class="flex justify-between items-center w-full rounded-lg bg-background h-8 pl-3">
             <p class="text-sm font-bold">
-                @if (Discount > 0)
+                @if (Cat.Discount > 0)
                 {
-                    <span class="text-primary">@($"{Cat.Cost:F0 - Discount:F0}") $</span>
+                    <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
                     <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
                 }
                 else
@@ -88,9 +88,6 @@
     [Parameter]
     public CatResponse? Cat { get; set; }
     
-    [Parameter]
-    public int Discount { get; set; }
-
     [Parameter]
     public EventCallback<Guid> OnClick { get; set; }
 
