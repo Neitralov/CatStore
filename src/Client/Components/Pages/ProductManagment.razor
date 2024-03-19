@@ -9,7 +9,7 @@
 
 <Panel CssClasses="flex lg:flex-row flex-col xl:gap-5 gap-4">
     <div class="basis-1/4 flex justify-center items-center">
-        <CatPreview SkinColor="@SkinColor" EyeColor="@EyeColor" EarColor="#FFD9D9" IsMale="@IsMale" />
+        <CatPreview SkinColor="@SkinColor" EyeColor="@EyeColor" EarColor="@EarColor" IsMale="@IsMale" />
     </div>
     
     <div class="basis-3/4 flex flex-col gap-3 w-full">
@@ -67,8 +67,8 @@
     private Guid Id { get; set; }
     private string Name { get; set; } = string.Empty;
     private string SkinColor { get; set; } = "#ffbe6f";
-    private string EarColor { get; set; } = string.Empty;
     private string EyeColor { get; set; } = "#3584e4";
+    private string EarColor { get; set; } = "#ffcea1";
     private bool IsMale { get; set; } = true;
     private int Cost { get; set; }
     private int Discount { get; set; }
@@ -82,7 +82,7 @@
 
     private async Task CreateCat()
     {
-        var request = new CreateCatRequest(Name, SkinColor, EyeColor, IsMale, Cost);
+        var request = new CreateCatRequest(Name, SkinColor, EyeColor, EarColor, IsMale, Cost);
         var response = await HttpClient.PostAsJsonAsync("/api/cats", request);
 
         if (response.IsSuccessStatusCode)
@@ -156,8 +156,8 @@
 
         Name = string.Empty;
         SkinColor = "#ffbe6f";
-        EarColor = string.Empty;
         EyeColor = "#3584e4";
+        EarColor = "#ffcea1";
         IsMale = true;
         Cost = 0;
     }
@@ -171,6 +171,7 @@
         Name = cat.Name;
         SkinColor = cat.SkinColor;
         EyeColor = cat.EyeColor;
+        EarColor = cat.EarColor;
         IsMale = cat.IsMale;
         Cost = (int)cat.Cost;
     }

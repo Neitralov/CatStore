@@ -21,6 +21,10 @@ public static partial class Errors
             code:        "Cat.InvalidEyeColor",
             description: "Цвет должен быть указан в HEX формате");
         
+        public static Error InvalidEarColor => Error.Validation(
+            code:        "Cat.InvalidEarColor",
+            description: "Цвет должен быть указан в HEX формате");
+
         public static Error InvalidCost => Error.Validation(
             code:        "Cat.InvalidCost",
             description: "Кот не может быть бесплатным");

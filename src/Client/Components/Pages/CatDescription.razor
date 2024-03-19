@@ -7,14 +7,14 @@
 {
     <div class="grid grid-cols-12 xl:gap-5 gap-4">
         <Panel CssClasses="xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12">
-            <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="#FFD9D9" IsMale="@Cat.IsMale"/>
+            <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="@Cat.EarColor" IsMale="@Cat.IsMale"/>
         </Panel>
 
         <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
             <ValueFieldWithLabel Label="Имя">@Cat.Name</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Цвет шерсти">@Cat.SkinColor</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Цвет глаз">@Cat.EyeColor</ValueFieldWithLabel>
-            <ValueFieldWithLabel Label="Цвет ушей">#ffcea1</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет ушей">@Cat.EarColor</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Пол">
                 @(Cat.IsMale ? "Мальчик" : "Девочка")
             </ValueFieldWithLabel>
@@ -39,9 +39,6 @@
 
     [Parameter]
     public CatResponse? Cat { get; set; }
-
-    [Parameter]
-    public string EarColor { get; set; } = string.Empty;
 
     [Parameter]
     public int Discount { get; set; }

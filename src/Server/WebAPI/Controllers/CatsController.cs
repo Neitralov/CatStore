@@ -79,6 +79,7 @@ public class CatsController(CatService catService) : ApiController
             request.Name,
             request.SkinColor,
             request.EyeColor,
+            request.EarColor,
             request.IsMale,
             request.Cost);
     }
@@ -98,6 +99,7 @@ public class CatsController(CatService catService) : ApiController
             cat.Name,
             cat.SkinColor,
             cat.EyeColor,
+            cat.EarColor,
             cat.IsMale,
             cat.Cost);
     }

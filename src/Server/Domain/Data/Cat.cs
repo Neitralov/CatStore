@@ -6,6 +6,7 @@ public class Cat
     public string Name { get; private set; } = string.Empty;
     public string SkinColor { get; private set; } = string.Empty;
     public string EyeColor { get; private set; } = string.Empty;
+    public string EarColor { get; private set; } = string.Empty;
     public bool IsMale { get; private set; }
     public decimal Cost { get; private set; }
     
@@ -18,6 +19,7 @@ public class Cat
         string name,
         string skinColor,
         string eyeColor,
+        string earColor,
         bool isMale,
         decimal cost,
         Guid? catId = null)
@@ -34,6 +36,9 @@ public class Cat
        
        if (correctHexColorPattern.IsMatch(eyeColor) is false)
            errors.Add(Errors.Cat.InvalidEyeColor);
+
+       if (correctHexColorPattern.IsMatch(earColor) is false)
+           errors.Add(Errors.Cat.InvalidEarColor);
        
        if (cost <= 0)
            errors.Add(Errors.Cat.InvalidCost);
@@ -47,6 +52,7 @@ public class Cat
            Name      = name,
            SkinColor = skinColor,
            EyeColor  = eyeColor,
+           EarColor  = earColor,
            IsMale    = isMale,
            Cost      = cost
        };
