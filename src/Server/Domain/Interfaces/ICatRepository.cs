@@ -6,9 +6,9 @@ public interface ICatRepository
     void AddCat(Cat cat);
 
     //Read
-    Cat? GetCat(Guid catId);
     Cat? FindCatById(Guid catId);
-    IEnumerable<Cat> GetAllCats();
+    Cat? GetCat(Guid catId);
+    IEnumerable<Cat> GetCats();
     bool IsCatExists(string name);
     bool IsCatExists(Guid catId);
 

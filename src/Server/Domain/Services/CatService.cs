@@ -22,7 +22,7 @@ public class CatService(ICatRepository catRepository)
     
     public ErrorOr<IEnumerable<Cat>> GetCats()
     {
-        var result = catRepository.GetAllCats();
+        var result = catRepository.GetCats();
 
         return result.ToList();
     }

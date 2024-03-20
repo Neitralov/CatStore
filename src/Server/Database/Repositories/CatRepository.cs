@@ -9,6 +9,11 @@ public class CatRepository(IDbContextFactory<DatabaseContext> factory) : ICatRep
         Database.Add(cat);
     }
 
+    public Cat? FindCatById(Guid catId)
+    {
+        return Database.Cats.SingleOrDefault(cat => cat.CatId == catId);
+    }
+
     public Cat? GetCat(Guid catId)
     {
         return Database.Cats
@@ -16,12 +21,7 @@ public class CatRepository(IDbContextFactory<DatabaseContext> factory) : ICatRep
             .SingleOrDefault(cat => cat.CatId == catId);
     }
 
-    public Cat? FindCatById(Guid catId)
-    {
-        return Database.Cats.SingleOrDefault(cat => cat.CatId == catId);
-    }
-
-    public IEnumerable<Cat> GetAllCats()
+    public IEnumerable<Cat> GetCats()
     {
         return Database.Cats.AsNoTracking();
     }
