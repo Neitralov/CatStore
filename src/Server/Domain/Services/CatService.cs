@@ -20,6 +20,13 @@ public class CatService(ICatRepository catRepository)
         return result is { } ? result : Errors.Cat.NotFound;
     }
     
+    public ErrorOr<IEnumerable<Cat>> GetCats()
+    {
+        var result = catRepository.GetAllCats();
+
+        return result.ToList();
+    }
+
     public ErrorOr<Updated> UpdateCatPrice(Guid catId, decimal price, decimal discount)
     {
         var cat = catRepository.FindCatById(catId);
@@ -41,12 +48,5 @@ public class CatService(ICatRepository catRepository)
         catRepository.SaveChanges();
         
         return result ? Result.Deleted : Errors.Cat.NotFound;
-    }
-
-    public ErrorOr<IEnumerable<Cat>> GetAllCats()
-    {
-        var result = catRepository.GetAllCats();
-        
-        return result.ToList();
     }
 }

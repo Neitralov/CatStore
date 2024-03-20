@@ -38,9 +38,9 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="200">Список котов</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<CatResponse>), 200)]
-    public IActionResult GetAllCats()
+    public IActionResult GetCats()
     {
-        ErrorOr<IEnumerable<Cat>> getAllCatsResult = catService.GetAllCats();
+        ErrorOr<IEnumerable<Cat>> getAllCatsResult = catService.GetCats();
 
         return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
     }

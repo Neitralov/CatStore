@@ -53,19 +53,6 @@ public class OrdersController(
         return createOrderResult.Match(_ => CreatedAtGetOrderDetails(order), Problem);
     }
     
-    /// <summary>Получить список заказов пользователя</summary>
-    /// <response code="200">Список заказов</response>
-    [HttpGet, Authorize]
-    [ProducesResponseType(typeof(List<OrderResponse>), 200)]
-    public IActionResult GetOrders()
-    {
-        var userId = GetUserGuid();
-
-        ErrorOr<IEnumerable<Order>> getAllOrdersResult = orderService.GetAllUserOrders(userId);
-
-        return getAllOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
-    }
-    
     /// <summary>Получить конкретный заказ пользователя</summary>
     /// <param name="orderId">Guid заказа, по которому нужно получить отчет</param>
     /// <response code="200">Отчет по заказу</response>
@@ -81,6 +68,19 @@ public class OrdersController(
         return getOrderResult.Match(order => Ok(MapOrderResponse(order)), Problem);
     }
     
+    /// <summary>Получить список заказов пользователя</summary>
+    /// <response code="200">Список заказов</response>
+    [HttpGet, Authorize]
+    [ProducesResponseType(typeof(List<OrderResponse>), 200)]
+    public IActionResult GetOrders()
+    {
+        var userId = GetUserGuid();
+
+        ErrorOr<IEnumerable<Order>> getAllOrdersResult = orderService.GetAllUserOrders(userId);
+
+        return getAllOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
+    }
+
     private static ErrorOr<Order> CreateOrderFrom(
         Guid userId,
         List<OrderItem> orderItems,
