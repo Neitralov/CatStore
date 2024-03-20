@@ -1,7 +1,6 @@
 <div class="flex items-center relative">
-    <select class="w-full h-8 px-3 text-sm appearance-none rounded-lg hover:shadow-md">
-        <option value="cheap">Сначала дешевые</option>
-        <option value="expensive">Сначала дорогие</option>
+    <select class="w-full h-8 px-3 text-sm appearance-none rounded-lg hover:shadow-md" value="@Value" @onchange="OnValueChanged">
+        @ChildContent
     </select>
     
     <svg class="absolute right-2 pointer-events-none" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,3 +12,20 @@
         </g>
     </svg>
 </div>
+
+@code {
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString()!;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

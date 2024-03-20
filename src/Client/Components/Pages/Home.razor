@@ -1,6 +1,5 @@
 ﻿@page "/"
 @inject HttpClient HttpClient
-@inject CartService CartService
 
 <PageTitle>Главная — CatStore</PageTitle>
 
@@ -40,15 +39,20 @@
 
     <div class="lg:col-span-9 col-span-12 flex flex-col xl:gap-5 gap-4">
         <Panel CssClasses="h-16">
-            <div class="w-52"><SortDropDown /></div>
+            <div class="w-52">
+                <SortDropdown @bind-Value="SortType">
+                    <option value="cheap">Сначала дешевые</option>
+                    <option value="expensive">Сначала дорогие</option>
+                </SortDropdown>
+            </div>
         </Panel>
 
         @if (Cats.Count > 0)
         {
             <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
-                @foreach(var cat in Cats)
+                @foreach(var cat in GetCats(Name, SortType))
                 {
-                    <CatCard Cat="cat" />
+                    <CatCard @key="cat" Cat="cat" />
                 }
             </div>
         }
@@ -63,9 +67,30 @@
     private List<CatResponse> Cats { get; set; } = new();
     private bool HasDataLoaded { get; set; }
 
+    [SupplyParameterFromQuery]
+    public string? Name { get; set; }
+    private string SortType { get; set; } = "cheap";
+
     protected override async Task OnInitializedAsync()
     {
         Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
         HasDataLoaded = true;
+    }
+
+    private List<CatResponse> GetCats(string? name, string sortType)
+    {
+        var cats = Cats;
+
+        if (name != null)
+            cats = Cats.Where(cat => cat.Name.ToLower().Contains(name.ToLower())).ToList();
+
+        Func<List<CatResponse>> sortMethod = sortType switch
+        {
+            "cheap"     => () => cats.OrderBy(cat => (int)cat.Cost - (int)cat.Discount).ToList(),
+            "expensive" => () => cats.OrderByDescending(cat => (int)cat.Cost - (int)cat.Discount).ToList(),
+            _           => () => cats
+        };
+
+        return sortMethod.Invoke();
     }
 }
