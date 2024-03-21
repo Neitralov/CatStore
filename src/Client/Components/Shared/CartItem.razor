@@ -4,7 +4,7 @@
 {
     <div class="flex items-center gap-4 w-full">
         <div class="flex justify-between w-full px-5 py-2 bg-background rounded-lg text-sm">
-            <span>@Cat.Name</span>
+            <span><a href='@($"/cat/{Cat.CatId}")'>@Cat.Name</a></span>
             <p class="text-sm font-bold">
                 @if (Cat.Discount > 0)
                 {
