@@ -54,7 +54,7 @@
 </div>
 
 @code {
-    private List<(CatResponse? Cat, int Quantity)> CartItems { get; set; } = new();
+    private List<(CatResponse? Cat, int Quantity)> CartItems { get; } = new();
 
     private int TotalPrice { get; set; }
     private int TotalPriceWithoutDiscount { get; set; }
