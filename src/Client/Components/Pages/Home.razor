@@ -7,33 +7,32 @@
     <Panel CssClasses="flex flex-col xl:gap-4 gap-3 lg:flex hidden col-span-3">
         <div class="flex flex-col gap-2">
             <h2>Цена</h2>
-            <InputField InputType="number" Placeholder="От 199"/>
-            <InputField InputType="number" Placeholder="До 499"/>
+            <InputNumberField Placeholder="От" @bind-Value="MinPrice" />
+            <InputNumberField Placeholder="До" @bind-Value="MaxPrice" />
         </div>
 
         <div class="flex flex-col gap-2">
             <h2>Пол</h2>
-            <RadioButton Text="Любой" Name="gender" Checked />
-            <RadioButton Text="Мальчик" Name="gender" />
-            <RadioButton Text="Девочка" Name="gender" />
+            <RadioButton Text="Любой" Name="gender" OnChange="() => IsMale = null" Checked="IsMale == null" />
+            <RadioButton Text="Мальчик" Name="gender" OnChange="() => IsMale = true" />
+            <RadioButton Text="Девочка" Name="gender" OnChange="() => IsMale = false"  />
         </div>
 
         <div class="flex flex-col gap-2">
             <h2 >Цвет</h2>
-            <RadioButton Text="Любой" Name="color" Checked />
-            <RadioButton Text="Черный" Name="color" />
-            <RadioButton Text="Белый" Name="color" />
-            <RadioButton Text="Красный" Name="color" />
-            <RadioButton Text="Оранжевый" Name="color" />
-            <RadioButton Text="Желтый" Name="color" />
-            <RadioButton Text="Зеленый" Name="color" />
-            <RadioButton Text="Синий" Name="color" />
-            <RadioButton Text="Фиолетовый" Name="color" />
+            <RadioButton Text="Любой" Name="color" OnChange='() => SkinColor = null' Checked="SkinColor == null" />
+            <RadioButton Text="Черный" Name="color" OnChange='() => SkinColor = "black"' />
+            <RadioButton Text="Белый" Name="color" OnChange='() => SkinColor = "white"' />
+            <RadioButton Text="Красный" Name="color" OnChange='() => SkinColor = "red"' />
+            <RadioButton Text="Оранжевый" Name="color" OnChange='() => SkinColor = "orange"' />
+            <RadioButton Text="Желтый" Name="color" OnChange='() => SkinColor = "yellow"' />
+            <RadioButton Text="Зеленый" Name="color" OnChange='() => SkinColor = "green"' />
+            <RadioButton Text="Синий" Name="color" OnChange='() => SkinColor = "blue"' />
+            <RadioButton Text="Фиолетовый" Name="color" OnChange='() => SkinColor = "violet"' />
         </div>
 
         <div class="flex flex-col gap-2">
-            <ApplyButton>Применить</ApplyButton>
-            <Button>Сбросить</Button>
+            <Button OnClick="ResetFilters">Сбросить</Button>
         </div>
     </Panel>
 
@@ -69,7 +68,12 @@
 
     [SupplyParameterFromQuery]
     public string? Name { get; set; }
+
     private string SortType { get; set; } = "cheap";
+    private int? MinPrice { get; set; }
+    private int? MaxPrice { get; set; }
+    private bool? IsMale { get; set; }
+    private string? SkinColor { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,6 +88,20 @@
         if (name != null)
             cats = Cats.Where(cat => cat.Name.ToLower().Contains(name.ToLower())).ToList();
 
+        if (MinPrice != null)
+            cats = cats.Where(cat => cat.Cost - cat.Discount >= MinPrice).ToList();
+
+        if (MaxPrice != null && MaxPrice > MinPrice)
+            cats = cats.Where(cat => cat.Cost - cat.Discount <= MaxPrice).ToList();
+        else
+            MaxPrice = null;
+
+        if (IsMale != null)
+            cats = cats.Where(cat => cat.IsMale == IsMale).ToList();
+
+        if (SkinColor != null)
+            cats = cats.Where(cat => GetColorName(cat.SkinColor) == SkinColor).ToList();
+
         Func<List<CatResponse>> sortMethod = sortType switch
         {
             "cheap"     => () => cats.OrderBy(cat => (int)cat.Cost - (int)cat.Discount).ToList(),
@@ -92,5 +110,62 @@
         };
 
         return sortMethod.Invoke();
+    }
+
+    private string GetColorName(string hexColor)
+    {
+        var red = Convert.ToInt32($"0x{hexColor[1..3]}", 16);
+        var green = Convert.ToInt32($"0x{hexColor[3..5]}", 16);
+        var blue = Convert.ToInt32($"0x{hexColor[5..7]}", 16);
+
+        var min = Math.Min(Math.Min(red, green), blue);
+        var max = Math.Max(Math.Max(red, green), blue);
+
+        if (min == max)
+        {
+            if (min < 127)
+                return "black";
+
+            return "white";
+        }
+
+        if (max < 125)
+            return "black";
+
+        if (min > 235)
+            return "white";
+
+        float hue;
+
+        if (max == red)
+            hue = (float)(green - blue) / (max - min);
+        else if (max == green)
+            hue = 2f + (float)(blue - red) / (max - min);
+        else
+            hue = 4f + (float)(red - green) / (max - min);
+
+        hue *= 60;
+
+        if (hue < 0)
+            hue += 360;
+
+        return Math.Round(hue) switch
+        {
+            >= 330 or < 22 => "red",
+            < 45           => "orange",
+            < 70           => "yellow",
+            < 155          => "green",
+            < 278          => "blue",
+            < 330          => "violet",
+            _              => "unknown"
+        };
+    }
+
+    private void ResetFilters()
+    {
+        MinPrice = null;
+        MaxPrice = null;
+        IsMale = null;
+        SkinColor = null;
     }
 }
