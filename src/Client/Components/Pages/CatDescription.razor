@@ -13,7 +13,7 @@
             </Panel>
 
             <Panel CssClasses="flex flex-col items-center w-full gap-2">
-                <p class="flex justify-center items-center w-full h-8 text-sm font-bold bg-background rounded-lg">
+                <p class="flex justify-center items-center gap-1 w-full h-8 text-sm font-bold bg-background rounded-lg">
                     @if (Cat.Discount > 0)
                     {
                         <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
