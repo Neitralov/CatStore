@@ -73,11 +73,9 @@
             </p>
             @if (CartItem is not null)
             {
-                <div class="flex justify-between w-full gap-2">
-                    <div class="flex justify-center items-center min-w-9 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="DecreaseCartItemQuantity">-</div>
-                    <div class="flex justify-center items-center w-full h-9 bg-background rounded-lg text-sm">@CartItem?.Quantity</div>
-                    <div class="flex justify-center items-center min-w-9 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="IncreaseCartItemQuantity">+</div>
-                </div>
+                <Counter OnMinusClick="DecreaseCartItemQuantity" OnPlusClick="IncreaseCartItemQuantity">
+                    @CartItem?.Quantity
+                </Counter>
             }
             else if (HasDataLoaded)
             {
