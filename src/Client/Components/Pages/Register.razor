@@ -28,6 +28,17 @@
 
     private async Task HandleRegister()
     {
+        if (string.IsNullOrEmpty(Email) ||
+            string.IsNullOrEmpty(Password) ||
+            string.IsNullOrEmpty(ConfirmPassword))
+        {
+            Email = string.Empty;
+            Password = string.Empty;
+            ConfirmPassword = string.Empty;
+            ErrorMessage = "Все поля должны быть заполнены";
+            return;
+        }
+
         var request = new CreateUserRequest(Email, Password, ConfirmPassword);
         var response = await HttpClient.PostAsJsonAsync("/api/users", request);
 

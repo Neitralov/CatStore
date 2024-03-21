@@ -33,6 +33,15 @@
 
     private async Task Login()
     {
+        if (string.IsNullOrEmpty(Email) ||
+            string.IsNullOrEmpty(Password))
+        {
+            Email = string.Empty;
+            Password = string.Empty;
+            ErrorMessage = "Все поля должны быть заполнены";
+            return;
+        }
+
         var request = new LoginUserRequest(Email, Password);
         var response = await HttpClient.PostAsJsonAsync("/api/users/login", request);
 
