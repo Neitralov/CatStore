@@ -59,7 +59,7 @@ try
 
         builder.Services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "CatStore.WebAPI", Version = "0.2.0" } );
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "CatStore.WebAPI", Version = "0.3.0" } );
 
             var xmlDocPaths = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly).ToList();
             xmlDocPaths.ForEach(xmlDocPath => options.IncludeXmlComments(xmlDocPath));
