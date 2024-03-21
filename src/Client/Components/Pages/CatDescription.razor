@@ -27,9 +27,9 @@
                 @if (CartItem is not null)
                 {
                     <div class="flex justify-between w-full gap-2">
-                        <div class="flex justify-center items-center min-w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="DecreaseCartItemQuantity">-</div>
-                        <div class="flex justify-center items-center w-full py-2 bg-background rounded-lg text-sm">@CartItem?.Quantity</div>
-                        <div class="flex justify-center items-center min-w-9 py-2 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="IncreaseCartItemQuantity">+</div>
+                        <div class="flex justify-center items-center min-w-9 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="DecreaseCartItemQuantity">-</div>
+                        <div class="flex justify-center items-center w-full h-9 bg-background rounded-lg text-sm">@CartItem?.Quantity</div>
+                        <div class="flex justify-center items-center min-w-9 border-solid border-second border rounded-lg text-sm select-none hover:cursor-pointer hover:shadow-md" @onclick="IncreaseCartItemQuantity">+</div>
                     </div>
                 }
                 else if (HasDataLoaded)
