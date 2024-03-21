@@ -49,8 +49,10 @@
         {
             <Button OnClick="BackToCreateMode">Перейти в режим добавления</Button>
         }
-        @foreach(var cat in Cats)
+        @for (var index = 1; index <= Cats.Count; index++)
         {
+            var cat = Cats[^index];
+
             <div class="flex gap-2">
                 <CatRowItem Cat="cat" OnClick="LoadDataToEditor"/>
                 <TrashBinButton LinkedWith="@cat.CatId" OnClick="DeleteCat" />
