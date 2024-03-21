@@ -17,7 +17,7 @@ public class OrderRepository(IDbContextFactory<DatabaseContext> factory) : IOrde
             .SingleOrDefault(order => order.OrderId == orderId);
     }
 
-    public IEnumerable<Order> GetAllUserOrders(Guid userId)
+    public IEnumerable<Order> GetOrders(Guid userId)
     {
         return Database.Orders
             .AsNoTracking()

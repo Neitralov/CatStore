@@ -76,9 +76,9 @@ public class OrdersController(
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<Order>> getAllOrdersResult = orderService.GetAllUserOrders(userId);
+        ErrorOr<IEnumerable<Order>> getOrdersResult = orderService.GetOrders(userId);
 
-        return getAllOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
+        return getOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
     }
 
     private static ErrorOr<Order> CreateOrderFrom(

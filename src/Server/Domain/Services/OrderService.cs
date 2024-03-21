@@ -26,8 +26,8 @@ public class OrderService(IOrderRepository orderRepository, ICartRepository cart
         return result;
     }
 
-    public ErrorOr<IEnumerable<Order>> GetAllUserOrders(Guid userId)
+    public ErrorOr<IEnumerable<Order>> GetOrders(Guid userId)
     {
-        return orderRepository.GetAllUserOrders(userId).ToList();
+        return orderRepository.GetOrders(userId).ToList();
     }
 }

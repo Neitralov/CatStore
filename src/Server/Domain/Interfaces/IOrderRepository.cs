@@ -7,7 +7,7 @@ public interface IOrderRepository
 
     //Read
     Order? GetOrder(Guid orderId);
-    IEnumerable<Order> GetAllUserOrders(Guid userId);
+    IEnumerable<Order> GetOrders(Guid userId);
 
     //Update
 
