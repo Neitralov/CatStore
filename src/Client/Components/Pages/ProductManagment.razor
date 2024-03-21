@@ -95,6 +95,7 @@
                 Cats.Add(result);
 
             ErrorMessage = string.Empty;
+            ClearInputFields();
         }
         else
         {
@@ -155,7 +156,11 @@
     {
         IsEditMode = false;
         ErrorMessage = string.Empty;
+        ClearInputFields();
+    }
 
+    private void ClearInputFields()
+    {
         Name = string.Empty;
         SkinColor = "#ffbe6f";
         EyeColor = "#3584e4";
