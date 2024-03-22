@@ -34,7 +34,6 @@ podman build . -t webclienttest
 podman run \
 -d \
 --pod catstore \
--e ASPNETCORE_ENVIRONMENT=Development \
 --name catstore-client \
 --replace \
 webclienttest
