@@ -1,29 +1,40 @@
 #!/bin/bash
 
+# Создаем Pod
+podman pod create --name catstore -p 8080:80 -p 8081:8080 --replace
+
+# Переходим в папку веб-API
 cd src/Server/WebAPI
 
-echo "Компилируется backend..."
+# Компилируем и собираем docker образ
 dotnet build -c Debug
-
-podman stop test
-
-echo "Собирается Docker образ backend-a..."
 podman build . -t webapitest
 
-echo "Запускается контейнер с backend-ом..."
+# Запускаем контейнер с backend-ом
 podman run \
 -d \
---rm \
--p 8000:8080 \
--v ./CatStore:/app/Database:Z \
+--pod catstore \
+-v catstore-volume:/app/Database:Z \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e AppSettings:Token="My favorite really secret key. 512 bit at least. (64 characters)." \
 -e ConnectionStrings:DefaultConnection="Data Source=Database/Database.db" \
---name test \
+--name catstore-webapi \
+--replace \
 webapitest
 
+# Переходим в папку с клиентом
 cd ../../Client
 
-echo "Запускается frontend..."
+# Компилируем и собираем docker образ
 bun tailwindcss -i wwwroot/css/tailwind.css -o wwwroot/css/app.css
-dotnet run
+dotnet publish -c Release
+podman build . -t webclienttest
+
+# Запускаем контейнер с frontend-ом
+podman run \
+-d \
+--pod catstore \
+-e ASPNETCORE_ENVIRONMENT=Development \
+--name catstore-client \
+--replace \
+webclienttest
