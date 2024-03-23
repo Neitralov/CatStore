@@ -1,0 +1,18 @@
+<div class="flex justify-center items-center min-w-9 h-9 border-solid border-second border rounded-lg hover:cursor-pointer hover:shadow-md" @onclick="() => OnClick.InvokeAsync(LinkedWith)">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <mask id="mask0_94_2460" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
+            <rect width="20" height="20" fill="#D9D9D9"/>
+        </mask>
+        <g mask="url(#mask0_94_2460)">
+            <path d="M5.64706 17.8824C5.16176 17.8824 4.74632 17.7096 4.40074 17.364C4.05515 17.0184 3.88235 16.6029 3.88235 16.1176V4.64706H3V2.88235H7.41176V2H12.7059V2.88235H17.1176V4.64706H16.2353V16.1176C16.2353 16.6029 16.0625 17.0184 15.7169 17.364C15.3713 17.7096 14.9559 17.8824 14.4706 17.8824H5.64706ZM14.4706 4.64706H5.64706V16.1176H14.4706V4.64706ZM7.41176 14.3529H9.17647V6.41176H7.41176V14.3529ZM10.9412 14.3529H12.7059V6.41176H10.9412V14.3529Z" fill="#1C1B1F"/>
+        </g>
+    </svg>
+</div>
+
+@code {
+    [Parameter]
+    public Guid LinkedWith { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnClick { get; set; }
+}

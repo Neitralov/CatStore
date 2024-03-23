@@ -1,0 +1,18 @@
+﻿@inherits LayoutComponentBase
+@inject IWebAssemblyHostEnvironment Env
+
+<div class="flex flex-col min-h-full bg-background">
+    @if (Env.IsDevelopment())
+    {
+        <div class="flex justify-center bg-green-300">
+            <a class="my-1 hover:underline" href="http://localhost:8081/swagger/index.html" target="_blank">Открыть Swagger UI</a>
+        </div>
+    }
+    <Header />
+
+    <main class="xl:container w-full grow xl:py-5 py-4 xl:px-[50px] px-4">
+        @Body
+    </main>
+
+    <Footer />
+</div>

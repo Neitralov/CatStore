@@ -1,0 +1,170 @@
+@page "/cart"
+@inject HttpClient HttpClient
+@inject UserService UserService
+@inject CartService CartService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+
+<PageTitle>Корзина — CatStore</PageTitle>
+
+<div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 gap-4">
+    @if (CartItems.Count > 0)
+    {
+        <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
+        @foreach(var cartItem in CartItems)
+        {
+            <CartItem
+                Cat="cartItem.Cat"
+                Quantity="cartItem.Quantity"
+                OnMinusClick="DecreaseCartItemQuantity"
+                OnPlusClick="IncreaseCartItemQuantity"
+                OnTrashBinClick="DeleteCartItem" />
+            <hr class="last:hidden" />
+        }
+        </Panel>
+    }
+    else if (HasDataLoaded)
+    {
+        <h1 class="col-span-12 text-sm">Корзина пуста. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/">каталог</a>, чтобы добавить котов.</h1>
+        if (IsUserAuthenticated is false)
+        {
+            <h1 class="col-span-12 text-sm">Если в Корзине были товары, <a class="text-primary hover:cursor-pointer hover:underline" href="/login?returnUrl=/cart">войдите</a>, чтобы увидеть их.</h1>
+        }
+    }
+    
+    @if (CartItems.Count > 0)
+    {
+        <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
+            <ApplyButton OnClick="PlaceOrder">К оформлению</ApplyButton>
+            <div class="flex justify-between text-sm">
+                <span>Итого</span>
+                <span>@TotalPrice $</span>
+            </div>
+            <hr />
+            <div class="flex justify-between text-sm text-muted">
+                <span>Товары</span>
+                <span>@TotalPriceWithoutDiscount $</span>
+            </div>
+            <div class="flex justify-between text-sm text-muted">
+                <span>Скидка</span>
+                <span class="text-primary">- @TotalDiscount $</span>
+            </div>
+        </Panel>
+    }
+</div>
+
+@code {
+    private List<(CatResponse? Cat, int Quantity)> CartItems { get; } = new();
+
+    private int TotalPrice { get; set; }
+    private int TotalPriceWithoutDiscount { get; set; }
+    private int TotalDiscount { get; set; }
+
+    private bool HasDataLoaded { get; set; }
+    private bool IsUserAuthenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsUserAuthenticated = await UserService.IsUserAuthenticated();
+
+        var dbCartItems = await CartService.GetCartItems();
+        
+        foreach (var cartItem in dbCartItems)
+        {
+            var catId = cartItem.CatId;
+            var response = await HttpClient.GetAsync($"/api/cats/{catId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var cat = await response.Content.ReadFromJsonAsync<CatResponse>();
+                CartItems.Add((cat, cartItem.Quantity));
+            }
+            else
+                await DeleteCartItem(cartItem.CatId);
+        }
+
+        CalculateCost();
+
+        HasDataLoaded = true;
+    }
+
+    private async Task DecreaseCartItemQuantity(CatResponse cat)
+    {
+        var currentItemQuantity = CartItems.FirstOrDefault(item => item.Cat?.CatId == cat.CatId).Quantity;
+        var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity - 1);
+
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
+            CartItems[index] = (cat, currentItemQuantity - 1);
+
+            CalculateCost();
+        }
+        else
+            await DeleteCartItem(cat.CatId);
+    }
+
+    private async Task IncreaseCartItemQuantity(CatResponse cat)
+    {
+        var currentItemQuantity = CartItems.FirstOrDefault(item => item.Cat?.CatId == cat.CatId).Quantity;
+        var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity + 1);
+
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
+            CartItems[index] = (cat, currentItemQuantity + 1);
+
+            CalculateCost();
+        }
+    }
+
+    private async Task DeleteCartItem(Guid catId)
+    {
+        var response = await CartService.DeleteCartItem(catId);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var index = CartItems.FindIndex(item => item.Cat?.CatId == catId);
+
+            if (index != -1)
+                CartItems.RemoveAt(index);
+
+            CalculateCost();
+        }
+    }
+
+    private async Task PlaceOrder()
+    {
+        if (await UserService.IsUserAuthenticated() is false)
+        {
+            NavigationManager.NavigateTo("/login?returnUrl=/cart");
+            return;
+        }
+
+        var response = await HttpClient.PostAsync("/api/orders", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Заказ успешно оформлен");
+            await CartService.InvokeOnCartChanged();
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            var errorMessage = result!.GetFirstErrorMessage();
+            await JsRuntime.InvokeVoidAsync("alert", errorMessage);
+        }
+    }
+
+    private void CalculateCost()
+    {
+        TotalPriceWithoutDiscount = (int)CartItems.Sum(item => (item.Cat?.Cost ?? 0) * item.Quantity);
+        TotalDiscount = (int)CartItems.Sum(item => (item.Cat?.Discount ?? 0) * item.Quantity);
+        TotalPrice = TotalPriceWithoutDiscount - TotalDiscount;
+    }
+}

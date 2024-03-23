@@ -1,0 +1,50 @@
+@inject HttpClient HttpClient
+
+@if (Cat is not null)
+{
+    <div class="flex items-center gap-4 w-full">
+        <div class="flex justify-between w-full px-5 py-2 bg-background rounded-lg text-sm">
+            <span><a href='@($"/cat/{Cat.CatId}")'>@Cat.Name</a></span>
+            <p class="text-sm font-bold">
+                @if (Cat.Discount > 0)
+                {
+                    <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
+                    <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
+                }
+                else
+                {
+                    <span>@($"{Cat.Cost:F0}") $</span>
+                }
+            </p>
+        </div>
+
+        <div class="basis-1/3">
+            <Counter OnMinusClick="() => OnMinusClick.InvokeAsync(Cat)" OnPlusClick="() => OnPlusClick.InvokeAsync(Cat)">
+                @Quantity
+            </Counter>
+        </div>
+        
+        <div class="flex justify-center items-center min-w-24 py-2 bg-background rounded-lg text-sm">
+            @($"{Quantity * (Cat.Cost - Cat.Discount):F0}") $
+        </div>
+
+        <TrashBinButton LinkedWith="Cat.CatId" OnClick="() => OnTrashBinClick.InvokeAsync(Cat.CatId)" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public CatResponse? Cat { get; set; }
+    
+    [Parameter]
+    public int Quantity { get; set; }
+
+    [Parameter]
+    public EventCallback<CatResponse> OnPlusClick { get; set; }
+    
+    [Parameter]
+    public EventCallback<CatResponse> OnMinusClick { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnTrashBinClick { get; set; }
+}

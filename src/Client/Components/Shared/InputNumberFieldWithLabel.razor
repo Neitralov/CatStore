@@ -1,0 +1,29 @@
+<div class="@CssClasses flex flex-col gap-2 w-full">
+    <h2>@Label</h2>
+    <input class="border-solid border-second border rounded-lg h-9 indent-3 w-full placeholder:text-muted hover:shadow-md" type="number" placeholder="@Placeholder"
+    value="@Value" @onchange="OnValueChanged" />
+</div>
+
+@code {
+    [Parameter]
+    public string CssClasses { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+    
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        int.TryParse(e.Value?.ToString(), out int value);
+        Value = value;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

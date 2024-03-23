@@ -1,0 +1,14 @@
+<div class="@CssClasses xl:px-5 px-4 xl:py-4 py-3 h-fit bg-neutral rounded-lg shadow text-sm" @onclick="OnClick">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public string CssClasses { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

@@ -1,0 +1,114 @@
+@page "/cat/{Id:guid}"
+@inject HttpClient HttpClient
+@inject CartService CartService
+
+<PageTitle>Описание товара — CatStore</PageTitle>
+
+@if (Cat is not null)
+{
+    <div class="grid grid-cols-12 xl:gap-5 gap-4">
+        <div class="flex flex-col xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12 xl:gap-5 gap-4">
+            <Panel>
+                <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="@Cat.EarColor" IsMale="@Cat.IsMale"/>
+            </Panel>
+
+            <Panel CssClasses="flex flex-col items-center w-full gap-2">
+                <p class="flex justify-center items-center gap-1 w-full h-8 text-sm font-bold bg-background rounded-lg">
+                    @if (Cat.Discount > 0)
+                    {
+                        <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
+                        <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
+                    }
+                    else
+                    {
+                        <span>@($"{Cat.Cost:F0}") $</span>
+                    }
+                </p>
+                @if (CartItem is not null)
+                {
+                    <Counter OnMinusClick="DecreaseCartItemQuantity" OnPlusClick="IncreaseCartItemQuantity">
+                        @CartItem?.Quantity
+                    </Counter>
+                }
+                else if (HasDataLoaded)
+                {
+                    <ApplyButton OnClick="AddToCart">В корзину</ApplyButton>
+                }
+            </Panel>
+        </div>
+
+        <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
+            <ValueFieldWithLabel Label="Имя">@Cat.Name</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет шерсти">@Cat.SkinColor</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет глаз">@Cat.EyeColor</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Цвет ушей">@Cat.EarColor</ValueFieldWithLabel>
+            <ValueFieldWithLabel Label="Пол">
+                @(Cat.IsMale ? "Мальчик" : "Девочка")
+            </ValueFieldWithLabel>
+        </Panel>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public CatResponse? Cat { get; set; }
+
+    private CartItemResponse? CartItem { get; set; }
+
+    private bool HasDataLoaded { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{Id}");
+
+        if (Cat != null)
+            CartItem = await CartService.GetCartItem(Cat.CatId);
+
+        HasDataLoaded = true;
+    }
+
+    private async Task AddToCart()
+    {
+        var request = new CreateCartItemRequest(Cat!.CatId);
+        await CartService.AddToCart(request);
+
+        CartItem = await CartService.GetCartItem(Cat.CatId);
+    }
+
+    private async Task DecreaseCartItemQuantity()
+    {
+        if (Cat is null || CartItem is null)
+        return;
+
+        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        else
+        await DeleteCartItem();
+    }
+
+    private async Task IncreaseCartItemQuantity()
+    {
+        if (Cat is null || CartItem is null)
+        return;
+
+        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity + 1);
+        var response = await CartService.UpdateCartItemQuantity(request);
+
+        if (response.IsSuccessStatusCode)
+        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity + 1);
+    }
+
+    private async Task DeleteCartItem()
+    {
+        if (Cat != null)
+        await CartService.DeleteCartItem(Cat.CatId);
+
+        CartItem = null;
+    }
+}

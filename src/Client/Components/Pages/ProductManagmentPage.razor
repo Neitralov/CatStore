@@ -1,0 +1,187 @@
+@page "/products"
+@layout ProfileLayout
+@inject HttpClient HttpClient
+@inject CartService CartService
+@inject IJSRuntime JsRuntime
+@attribute [Authorize(Policy = "CanEditCats")]
+
+<PageTitle>Управление товарами — CatStore</PageTitle>
+
+<Panel CssClasses="flex lg:flex-row flex-col xl:gap-5 gap-4">
+    <div class="basis-1/4 flex justify-center items-center">
+        <CatPreview SkinColor="@SkinColor" EyeColor="@EyeColor" EarColor="@EarColor" IsMale="@IsMale" />
+    </div>
+    
+    <div class="basis-3/4 flex flex-col gap-3 w-full">
+        <div class="flex justify-between gap-2">
+            <InputTextFieldWithLabel Label="Имя" InputType="text" @bind-Value="Name" Disabled="IsEditMode" />
+            <CheckBoxWithLabel Label="Пол" Text="Мальчик?" @bind-Value="IsMale" Disabled="IsEditMode" />
+        </div>
+
+        <div class="flex justify-between gap-2">
+            <InputTextFieldWithLabel Label="Цвет шерсти" InputType="color" @bind-Value="SkinColor" Disabled="IsEditMode" />
+            <InputTextFieldWithLabel Label="Цвет глаз" InputType="color" @bind-Value="EyeColor" Disabled="IsEditMode" />
+            <InputTextFieldWithLabel Label="Цвет ушей" InputType="color" @bind-Value="EarColor" Disabled="IsEditMode" />
+        </div>
+
+        <div class="flex justify-between gap-2">
+            <InputNumberFieldWithLabel Label="Цена" @bind-Value="Cost" />
+            <InputNumberFieldWithLabel Label="Скидка" @bind-Value="Discount" />
+        </div>
+
+        <p class="text-attention">@ErrorMessage</p>
+
+        @if (IsEditMode)
+        {
+            <ApplyButton OnClick="UpdateCatPrice">Сохранить</ApplyButton>
+        }
+        else
+        {
+            <ApplyButton OnClick="CreateCat">Добавить</ApplyButton>
+        }
+    </div>
+</Panel>
+
+@if (Cats.Count > 0)
+{
+    <Panel CssClasses="flex flex-col gap-3">
+        @if (IsEditMode)
+        {
+            <Button OnClick="BackToCreateMode">Перейти в режим добавления</Button>
+        }
+        @for (var index = 1; index <= Cats.Count; index++)
+        {
+            var cat = Cats[^index];
+
+            <div class="flex gap-2">
+                <CatRowItem Cat="cat" OnClick="LoadDataToEditor"/>
+                <TrashBinButton LinkedWith="@cat.CatId" OnClick="DeleteCat" />
+            </div>
+        }
+    </Panel>
+}
+
+@code {
+    private List<CatResponse> Cats { get; set; } = new();
+
+    private bool IsEditMode { get; set; }
+
+    private Guid Id { get; set; }
+    private string Name { get; set; } = string.Empty;
+    private string SkinColor { get; set; } = "#ffbe6f";
+    private string EyeColor { get; set; } = "#3584e4";
+    private string EarColor { get; set; } = "#ffcea1";
+    private bool IsMale { get; set; } = true;
+    private int Cost { get; set; }
+    private int Discount { get; set; }
+
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
+    }
+
+    private async Task CreateCat()
+    {
+        var request = new CreateCatRequest(Name, SkinColor, EyeColor, EarColor, IsMale, Cost, Discount);
+        var response = await HttpClient.PostAsJsonAsync("/api/cats", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<CatResponse>();
+
+            if (result is not null)
+                Cats.Add(result);
+
+            ErrorMessage = string.Empty;
+            ClearInputFields();
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            ErrorMessage = result!.GetFirstErrorMessage();
+        }
+    }
+
+    private async Task UpdateCatPrice()
+    {
+        var request = new UpdateCatPriceRequest(Cost, Discount);
+        var response = await HttpClient.PatchAsJsonAsync($"/api/cats/{Id}/update-price", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var updatedCat = await HttpClient.GetFromJsonAsync<CatResponse>($"/api/cats/{Id}");
+
+            if (updatedCat is not null)
+            {
+                var index = Cats.FindIndex(cat => cat.CatId == updatedCat.CatId);
+                Cats[index] = updatedCat;
+            }
+
+            await JsRuntime.InvokeVoidAsync("alert", "Кот успешно сохранен");
+            ErrorMessage = string.Empty;
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            ErrorMessage = result!.GetFirstErrorMessage();
+        }
+    }
+
+    private async Task DeleteCat(Guid catId)
+    {
+        var response = await HttpClient.DeleteAsync($"/api/cats/{catId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var cat = Cats.Find(cat => cat.CatId == catId);
+
+            if (cat is not null)
+                Cats.Remove(cat);
+
+            BackToCreateMode();
+            await CartService.InvokeOnCartChanged();
+
+            ErrorMessage = string.Empty;
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            ErrorMessage = result!.GetFirstErrorMessage();
+        }
+    }
+
+    private void BackToCreateMode()
+    {
+        IsEditMode = false;
+        ErrorMessage = string.Empty;
+        ClearInputFields();
+    }
+
+    private void ClearInputFields()
+    {
+        Name = string.Empty;
+        SkinColor = "#ffbe6f";
+        EyeColor = "#3584e4";
+        EarColor = "#ffcea1";
+        IsMale = true;
+        Cost = 0;
+        Discount = 0;
+    }
+
+    private void LoadDataToEditor(CatResponse cat)
+    {
+        IsEditMode = true;
+        ErrorMessage = string.Empty;
+
+        Id = cat.CatId;
+        Name = cat.Name;
+        SkinColor = cat.SkinColor;
+        EyeColor = cat.EyeColor;
+        EarColor = cat.EarColor;
+        IsMale = cat.IsMale;
+        Cost = (int)cat.Cost;
+        Discount = (int)cat.Discount;
+    }
+}

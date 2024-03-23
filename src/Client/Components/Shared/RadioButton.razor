@@ -1,0 +1,20 @@
+<label class="flex items-center border-solid border-second border rounded-lg h-9 text-muted hover:cursor-pointer select-none hover:shadow-md" for="@For" onclick="document.querySelector('#@For').click()">
+    <input class="border-solid border-second border rounded-lg h-3.5 ml-3 mr-2 accent-black focus:outline-none" type="radio" name="@Name" id="@For" checked="@Checked" @onchange="OnChange" />
+    @Text
+</label>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Checked { get; set; }
+
+    [Parameter]
+    public EventCallback OnChange { get; set; }
+
+    private string For { get; set; } = "a" + Guid.NewGuid();
+}

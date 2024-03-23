@@ -1,0 +1,23 @@
+<input class="border-solid border-second border rounded-lg h-9 indent-3 w-full placeholder:text-muted hover:shadow-md"
+    type="number"
+    placeholder="@Placeholder"
+    value="@Value"
+    @onchange="OnValueChanged" />
+
+@code {
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public int? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int?> ValueChanged { get; set; }
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        int.TryParse(e.Value?.ToString(), out int value);
+        Value = value;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

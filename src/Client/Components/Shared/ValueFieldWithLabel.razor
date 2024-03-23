@@ -1,0 +1,15 @@
+<div class="flex flex-col gap-2">
+    <h2 class="text-sm">@Label</h2>
+    <p class="text-sm text-muted bg-background px-3 py-2 rounded-lg">@ChildContent</p>
+</div>
+
+@code {
+    [Parameter]
+    public string CssClasses { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

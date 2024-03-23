@@ -1,0 +1,12 @@
+<p class=" border-solid border-second border text-sm leading-4 w-full bg-background px-3 py-2 rounded-lg hover:cursor-pointer hover:shadow-md"
+    @onclick="() => OnClick.InvokeAsync(Cat)">
+    @Cat?.Name
+</p>
+
+@code {
+    [Parameter]
+    public CatResponse? Cat { get; set; }
+    
+    [Parameter]
+    public EventCallback<CatResponse> OnClick { get; set; }
+}
