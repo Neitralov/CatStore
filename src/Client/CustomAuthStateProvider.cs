@@ -5,7 +5,6 @@ public class CustomAuthStateProvider(ILocalStorageService localStorage, HttpClie
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var identity = new ClaimsIdentity();
-        httpClient.DefaultRequestHeaders.Authorization = null;
         
         var accessToken = await localStorage.GetItemAsStringAsync("AccessToken");
         var refreshToken = await localStorage.GetItemAsStringAsync("RefreshToken");
