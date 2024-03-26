@@ -24,3 +24,5 @@ global using WebAPI.Contracts.Cat;
 global using WebAPI.Contracts.User;
 global using WebAPI.Contracts.CartItem;
 global using WebAPI.Contracts.Order;
+
+global using TokensPair = (string AccessToken, string RefreshToken);

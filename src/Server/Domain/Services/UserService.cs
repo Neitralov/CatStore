@@ -43,7 +43,7 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         return result;
     }
 
-    public ErrorOr<(string accessToken, string refreshToken)> RefreshTokens(string? expiredAccessToken, string? refreshToken)
+    public ErrorOr<TokensPair> RefreshTokens(string? expiredAccessToken, string? refreshToken)
     {
         if (expiredAccessToken is null)
             return Errors.AccessToken.NotFound;
@@ -77,7 +77,7 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         return (newAccessToken, newRefreshToken);
     }
 
-    public ErrorOr<(string accessToken, string refreshToken)> Login(string email, string password)
+    public ErrorOr<TokensPair> Login(string email, string password)
     {
         var user = userRepository.FindUserByEmail(email);
 
@@ -140,7 +140,7 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
 
         try
         {
-            return tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+            return tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out _);
         }
         catch
         {

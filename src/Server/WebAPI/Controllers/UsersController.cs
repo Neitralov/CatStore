@@ -48,13 +48,13 @@ public class UsersController(UserService userService) : ApiController
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
     public IActionResult Login([Required] LoginUserRequest request)
     {
-        ErrorOr<(string accessToken, string refreshToken)> loginUserResult = userService.Login(request.Email, request.Password);
+        ErrorOr<TokensPair> loginUserResult = userService.Login(request.Email, request.Password);
 
         if (loginUserResult.IsError)
             return Problem(loginUserResult.Errors);
 
-        var accessToken = loginUserResult.Value.accessToken;
-        var refreshToken = loginUserResult.Value.refreshToken;
+        var accessToken = loginUserResult.Value.AccessToken;
+        var refreshToken = loginUserResult.Value.RefreshToken;
 
         return Ok(new LoginUserResponse(accessToken, refreshToken));
     }
@@ -67,13 +67,13 @@ public class UsersController(UserService userService) : ApiController
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
     public IActionResult LoginByTokens([Required] RefreshUserTokensRequest request)
     {
-        ErrorOr<(string accessToken, string refreshToken)> refreshTokensResult = userService.RefreshTokens(request.ExpiredAccessToken,  request.RefreshToken);
+        ErrorOr<TokensPair> refreshTokensResult = userService.RefreshTokens(request.ExpiredAccessToken,  request.RefreshToken);
 
         if (refreshTokensResult.IsError)
             return Problem(refreshTokensResult.Errors);
 
-        var newAccessToken = refreshTokensResult.Value.accessToken;
-        var newRefreshToken = refreshTokensResult.Value.refreshToken;
+        var newAccessToken = refreshTokensResult.Value.AccessToken;
+        var newRefreshToken = refreshTokensResult.Value.RefreshToken;
         
         return Ok(new LoginUserResponse(newAccessToken, newRefreshToken));
     }
