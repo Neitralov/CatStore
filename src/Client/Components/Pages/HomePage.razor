@@ -46,10 +46,10 @@
             </div>
         </Panel>
 
-        @if (Cats.Count > 0)
+        @if (GetCats(Name, SortType) is { Count: not 0 } cats)
         {
             <div class="grid xl:grid-cols-4 grid-cols-3 auto-rows-min xl:gap-5 gap-4">
-                @foreach(var cat in GetCats(Name, SortType))
+                @foreach(var cat in cats)
                 {
                     <CatCard @key="cat" Cat="cat" />
                 }
@@ -57,7 +57,14 @@
         }
         else if (HasDataLoaded)
         {
-            <h1 class="text-sm">Каталог пуст. Перейдите на страницу <a class="text-primary hover:cursor-pointer hover:underline" href="/products">управления товарами</a>, чтобы добавить котов.</h1>
+            if (Cats.Count > 0)
+            {
+                <h1 class="text-sm">Нет котов, которые бы удовлетворяли вашему запросу :(</h1>
+            }
+            else
+            {
+                <h1 class="text-sm">Каталог пуст. Перейдите на страницу <a class="text-primary hover:cursor-pointer hover:underline" href="/products">управления товарами</a>, чтобы добавить котов.</h1>
+            }
         }
     </div>
 </div>
