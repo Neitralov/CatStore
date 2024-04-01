@@ -41,15 +41,13 @@ let ``Нельзя создать кота с некорректным цвет�
     let result = sut.FirstError
     Assert.Equal(Errors.Cat.InvalidEarColor, result)
     
-[<Fact>]
-let ``Нельзя создать бесплатного кота`` () =
-    let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 0, 0)
-    let result = sut.FirstError
-    Assert.Equal(Errors.Cat.InvalidCost, result)
-    
-[<Fact>]
-let ``Скидка не может составлять 100% и более`` () =
-    let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, 10)
+[<Theory>]
+[<InlineData(0, 0)>]
+[<InlineData(-1, 0)>]
+[<InlineData(1, 1)>]
+[<InlineData(1, 2)>]
+let ``Нельзя создать бесплатного кота`` cost discount =
+    let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, cost, discount)
     let result = sut.FirstError
     Assert.Equal(Errors.Cat.InvalidCost, result)
     
@@ -57,4 +55,20 @@ let ``Скидка не может составлять 100% и более`` () 
 let ``Скидка не может быть отрицательной`` () =
     let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, -10)
     let result = sut.FirstError
+    Assert.Equal(Errors.Cat.InvalidDiscount, result)
+    
+[<Theory>]
+[<InlineData(0, 0)>]
+[<InlineData(-1, 0)>]
+[<InlineData(1, 1)>]
+[<InlineData(1, 2)>]
+let ``Нельзя обновить цену кота так, чтобы он стал бесплатным`` cost discount =
+    let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, 0)
+    let result = sut.Value.UpdatePrice(cost, discount).FirstError
+    Assert.Equal(Errors.Cat.InvalidCost, result)
+    
+[<Fact>]
+let ``Нельзя обновить скидку кота так, чтобы она стала отрицательной`` () =
+    let sut = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, 0)
+    let result = sut.Value.UpdatePrice(sut.Value.Cost, -1).FirstError
     Assert.Equal(Errors.Cat.InvalidDiscount, result)
