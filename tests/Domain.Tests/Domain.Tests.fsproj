@@ -12,6 +12,8 @@
     <Compile Include="CatTests.fs" />
     <Compile Include="UserTests.fs" />
     <Compile Include="CartItemTests.fs" />
+    <Compile Include="OrderItemTests.fs" />
+    <Compile Include="OrderTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
