@@ -1,16 +1,7 @@
 .idea
 .fleet
+bin/
 obj/
-src/Server/Database/bin/
-src/Server/Database/obj/
-src/Server/Domain/bin/
-src/Server/Domain/obj/
-src/Server/WebAPI/bin/
-src/Server/WebAPI/obj/
-src/Server/WebAPI.Contracts/bin/
-src/Server/WebAPI.Contracts/obj/
-src/Client/bin/
-src/Client/obj/
 src/Client/wwwroot/css/app.css
 src/Client/node_modules/
 *.db*
