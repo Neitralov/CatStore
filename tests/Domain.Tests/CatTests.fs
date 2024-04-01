@@ -8,7 +8,7 @@ open Domain.ServiceErrors
 [<InlineData("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, 5)>]
 [<InlineData("Ком", "#000000", "#000000", "#000000", true, 1, 0)>]
 [<InlineData("Пятнадцать букв", "#afe3e3", "#c0aa14", "#1b1b4b", false, 50, 49)>]
-let ``Кот должен быть создан при корректных значениях`` (name, skinColor, eyeColor, earColor, isMale, cost, discount) =
+let ``Кот должен быть создан при корректных значениях`` name skinColor eyeColor earColor isMale cost discount =
     let sut = Cat.Create(name, skinColor, eyeColor, earColor, isMale, cost, discount)
     let result = sut.IsError
     Assert.False(result)
@@ -18,7 +18,7 @@ let ``Кот должен быть создан при корректных зн
 [<InlineData("      ")>]
 [<InlineData("Аа")>]
 [<InlineData("Aaaaaaaaaaaaaaaa")>]
-let ``Нельзя создать кота с пустым, коротким или слишком длинным именем`` (value) =
+let ``Нельзя создать кота с пустым, коротким или слишком длинным именем`` value =
     let sut = Cat.Create(value, "#ffffff", "#ffffff", "#ffffff", true, 10, 0)
     let result = sut.FirstError
     Assert.Equal(Errors.Cat.InvalidName, result)
