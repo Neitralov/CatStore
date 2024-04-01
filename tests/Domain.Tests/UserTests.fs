@@ -1,5 +1,6 @@
 module UserTests
 
+open System.Linq
 open Xunit
 open Domain.Data
 open Domain.ServiceErrors
@@ -29,6 +30,14 @@ let ``Нельзя создать пользователя если пароли
     let sut = User.Create("example@gmail.com", "1234", "123Q")
     let result = sut.FirstError
     Assert.Equal(Errors.User.PasswordsDontMatch, result)
+    
+[<Fact>]
+let ``Пароль пользователя можно менять`` () =
+    let sut = User.Create("example@gmail.com", "1234", "1234")
+    let oldPasswordHash = sut.Value.PasswordHash
+    sut.Value.ChangePassword("12345") |> ignore
+    let result = sut.Value.PasswordHash
+    Assert.False(Enumerable.SequenceEqual(oldPasswordHash, result))
     
 [<Fact>]
 let ``Корректный пароль пользователя нельзя сменить на короткий`` () =
