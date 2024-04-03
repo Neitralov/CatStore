@@ -9,15 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="CatTests.fs" />
-    <Compile Include="UserTests.fs" />
-    <Compile Include="CartItemTests.fs" />
-    <Compile Include="OrderItemTests.fs" />
-    <Compile Include="OrderTests.fs" />
+    <Compile Include="Data\CatTests.fs" />
+    <Compile Include="Data\UserTests.fs" />
+    <Compile Include="Data\CartItemTests.fs" />
+    <Compile Include="Data\OrderItemTests.fs" />
+    <Compile Include="Data\OrderTests.fs" />
+    <Compile Include="Services\CatServiceTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Foq" Version="1.8.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
