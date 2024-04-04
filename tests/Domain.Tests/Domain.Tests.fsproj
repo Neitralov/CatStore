@@ -15,6 +15,9 @@
     <Compile Include="Data\OrderItemTests.fs" />
     <Compile Include="Data\OrderTests.fs" />
     <Compile Include="Services\CatServiceTests.fs" />
+    <Compile Include="Services\UserServiceTests.fs" />
+    <Compile Include="Services\CartServiceTests.fs" />
+    <Compile Include="Services\OrderServiceTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
