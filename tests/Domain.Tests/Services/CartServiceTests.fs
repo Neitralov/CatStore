@@ -151,7 +151,6 @@ let ``Количество котов в корзине не будет обно
     
 [<Fact>]
 let ``Сервис передаст пользователю общее количество его товаров в корзине при запросе`` () =
-    let cartItem = CartItem.Create(Guid.NewGuid(), Guid.NewGuid()).Value
     let behaviour (repository: ICartRepository) = <@ repository.GetUserCartItemsCount(any()) --> 4 @>
     let catRepository = Mock.Of<ICatRepository>()
     let sut = CartService(Mock.With(behaviour), catRepository)
