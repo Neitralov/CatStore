@@ -4,15 +4,13 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
 {
     public ErrorOr<Created> StoreCartItem(CartItem cartItem)
     {
+        if (catRepository.IsCatExists(cartItem.CatId) is false)
+            return Errors.Cat.NotFound;
+        
         var sameCartItem = cartRepository.FindCartItem(cartItem);
 
         if (sameCartItem is null)
-        {
-            if (catRepository.IsCatExists(cartItem.CatId) is false)
-                return Errors.Cat.NotFound;
-
             cartRepository.AddCartItem(cartItem);
-        }
         else
             sameCartItem.IncreaseQuantity();
 
@@ -48,6 +46,7 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
         if (dbCartItem is null)
             return Errors.CartItem.NotFound;
 
+        //TODO: А почему я создаю новый cartItem и извлекаю его количество, а не передаю CatId и UserId, а кол-во отдельно?
         var result = dbCartItem.UpdateQuantity(cartItem.Quantity);
 
         if (result == Result.Updated)
