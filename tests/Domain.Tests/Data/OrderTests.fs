@@ -11,14 +11,18 @@ let ``Создание заказа с корректными данными н�
     let orderItems = List<OrderItem>()
     orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 1, 25).Value)
     let sut = Order.Create(Guid.NewGuid(), orderItems, 25)
+    
     let result = sut.IsError
+    
     Assert.False(result)
     
 [<Fact>]
 let ``Нельзя создать пустой заказ`` () =
     let orderItems = List<OrderItem>()
     let sut = Order.Create(Guid.NewGuid(), orderItems, 25)
+    
     let result = sut.FirstError
+    
     Assert.Equal(Errors.Order.EmptyOrder, result)
     
 [<Fact>]
@@ -26,5 +30,7 @@ let ``Нельзя создать бесплатный заказ`` () =
     let orderItems = List<OrderItem>()
     orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 1, 25).Value)
     let sut = Order.Create(Guid.NewGuid(), orderItems, 0)
+    
     let result = sut.FirstError
+    
     Assert.Equal(Errors.Order.InvalidPrice, result)

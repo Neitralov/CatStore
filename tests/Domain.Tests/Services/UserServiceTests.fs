@@ -18,7 +18,9 @@ let ``Учетная запись с уникальным email должна б�
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.StoreUser(user).IsError
+    
     Assert.False(result)
     verify <@ repository.AddUser(user) @> once
     verify <@ repository.SaveChanges() @> once
@@ -32,7 +34,9 @@ let ``Нельзя сохранить две учетные записи с од
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.StoreUser(user).FirstError
+    
     Assert.Equal(Errors.User.AlreadyExists, result)
     verify <@ repository.AddUser(user) @> never
     verify <@ repository.SaveChanges() @> never
@@ -46,7 +50,9 @@ let ``Пароль существующего в БД пользователя �
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.ChangeUserPassword(user.UserId, "1234", "123Q", "123Q").IsError
+    
     Assert.False(result)
     verify <@ repository.SaveChanges() @> once
     
@@ -58,7 +64,9 @@ let ``Сервис вернет NotFound при попытке обновить 
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.ChangeUserPassword(Guid.NewGuid(), "1234", "123Q", "123Q").FirstError
+    
     Assert.Equal(Errors.User.NotFound, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -71,7 +79,9 @@ let ``Нельзя обновить пароль пользователя, ес�
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.ChangeUserPassword(user.UserId, "wrongPassword", "123Q", "123Q").FirstError
+    
     Assert.Equal(Errors.User.IncorrectOldPassword, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -84,7 +94,9 @@ let ``Нельзя обновить пароль пользователя, ес�
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.ChangeUserPassword(user.UserId, "1234", "123Q", "123F").FirstError
+    
     Assert.Equal(Errors.User.PasswordsDontMatch, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -97,7 +109,9 @@ let ``Нельзя обновить пароль пользователя, ес�
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.ChangeUserPassword(user.UserId, "1234", "1234", "1234").FirstError
+    
     Assert.Equal(Errors.User.NewAndOldPasswordAreTheSame, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -110,7 +124,9 @@ let ``Пользователь может войти в свой аккаунт,
             .Create()
     let behaviour (config: IConfiguration) = <@ config["AppSettings:Token"] --> "My favorite really secret key. 512 bit at least. (64 characters)."  @>
     let sut = UserService(repository, Mock.With(behaviour))
+    
     let result = sut.Login(user.Email, "1234").IsError
+    
     Assert.False(result)
     verify <@ repository.AddRefreshTokenSession(any()) @> once
     verify <@ repository.SaveChanges() @> once
@@ -123,7 +139,9 @@ let ``Пользователь не может войти в свой аккау
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.Login("wrongEmail", "password").FirstError
+    
     Assert.Equal(Errors.Login.IncorrectEmailOrPassword, result)
     verify <@ repository.AddRefreshTokenSession(any()) @> never
     verify <@ repository.SaveChanges() @> never
@@ -137,7 +155,9 @@ let ``Пользователь не может войти в свой аккау
             .Create()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.Login("Example@gmail.com", "wrongPassword").FirstError
+    
     Assert.Equal(Errors.Login.IncorrectEmailOrPassword, result)
     verify <@ repository.AddRefreshTokenSession(any()) @> never
     verify <@ repository.SaveChanges() @> never
@@ -147,7 +167,9 @@ let ``Нельзя обновить токены, если у пользоват
     let repository = Mock.Of<IUserRepository>()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.RefreshTokens(null, Guid.NewGuid().ToString()).FirstError
+    
     Assert.Equal(Errors.AccessToken.NotFound, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -156,6 +178,8 @@ let ``Нельзя обновить токены, если у пользоват
     let repository = Mock.Of<IUserRepository>()
     let configuration = Mock.Of<IConfiguration>()
     let sut = UserService(repository, configuration)
+    
     let result = sut.RefreshTokens("AccessToken", null).FirstError
+    
     Assert.Equal(Errors.RefreshToken.NotFound, result)
     verify <@ repository.SaveChanges() @> never

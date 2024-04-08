@@ -16,7 +16,9 @@ let ``Коты с разными названиями должны сохран�
             .Setup(fun mock -> <@ mock.IsCatExists("Персик") @>).Returns(true)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.StoreCat(cat).IsError
+    
     Assert.False(result)
     verify <@ repository.AddCat(cat) @> once
     verify <@ repository.SaveChanges() @> once
@@ -29,7 +31,9 @@ let ``Нельзя сохранить двух котов с одинаковы�
             .Setup(fun mock -> <@ mock.IsCatExists("Персик") @>).Returns(true)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.StoreCat(cat).FirstError
+    
     Assert.Equal(Errors.Cat.AlreadyExists, result)
     verify <@ repository.AddCat(cat) @> never
     verify <@ repository.SaveChanges() @> never
@@ -39,21 +43,27 @@ let ``Сервис найдет кота по ID, если он находитс
     let cat = Cat.Create("Персик", "#ffffff", "#ffffff", "#ffffff", true, 10, 0).Value
     let behaviour (repository: ICatRepository) = <@ repository.GetCat(cat.CatId) --> cat @>
     let sut = CatService(Mock.With(behaviour))
+    
     let result = sut.GetCat(cat.CatId).IsError
+    
     Assert.False(result)
     
 [<Fact>]
 let ``Сервис вернет NotFound при попытке получить кота по ID, если его нет в БД`` () =
     let behaviour (repository: ICatRepository) = <@ repository.GetCat(any()) --> null @>
     let sut = CatService(Mock.With(behaviour))
+    
     let result = sut.GetCat(Guid.NewGuid()).FirstError
+    
     Assert.Equal(Errors.Cat.NotFound, result)
     
 [<Fact>]
 let ``Сервис вернет список всех котов из БД по запросу`` () =
     let behaviour (repository: ICatRepository) = <@ repository.GetCats() --> [] @>
     let sut = CatService(Mock.With(behaviour))
+    
     let result = sut.GetCats().IsError
+    
     Assert.False(result)
     
 [<Fact>]
@@ -64,7 +74,9 @@ let ``Сервис обновит цену кота, если он есть в �
             .Setup(fun mock -> <@ mock.FindCatById(cat.CatId) @>).Returns(cat)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.UpdateCatPrice(cat.CatId, 15, 5).IsError
+    
     Assert.False(result)
     Assert.Equal<decimal>(15m, cat.Cost)
     Assert.Equal<decimal>(5m, cat.Discount)
@@ -77,7 +89,9 @@ let ``Сервис вернет NotFound при попытке обновить 
             .Setup(fun mock -> <@ mock.FindCatById(any()) @>).Returns(null)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.UpdateCatPrice(Guid.NewGuid(), 15, 5).FirstError
+    
     Assert.Equal(Errors.Cat.NotFound, result)
     verify <@ repository.SaveChanges() @> never
     
@@ -88,7 +102,9 @@ let ``Сервис удалит кота с соответствующим ID, �
             .Setup(fun mock -> <@ mock.RemoveCat(any()) @>).Returns(true)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.DeleteCat(Guid.NewGuid()).IsError
+    
     Assert.False(result)
     verify <@ repository.SaveChanges() @> once
     
@@ -99,5 +115,7 @@ let ``Сервис вернет NotFound при попытке удалить к
             .Setup(fun mock -> <@ mock.RemoveCat(any()) @>).Returns(false)
             .Create()
     let sut = CatService(repository)
+    
     let result = sut.DeleteCat(Guid.NewGuid()).FirstError
+    
     Assert.Equal(Errors.Cat.NotFound, result)
