@@ -32,7 +32,7 @@ let ``Пользователь получит данные о заказе, ес
     orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 2, 100).Value)
     let order = Order.Create(userId, orderItems).Value
     let cartRepository = Mock.Of<ICartRepository>()
-    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any()) --> order @>
+    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any(), userId) --> order @>
     let sut = OrderService(Mock.With(behaviour), cartRepository)
     
     let result = sut.GetOrder(any(), userId).IsError
@@ -41,11 +41,12 @@ let ``Пользователь получит данные о заказе, ес
     
 [<Fact>]
 let ``Пользователь не получит данные о заказе, если заказ не принадлежит ему`` () =
+    let userId = Guid.NewGuid()
     let orderItems = List<OrderItem>()
     orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 2, 100).Value)
-    let order = Order.Create(Guid.NewGuid(), orderItems).Value
+    let order = Order.Create(userId, orderItems).Value
     let cartRepository = Mock.Of<ICartRepository>()
-    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any()) --> order @>
+    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any(), userId) --> order @>
     let sut = OrderService(Mock.With(behaviour), cartRepository)
     
     let result = sut.GetOrder(any(), Guid.NewGuid()).FirstError
@@ -55,7 +56,7 @@ let ``Пользователь не получит данные о заказе,
 [<Fact>]
 let ``Пользователь не получит данные о заказе, если такого заказа не существует`` () =
     let cartRepository = Mock.Of<ICartRepository>()
-    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any()) --> null @>
+    let behaviour (repository: IOrderRepository) = <@ repository.GetOrder(any(), any()) --> null @>
     let sut = OrderService(Mock.With(behaviour), cartRepository)
     
     let result = sut.GetOrder(any(), any()).FirstError
