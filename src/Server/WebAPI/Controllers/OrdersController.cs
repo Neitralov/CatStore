@@ -36,13 +36,13 @@ public class OrdersController(
                 quantity:   item.Quantity,
                 totalPrice: (cat.Cost - cat.Discount) * item.Quantity);
             
+            if (orderItem.IsError)
+                return Problem(orderItem.Errors);
+            
             orderItems.Add(orderItem.Value);
         }
         
-        decimal totalPrice = 0;
-        orderItems.ForEach(item => totalPrice += item.TotalPrice);
-        
-        ErrorOr<Order> orderItemsToOrderResult = CreateOrderFrom(userId, orderItems, totalPrice);
+        ErrorOr<Order> orderItemsToOrderResult = CreateOrderFrom(userId, orderItems);
         
         if (orderItemsToOrderResult.IsError)
             return Problem(orderItemsToOrderResult.Errors);
@@ -83,13 +83,11 @@ public class OrdersController(
 
     private static ErrorOr<Order> CreateOrderFrom(
         Guid userId,
-        List<OrderItem> orderItems,
-        decimal totalPrice)
+        List<OrderItem> orderItems)
     {
         return Order.Create(
             userId,
-            orderItems,
-            totalPrice);
+            orderItems);
     }
     
     private CreatedAtActionResult CreatedAtGetOrderDetails(Order order)

@@ -10,7 +10,7 @@ open Domain.ServiceErrors
 let ``Создание заказа с корректными данными не вызывает ошибок`` () =
     let orderItems = List<OrderItem>()
     orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 1, 25).Value)
-    let sut = Order.Create(Guid.NewGuid(), orderItems, 25)
+    let sut = Order.Create(Guid.NewGuid(), orderItems)
     
     let result = sut.IsError
     
@@ -19,18 +19,8 @@ let ``Создание заказа с корректными данными н�
 [<Fact>]
 let ``Нельзя создать пустой заказ`` () =
     let orderItems = List<OrderItem>()
-    let sut = Order.Create(Guid.NewGuid(), orderItems, 25)
+    let sut = Order.Create(Guid.NewGuid(), orderItems)
     
     let result = sut.FirstError
     
     Assert.Equal(Errors.Order.EmptyOrder, result)
-    
-[<Fact>]
-let ``Нельзя создать бесплатный заказ`` () =
-    let orderItems = List<OrderItem>()
-    orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 1, 25).Value)
-    let sut = Order.Create(Guid.NewGuid(), orderItems, 0)
-    
-    let result = sut.FirstError
-    
-    Assert.Equal(Errors.Order.InvalidPrice, result)
