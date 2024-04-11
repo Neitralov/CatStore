@@ -51,6 +51,10 @@ Backend:
 * ORM: [EF Core 8](https://learn.microsoft.com/ru-ru/ef/core/)
 * СУБД: [SQLite](https://www.sqlite.org/about.html)
 
+Тестирование:
+* [xUnit](https://github.com/xunit/xunit)
+* [Foq](https://github.com/fsprojects/Foq)
+
 Дополнительные пакеты:
 
 * [ErrorOr](https://github.com/amantinband/error-or)
