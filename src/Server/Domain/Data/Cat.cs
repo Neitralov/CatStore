@@ -28,10 +28,10 @@ public class Cat
     {
        List<Error> errors = new();
        
-       if (name.Length is < MinNameLength or > MaxNameLength)
+       if (name.Trim().Length is < MinNameLength or > MaxNameLength)
            errors.Add(Errors.Cat.InvalidName);
        
-       var correctHexColorPattern = new Regex(@"#[0-9a-f]{6}$", RegexOptions.Compiled);
+       var correctHexColorPattern = new Regex("#[0-9a-f]{6}$", RegexOptions.Compiled);
        
        if (correctHexColorPattern.IsMatch(skinColor) is false)
            errors.Add(Errors.Cat.InvalidSkinColor);
@@ -54,7 +54,7 @@ public class Cat
        return new Cat
        {
            CatId     = catId ?? Guid.NewGuid(),
-           Name      = name,
+           Name      = name.Trim(),
            SkinColor = skinColor,
            EyeColor  = eyeColor,
            EarColor  = earColor,

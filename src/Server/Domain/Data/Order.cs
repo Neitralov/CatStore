@@ -13,7 +13,6 @@ public class Order
     public static ErrorOr<Order> Create(
         Guid userId,
         ICollection<OrderItem> orderItems,
-        decimal totalPrice,
         Guid? orderId = null)
     {
         List<Error> errors = new();
@@ -21,8 +20,7 @@ public class Order
         if (orderItems.Count <= 0)
             errors.Add(Errors.Order.EmptyOrder);
 
-        if (totalPrice <= 0)
-            errors.Add(Errors.Order.InvalidPrice);
+        var totalPrice = orderItems.Sum(item => item.TotalPrice);
 
         if (errors.Count > 0)
             return errors;

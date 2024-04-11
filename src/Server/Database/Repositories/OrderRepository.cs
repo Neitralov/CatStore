@@ -9,12 +9,14 @@ public class OrderRepository(IDbContextFactory<DatabaseContext> factory) : IOrde
         Database.Add(order);
     }
 
-    public Order? GetOrder(Guid orderId)
+    public Order? GetOrder(Guid orderId, Guid userId)
     {
         return Database.Orders
             .AsNoTracking()
             .Include(order => order.OrderItems)
-            .SingleOrDefault(order => order.OrderId == orderId);
+            .SingleOrDefault(order => 
+                order.OrderId == orderId && 
+                order.UserId == userId);
     }
 
     public IEnumerable<Order> GetOrders(Guid userId)
