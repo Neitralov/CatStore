@@ -20,7 +20,6 @@
 * Формирование заказов пользователей.
 
 # 🧭 Дорожная карта
-* Покрытие кода тестами.
 * Адаптивы для мобильных устройств.
 * Интеграция с [ЮКасса](https://yookassa.ru).
 
@@ -51,6 +50,10 @@ Backend:
 * Веб-фреймворк: [ASP.NET Core 8](https://dotnet.microsoft.com/en-us/apps/aspnet)
 * ORM: [EF Core 8](https://learn.microsoft.com/ru-ru/ef/core/)
 * СУБД: [SQLite](https://www.sqlite.org/about.html)
+
+Тестирование:
+* [xUnit](https://github.com/xunit/xunit)
+* [Foq](https://github.com/fsprojects/Foq)
 
 Дополнительные пакеты:
 
