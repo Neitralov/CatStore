@@ -23,7 +23,7 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
     {
         var result = cartRepository.GetCartItem(userId, catId);
 
-        return result is { } ? result : Errors.CartItem.NotFound;
+        return result is not null ? result : Errors.CartItem.NotFound;
     }
 
     public ErrorOr<IEnumerable<CartItem>> GetCartItems(Guid userId)

@@ -17,7 +17,7 @@ public class CatService(ICatRepository catRepository)
     {
         var result = catRepository.GetCat(catId);
         
-        return result is { } ? result : Errors.Cat.NotFound;
+        return result is not null ? result : Errors.Cat.NotFound;
     }
     
     public ErrorOr<IEnumerable<Cat>> GetCats()

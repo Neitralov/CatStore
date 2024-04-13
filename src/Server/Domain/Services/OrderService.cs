@@ -20,7 +20,7 @@ public class OrderService(IOrderRepository orderRepository, ICartRepository cart
     {
         var result = orderRepository.GetOrder(orderId, userId);
 
-        return result is { } ? result : Errors.Order.NotFound;
+        return result is not null ? result : Errors.Order.NotFound;
     }
 
     public ErrorOr<IEnumerable<Order>> GetOrders(Guid userId)

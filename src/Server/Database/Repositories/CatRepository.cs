@@ -30,10 +30,10 @@ public class CatRepository(IDbContextFactory<DatabaseContext> factory) : ICatRep
     {
         var storedCat = Database.Cats.Find(catId);
 
-        if (storedCat is { })
+        if (storedCat is not null)
             Database.Remove(storedCat);
 
-        return storedCat is { };
+        return storedCat is not null;
     }
 
     public bool IsCatExists(string name)

@@ -45,10 +45,10 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
             cartItem.UserId == userId &&
             cartItem.CatId == catId);
 
-        if (cartItem is { })
+        if (cartItem is not null)
             Database.Remove(cartItem);
 
-        return cartItem is { };
+        return cartItem is not null;
     }
 
     public bool RemoveCartItems(List<CartItem> items)
@@ -61,7 +61,7 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
                 dbItem.UserId == item.UserId &&
                 dbItem.CatId == item.CatId);
 
-            if (dbCartItem is { })
+            if (dbCartItem is not null)
                 dbCartItems.Add(dbCartItem);
             else
                 return false;
