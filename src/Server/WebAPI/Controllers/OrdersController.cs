@@ -18,6 +18,7 @@ public class OrdersController(
     {
         var userId = GetUserGuid();
         
+        //TODO: Выделить этап создания OrderItems в метод OrderService.CreateOrderItemsFromCart
         var cartItems = cartService.GetCartItems(userId).Value.ToList();
         var orderItems = new List<OrderItem>();
         
