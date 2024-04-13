@@ -62,7 +62,7 @@
 }
 
 @code {
-    private List<CatResponse> Cats { get; set; } = new();
+    private List<CatResponse> Cats { get; set; } = [];
 
     private bool IsEditMode { get; set; }
 
@@ -79,7 +79,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
+        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? [];
     }
 
     private async Task CreateCat()

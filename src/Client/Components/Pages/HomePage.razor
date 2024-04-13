@@ -70,7 +70,7 @@
 </div>
 
 @code {
-    private List<CatResponse> Cats { get; set; } = new();
+    private List<CatResponse> Cats { get; set; } = [];
     private bool HasDataLoaded { get; set; }
 
     [SupplyParameterFromQuery]
@@ -84,7 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? new List<CatResponse>();
+        Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? [];
         HasDataLoaded = true;
     }
 
@@ -98,7 +98,7 @@
         if (MinPrice != null)
             cats = cats.Where(cat => cat.Cost - cat.Discount >= MinPrice).ToList();
 
-        if (MaxPrice != null && MaxPrice > MinPrice)
+        if (MaxPrice > MinPrice)
             cats = cats.Where(cat => cat.Cost - cat.Discount <= MaxPrice).ToList();
         else
             MaxPrice = null;
@@ -129,12 +129,7 @@
         var max = Math.Max(Math.Max(red, green), blue);
 
         if (min == max)
-        {
-            if (min < 127)
-                return "black";
-
-            return "white";
-        }
+            return min < 127 ? "black" : "white";
 
         if (max < 125)
             return "black";

@@ -13,7 +13,7 @@ public class CartItem
         Guid catId,
         int quantity = 1)
     {
-        List<Error> errors = new();
+        List<Error> errors = [];
 
         if (quantity < 1)
             errors.Add(Errors.CartItem.InvalidQuantity);

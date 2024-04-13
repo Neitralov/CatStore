@@ -16,7 +16,7 @@ public class OrderItem
         int quantity,
         decimal totalPrice)
     {
-        List<Error> errors = new();
+        List<Error> errors = [];
 
         if (quantity < 1)
             errors.Add(Errors.OrderItem.InvalidQuantity);

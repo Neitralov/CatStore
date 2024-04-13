@@ -26,7 +26,7 @@ public class Cat
         decimal discount,
         Guid? catId = null)
     {
-       List<Error> errors = new();
+       List<Error> errors = [];
        
        if (name.Trim().Length is < MinNameLength or > MaxNameLength)
            errors.Add(Errors.Cat.InvalidName);

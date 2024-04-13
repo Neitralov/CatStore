@@ -15,7 +15,7 @@ public class Order
         ICollection<OrderItem> orderItems,
         Guid? orderId = null)
     {
-        List<Error> errors = new();
+        List<Error> errors = [];
 
         if (orderItems.Count <= 0)
             errors.Add(Errors.Order.EmptyOrder);

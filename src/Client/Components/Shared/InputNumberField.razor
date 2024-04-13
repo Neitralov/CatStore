@@ -16,7 +16,7 @@
 
     private async Task OnValueChanged(ChangeEventArgs e)
     {
-        int.TryParse(e.Value?.ToString(), out int value);
+        int.TryParse(e.Value?.ToString(), out var value);
         Value = value;
         await ValueChanged.InvokeAsync(Value);
     }

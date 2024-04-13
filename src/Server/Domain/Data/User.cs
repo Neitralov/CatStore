@@ -21,7 +21,7 @@ public class User
         bool canEditCats = false,
         Guid? userId = null)
     {
-        List<Error> errors = new();
+        List<Error> errors = [];
 
         if (email.Contains('@') is false)
             errors.Add(Errors.User.InvalidEmail);
@@ -35,7 +35,7 @@ public class User
         if (errors.Count > 0)
             return errors;
 
-        CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+        CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
 
         return new User
         {
@@ -53,7 +53,7 @@ public class User
         if (newPassword.Length < MinPasswordLength)
             return Errors.User.InvalidPassword;
 
-        CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+        CreatePasswordHash(newPassword, out var passwordHash, out var passwordSalt);
 
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;

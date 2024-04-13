@@ -42,7 +42,7 @@ else if (HasDataLoaded)
         
     protected override async Task OnInitializedAsync()
     {
-        Orders = await HttpClient.GetFromJsonAsync<List<OrderResponse>>("/api/orders") ?? new();
+        Orders = await HttpClient.GetFromJsonAsync<List<OrderResponse>>("/api/orders") ?? [];
             
         HasDataLoaded = true;
     }
