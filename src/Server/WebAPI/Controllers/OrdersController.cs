@@ -83,7 +83,7 @@ public class OrdersController(
 
     private static ErrorOr<Order> CreateOrderFrom(
         Guid userId,
-        List<OrderItem> orderItems)
+        ICollection<OrderItem> orderItems)
     {
         return Order.Create(
             userId,
