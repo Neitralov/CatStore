@@ -1,6 +1,7 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
+[Route("/api/cats"), Tags("Cats")]
 public class CatsController(CatService catService) : ApiController
 {
     /// <summary>Добавить нового кота в магазин</summary>

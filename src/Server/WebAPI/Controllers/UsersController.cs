@@ -1,6 +1,7 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
+[Route("/api/users"), Tags("Users")]
 public class UsersController(UserService userService) : ApiController
 {
     /// <summary>Зарегистрировать новый аккаунт</summary>

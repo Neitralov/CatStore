@@ -1,6 +1,7 @@
 namespace WebAPI.Controllers;
 
 /// <inheritdoc />
+[Route("/api/orders"), Tags("Orders")]
 public class OrdersController(
     OrderService orderService,
     CartService cartService,
@@ -18,7 +19,6 @@ public class OrdersController(
         var userId = GetUserGuid();
         
         var cartItems = cartService.GetCartItems(userId).Value.ToList();
-        
         var orderItems = new List<OrderItem>();
         
         foreach (var item in cartItems)

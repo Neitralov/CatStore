@@ -2,7 +2,6 @@ namespace WebAPI.Controllers;
 
 /// <inheritdoc/>
 [ApiController]
-[Route("api/[controller]")]
 public class ApiController : ControllerBase
 {
     /// <summary></summary>>
