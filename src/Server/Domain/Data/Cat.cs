@@ -1,6 +1,6 @@
 namespace Domain.Data;
 
-public class Cat
+public partial class Cat
 {
     public Guid CatId { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -31,7 +31,7 @@ public class Cat
        if (name.Trim().Length is < MinNameLength or > MaxNameLength)
            errors.Add(Errors.Cat.InvalidName);
        
-       var correctHexColorPattern = new Regex("#[0-9a-f]{6}$", RegexOptions.Compiled);
+       var correctHexColorPattern = GetRegexHexColorPattern();
        
        if (correctHexColorPattern.IsMatch(skinColor) is false)
            errors.Add(Errors.Cat.InvalidSkinColor);
@@ -77,4 +77,7 @@ public class Cat
 
         return Result.Updated;
     }
+
+    [GeneratedRegex("#[0-9a-f]{6}$", RegexOptions.Compiled)]
+    private static partial Regex GetRegexHexColorPattern();
 }
