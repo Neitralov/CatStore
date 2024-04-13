@@ -79,12 +79,10 @@ try
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, JwtBearerDefaults.AuthenticationScheme);
         });
 
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy(
-                name: "CanEditCats",
-                policyBuilder => policyBuilder.RequireClaim(nameof(User.CanEditCats), true.ToString()));
-        });
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy(
+                name: nameof(User.CanEditCats), 
+                configurePolicy: policyBuilder => policyBuilder.RequireClaim(nameof(User.CanEditCats), true.ToString()));
     }
 
     var app = builder.Build();
