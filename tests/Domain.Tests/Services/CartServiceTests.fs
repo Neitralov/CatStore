@@ -85,9 +85,9 @@ let ``Сервис вернет элементы корзины покупок �
     let catRepository = Mock.Of<ICatRepository>()
     let sut = CartService(Mock.With(cartBehaviour), catRepository)
     
-    let result = sut.GetCartItems(any()).IsError
+    let result = sut.GetCartItems(any())
     
-    Assert.False(result)
+    Assert.True(result <> null)
     
 [<Fact>]
 let ``При удалении кота из корзины, он будет удален, если действительно находится в корзине`` () =

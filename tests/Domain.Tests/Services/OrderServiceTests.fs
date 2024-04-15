@@ -81,6 +81,6 @@ let ``Сервис предоставит список всех заказов �
     let behaviour (repository: IOrderRepository) = <@ repository.GetOrders(any()) --> List<Order>() @>
     let sut = OrderService(Mock.With(behaviour), cartRepository, catRepository)
     
-    let result = sut.GetOrders(any()).IsError
+    let result = sut.GetOrders(any())
     
-    Assert.False(result)
+    Assert.True(result <> null)

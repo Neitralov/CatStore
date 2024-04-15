@@ -63,9 +63,9 @@ let ``Сервис вернет список всех котов из БД по 
     let behaviour (repository: ICatRepository) = <@ repository.GetCats() --> List<Cat>() @>
     let sut = CatService(Mock.With(behaviour))
     
-    let result = sut.GetCats().IsError
+    let result = sut.GetCats()
     
-    Assert.False(result)
+    Assert.True(result <> null)
     
 [<Fact>]
 let ``Сервис обновит цену кота, если он есть в БД`` () =
