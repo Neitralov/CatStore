@@ -111,8 +111,8 @@
 
         Func<List<CatResponse>> sortMethod = sortType switch
         {
-            "cheap"     => () => cats.OrderBy(cat => (int)cat.Cost - (int)cat.Discount).ToList(),
-            "expensive" => () => cats.OrderByDescending(cat => (int)cat.Cost - (int)cat.Discount).ToList(),
+            "cheap"     => () => cats.OrderBy(cat => cat.Cost - cat.Discount).ToList(),
+            "expensive" => () => cats.OrderByDescending(cat => cat.Cost - cat.Discount).ToList(),
             _           => () => cats
         };
 

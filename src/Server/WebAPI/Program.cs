@@ -28,7 +28,7 @@ try
         builder.Services.AddHealthChecks();
         
         builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddTransient<ICatRepository, CatRepository>();
         builder.Services.AddTransient<CatService>();

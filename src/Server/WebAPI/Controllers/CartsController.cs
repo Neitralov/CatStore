@@ -76,7 +76,7 @@ public class CartsController(CartService cartService) : ApiController
     {
         var userId = GetUserGuid();
         
-        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(request.CatId, userId, request.Quantity);
+        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(userId, request.CatId, request.Quantity);
 
         return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
