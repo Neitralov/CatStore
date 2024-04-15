@@ -20,10 +20,10 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
             .HasKey(entity => entity.SessionId);
 
         var admin = User.Create(
-            email: "admin@gmail.com",
-            password: "admin",
-            confirmPassword: "admin",
-            canEditCats: true)
+                email: "admin@gmail.com",
+                password: "admin",
+                confirmPassword: "admin",
+                canEditCats: true)
             .Value;
 
         modelBuilder.Entity<User>().HasData(admin);

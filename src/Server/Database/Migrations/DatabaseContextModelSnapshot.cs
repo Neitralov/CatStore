@@ -4,6 +4,7 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,18 +16,22 @@ namespace Database.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Domain.Data.CartItem", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CatId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId", "CatId");
 
@@ -37,32 +42,32 @@ namespace Database.Migrations
                 {
                     b.Property<Guid>("CatId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Cost")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Discount")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("EarColor")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("EyeColor")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsMale")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("SkinColor")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("CatId");
 
@@ -73,16 +78,16 @@ namespace Database.Migrations
                 {
                     b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("OrderId");
 
@@ -92,20 +97,20 @@ namespace Database.Migrations
             modelBuilder.Entity("Domain.Data.OrderItem", b =>
                 {
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CatId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("numeric");
 
                     b.HasKey("OrderId", "CatId");
 
@@ -116,17 +121,19 @@ namespace Database.Migrations
                 {
                     b.Property<int>("SessionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SessionId"));
 
                     b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("SessionId");
 
@@ -137,25 +144,25 @@ namespace Database.Migrations
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("CanEditCats")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("bytea");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("bytea");
 
                     b.HasKey("UserId");
 
@@ -164,12 +171,12 @@ namespace Database.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("df39a4e8-1b48-4614-8480-a91467603fb8"),
+                            UserId = new Guid("4f121d9c-1916-47d6-9bf8-7e394d0a9757"),
                             CanEditCats = true,
-                            DateCreated = new DateTime(2024, 3, 19, 10, 8, 42, 158, DateTimeKind.Utc).AddTicks(24),
+                            DateCreated = new DateTime(2024, 4, 15, 10, 38, 22, 96, DateTimeKind.Utc).AddTicks(5436),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 142, 196, 135, 58, 136, 89, 148, 251, 31, 9, 226, 87, 169, 149, 211, 2, 53, 109, 200, 90, 107, 56, 232, 65, 233, 254, 178, 66, 28, 66, 105, 192, 69, 121, 191, 248, 71, 255, 203, 45, 11, 64, 214, 64, 253, 173, 117, 182, 40, 37, 3, 22, 77, 216, 69, 126, 172, 245, 15, 1, 41, 84, 231, 0 },
-                            PasswordSalt = new byte[] { 58, 43, 223, 88, 3, 221, 196, 55, 247, 235, 31, 215, 188, 112, 127, 132, 40, 76, 255, 26, 95, 210, 191, 251, 55, 253, 97, 63, 84, 194, 72, 80, 59, 53, 39, 228, 244, 180, 132, 58, 17, 116, 7, 93, 193, 167, 21, 94, 11, 171, 199, 186, 200, 123, 246, 77, 33, 70, 51, 21, 44, 171, 177, 205, 122, 57, 115, 3, 229, 4, 164, 135, 45, 120, 73, 165, 55, 36, 223, 133, 31, 119, 65, 119, 14, 168, 70, 84, 61, 19, 78, 140, 72, 68, 75, 211, 67, 61, 176, 156, 21, 220, 190, 153, 226, 133, 187, 20, 98, 13, 98, 155, 126, 18, 43, 28, 41, 27, 108, 21, 242, 86, 210, 35, 43, 173, 5, 7 }
+                            PasswordHash = new byte[] { 230, 22, 252, 121, 246, 127, 221, 19, 41, 179, 15, 28, 104, 89, 153, 111, 156, 150, 230, 245, 55, 197, 54, 115, 204, 213, 235, 108, 145, 96, 111, 15, 88, 239, 9, 149, 95, 130, 125, 208, 138, 250, 125, 175, 3, 216, 170, 143, 39, 155, 175, 171, 93, 145, 203, 242, 182, 23, 48, 163, 101, 225, 253, 98 },
+                            PasswordSalt = new byte[] { 152, 53, 239, 107, 91, 203, 127, 184, 35, 155, 17, 2, 193, 72, 34, 27, 150, 3, 247, 175, 75, 91, 228, 99, 77, 90, 85, 184, 26, 177, 195, 63, 223, 200, 61, 35, 7, 172, 110, 184, 105, 129, 202, 24, 75, 55, 216, 42, 221, 124, 135, 28, 83, 255, 63, 8, 236, 135, 66, 71, 44, 181, 31, 58, 175, 81, 246, 135, 65, 249, 130, 175, 54, 231, 89, 134, 14, 143, 229, 204, 200, 127, 136, 213, 50, 16, 69, 171, 79, 171, 56, 30, 227, 207, 83, 47, 170, 135, 109, 186, 182, 37, 231, 63, 90, 5, 176, 216, 193, 136, 128, 38, 181, 222, 251, 82, 247, 96, 168, 52, 72, 36, 28, 179, 12, 15, 5, 191 }
                         });
                 });
 
