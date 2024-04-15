@@ -1,50 +1,48 @@
 namespace Database.Repositories;
 
-public class CatRepository(IDbContextFactory<DatabaseContext> factory) : ICatRepository
+public class CatRepository(DatabaseContext database) : ICatRepository
 {
-    private DatabaseContext Database { get; } = factory.CreateDbContext();
-
     public void AddCat(Cat cat)
     {
-        Database.Add(cat);
+        database.Add(cat);
     }
 
     public Cat? FindCatById(Guid catId)
     {
-        return Database.Cats.SingleOrDefault(cat => cat.CatId == catId);
+        return database.Cats.SingleOrDefault(cat => cat.CatId == catId);
     }
 
     public Cat? GetCat(Guid catId)
     {
-        return Database.Cats
+        return database.Cats
             .AsNoTracking()
             .SingleOrDefault(cat => cat.CatId == catId);
     }
 
     public IEnumerable<Cat> GetCats()
     {
-        return Database.Cats.AsNoTracking();
+        return database.Cats.AsNoTracking();
     }
 
     public bool RemoveCat(Guid catId)
     {
-        var storedCat = Database.Cats.Find(catId);
+        var storedCat = database.Cats.Find(catId);
 
         if (storedCat is not null)
-            Database.Remove(storedCat);
+            database.Remove(storedCat);
 
         return storedCat is not null;
     }
 
     public bool IsCatExists(string name)
     {
-        return Database.Cats.Any(cat => cat.Name == name);
+        return database.Cats.Any(cat => cat.Name == name);
     }
 
     public bool IsCatExists(Guid catId)
     {
-        return Database.Cats.Any(cat => cat.CatId == catId);
+        return database.Cats.Any(cat => cat.CatId == catId);
     }
 
-    public void SaveChanges() => Database.SaveChanges();
+    public void SaveChanges() => database.SaveChanges();
 }

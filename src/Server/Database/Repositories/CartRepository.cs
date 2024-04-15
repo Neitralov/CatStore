@@ -1,24 +1,22 @@
 namespace Database.Repositories;
 
-public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartRepository
+public class CartRepository(DatabaseContext database) : ICartRepository
 {
-    private DatabaseContext Database { get; } = factory.CreateDbContext();
-
     public void AddCartItem(CartItem cartItem)
     {
-        Database.Add(cartItem);
+        database.Add(cartItem);
     }
 
     public CartItem? FindCartItem(CartItem cartItem)
     {
-        return Database.CartItems.SingleOrDefault(item =>
+        return database.CartItems.SingleOrDefault(item =>
             item.UserId == cartItem.UserId &&
             item.CatId == cartItem.CatId);
     }
 
     public CartItem? GetCartItem(Guid userId, Guid catId)
     {
-        return Database.CartItems
+        return database.CartItems
             .AsNoTracking()
             .SingleOrDefault(cartItem =>
                 cartItem.UserId == userId &&
@@ -27,26 +25,26 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
 
     public IEnumerable<CartItem> GetCartItems(Guid userId)
     {
-        return Database.CartItems
+        return database.CartItems
             .AsNoTracking()
             .Where(cartItem => cartItem.UserId == userId);
     }
 
     public int GetUserCartItemsCount(Guid userId)
     {
-        return Database.CartItems
+        return database.CartItems
             .Where(item => item.UserId == userId)
             .Sum(item => item.Quantity);
     }
 
     public bool RemoveCartItem(Guid userId, Guid catId)
     {
-        var cartItem = Database.CartItems.SingleOrDefault(cartItem =>
+        var cartItem = database.CartItems.SingleOrDefault(cartItem =>
             cartItem.UserId == userId &&
             cartItem.CatId == catId);
 
         if (cartItem is not null)
-            Database.Remove(cartItem);
+            database.Remove(cartItem);
 
         return cartItem is not null;
     }
@@ -57,7 +55,7 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
 
         foreach (var item in items)
         {
-            var dbCartItem = Database.CartItems.SingleOrDefault(dbItem =>
+            var dbCartItem = database.CartItems.SingleOrDefault(dbItem =>
                 dbItem.UserId == item.UserId &&
                 dbItem.CatId == item.CatId);
 
@@ -67,9 +65,9 @@ public class CartRepository(IDbContextFactory<DatabaseContext> factory) : ICartR
                 return false;
         }
 
-        Database.CartItems.RemoveRange(dbCartItems);
+        database.CartItems.RemoveRange(dbCartItems);
         return true;
     }
 
-    public void SaveChanges() => Database.SaveChanges();
+    public void SaveChanges() => database.SaveChanges();
 }
