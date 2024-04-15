@@ -11,26 +11,23 @@ public class OrderItem
     private OrderItem() { }
 
     public static ErrorOr<OrderItem> Create(
-        Guid catId,
-        string catName,
-        int quantity,
-        decimal totalPrice)
+        Cat cat,
+        int quantity)
     {
         List<Error> errors = [];
 
         if (quantity < 1)
             errors.Add(Errors.OrderItem.InvalidQuantity);
-
-        if (totalPrice <= 0)
-            errors.Add(Errors.OrderItem.InvalidPrice);
+        
+        var totalPrice = (cat.Cost - cat.Discount) * quantity;
 
         if (errors.Count > 0)
             return errors;
 
         return new OrderItem
         {
-            CatId = catId,
-            Name = catName,
+            CatId = cat.CatId,
+            Name = cat.Name,
             Quantity = quantity,
             TotalPrice = totalPrice
         };

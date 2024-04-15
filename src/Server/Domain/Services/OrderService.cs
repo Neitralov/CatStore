@@ -31,11 +31,7 @@ public class OrderService(
             if (cat is null)
                 return Errors.Cat.NotFound;
             
-            var orderItem = OrderItem.Create(
-                catId:      cat.CatId,
-                catName:    cat.Name,
-                quantity:   item.Quantity,
-                totalPrice: (cat.Cost - cat.Discount) * item.Quantity);
+            var orderItem = OrderItem.Create(cat, item.Quantity);
             
             if (orderItem.IsError)
                 return orderItem.Errors;
