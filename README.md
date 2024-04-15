@@ -49,7 +49,7 @@ Backend:
 
 * Веб-фреймворк: [ASP.NET Core 8](https://dotnet.microsoft.com/en-us/apps/aspnet)
 * ORM: [EF Core 8](https://learn.microsoft.com/ru-ru/ef/core/)
-* СУБД: [PostgreSQL]([https://www.sqlite.org/about.html](https://www.postgresql.org/))
+* СУБД: [PostgreSQL](https://www.postgresql.org/)
 
 Тестирование:
 * [xUnit](https://github.com/xunit/xunit)
