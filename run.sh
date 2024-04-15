@@ -1,14 +1,18 @@
 #!/bin/bash
 
-# Создаем Pod
-podman pod create --name catstore -p 8080:80 -p 8081:8080 -p 5432:5432 --replace
-
-# Переходим в папку веб-API
+# Переходим в папку веб-API, компилируем и собираем docker image
 cd src/Server/WebAPI
-
-# Компилируем и собираем docker образ
 dotnet build -c Debug
 podman build . -t webapitest
+
+# Переходим в папку с клиентом, компилируем и собираем docker image
+cd ../../Client
+bun tailwindcss -i wwwroot/css/tailwind.css -o wwwroot/css/app.css
+dotnet publish -c Release
+podman build . -t webclienttest
+
+# Создаем Pod
+podman pod create --name catstore -p 8080:80 -p 8081:8080 -p 5432:5432 --replace
 
 # Запускаем контейнер с БД
 podman run \
@@ -33,14 +37,6 @@ podman run \
 --name catstore-webapi \
 --replace \
 webapitest
-
-# Переходим в папку с клиентом
-cd ../../Client
-
-# Компилируем и собираем docker образ
-bun tailwindcss -i wwwroot/css/tailwind.css -o wwwroot/css/app.css
-dotnet publish -c Release
-podman build . -t webclienttest
 
 # Запускаем контейнер с frontend-ом
 podman run \
