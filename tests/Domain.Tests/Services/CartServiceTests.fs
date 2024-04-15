@@ -1,6 +1,7 @@
 module CartServiceTests
 
 open System
+open System.Collections.Generic
 open Xunit
 open Foq
 open Domain.Data
@@ -80,7 +81,7 @@ let ``Если пользователь не добавил кота в корз
     
 [<Fact>]
 let ``Сервис вернет элементы корзины покупок при запросе`` () =
-    let cartBehaviour (repository: ICartRepository) = <@ repository.GetCartItems(any()) --> [] @>
+    let cartBehaviour (repository: ICartRepository) = <@ repository.GetCartItems(any()) --> List<CartItem>() @>
     let catRepository = Mock.Of<ICatRepository>()
     let sut = CartService(Mock.With(cartBehaviour), catRepository)
     
@@ -119,15 +120,14 @@ let ``При удалении кота из корзины, сервис вер�
 [<Fact>]
 let ``Количество котов в корзине будет обновлено, при запросе обновления существующего кота из корзины`` () =
     let cartItem = CartItem.Create(Guid.NewGuid(), Guid.NewGuid()).Value
-    let newCartItem = CartItem.Create(cartItem.UserId, cartItem.CatId, 2).Value
     let cartRepository
         = Mock<ICartRepository>()
-            .Setup(fun mock -> <@ mock.FindCartItem(newCartItem) @>).Returns(cartItem)
+            .Setup(fun mock -> <@ mock.FindCartItem(any(), any()) @>).Returns(cartItem)
             .Create()
     let catRepository = Mock.Of<ICatRepository>()
     let sut = CartService(cartRepository, catRepository)
     
-    let result = sut.UpdateQuantity(newCartItem).IsError
+    let result = sut.UpdateQuantity(cartItem.CatId, cartItem.UserId, 2).IsError
     
     Assert.False(result)
     Assert.Equal(2, cartItem.Quantity)
@@ -144,7 +144,7 @@ let ``Количество котов в корзине не будет обно
     let catRepository = Mock.Of<ICatRepository>()
     let sut = CartService(cartRepository, catRepository)
     
-    let result = sut.UpdateQuantity(newCartItem).FirstError
+    let result = sut.UpdateQuantity(Guid.NewGuid(), cartItem.UserId, 2).FirstError
     
     Assert.Equal(Errors.CartItem.NotFound, result)
     verify <@ cartRepository.SaveChanges() @> never

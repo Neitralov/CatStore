@@ -8,8 +8,9 @@ open Domain.ServiceErrors
 
 [<Fact>]
 let ``Создание заказа с корректными данными не вызывает ошибок`` () =
+    let cat = Cat.Create("Абрикос", "#ffffff", "#ffffff", "#ffffff", true, 10, 0).Value
     let orderItems = List<OrderItem>()
-    orderItems.Add(OrderItem.Create(Guid.NewGuid(), "Персик", 1, 25).Value)
+    orderItems.Add(OrderItem.Create(cat, 1).Value)
     let sut = Order.Create(Guid.NewGuid(), orderItems)
     
     let result = sut.IsError

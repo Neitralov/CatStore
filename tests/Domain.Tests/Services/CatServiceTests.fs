@@ -1,6 +1,7 @@
 module CatServiceTests
 
 open System
+open System.Collections.Generic
 open Xunit
 open Foq
 open Domain.Data
@@ -59,7 +60,7 @@ let ``Сервис вернет NotFound при попытке получить 
     
 [<Fact>]
 let ``Сервис вернет список всех котов из БД по запросу`` () =
-    let behaviour (repository: ICatRepository) = <@ repository.GetCats() --> [] @>
+    let behaviour (repository: ICatRepository) = <@ repository.GetCats() --> List<Cat>() @>
     let sut = CatService(Mock.With(behaviour))
     
     let result = sut.GetCats().IsError
