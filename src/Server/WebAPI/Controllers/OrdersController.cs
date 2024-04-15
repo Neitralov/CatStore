@@ -2,10 +2,7 @@ namespace WebAPI.Controllers;
 
 /// <inheritdoc />
 [Route("/api/orders"), Tags("Orders")]
-public class OrdersController(
-    OrderService orderService,
-    CartService cartService,
-    CatService catService) : ApiController
+public class OrdersController(OrderService orderService) : ApiController
 {
     /// <summary>Оформить заказ пользователя</summary>
     /// <remarks>Заказ будет сформирован на основе товаров из корзины. После этого действия корзина будет очищена.</remarks>
@@ -18,38 +15,19 @@ public class OrdersController(
     {
         var userId = GetUserGuid();
         
-        //TODO: Выделить этап создания OrderItems в метод OrderService.CreateOrderItemsFromCart
-        var cartItems = cartService.GetCartItems(userId).Value.ToList();
-        var orderItems = new List<OrderItem>();
+        ErrorOr<List<OrderItem>> cartItemsToOrderItemsResult = orderService.CreateOrderItemsFromCart(userId);
+
+        if (cartItemsToOrderItemsResult.IsError)
+            return Problem(cartItemsToOrderItemsResult.Errors);
         
-        foreach (var item in cartItems)
-        {
-            ErrorOr<Cat> getCatResult = catService.GetCat(item.CatId);
-            
-            if (getCatResult.IsError)
-                return Problem(getCatResult.Errors);
-            
-            var cat = getCatResult.Value;
-            
-            var orderItem = OrderItem.Create(
-                catId:      cat.CatId,
-                catName:    cat.Name,
-                quantity:   item.Quantity,
-                totalPrice: (cat.Cost - cat.Discount) * item.Quantity);
-            
-            if (orderItem.IsError)
-                return Problem(orderItem.Errors);
-            
-            orderItems.Add(orderItem.Value);
-        }
-        
+        var orderItems = cartItemsToOrderItemsResult.Value;
         ErrorOr<Order> orderItemsToOrderResult = CreateOrderFrom(userId, orderItems);
         
         if (orderItemsToOrderResult.IsError)
             return Problem(orderItemsToOrderResult.Errors);
         
         var order = orderItemsToOrderResult.Value;
-        ErrorOr<Created> createOrderResult = orderService.StoreOrder(order, cartItems);
+        ErrorOr<Created> createOrderResult = orderService.StoreOrder(order);
         
         return createOrderResult.Match(_ => CreatedAtGetOrderDetails(order), Problem);
     }
