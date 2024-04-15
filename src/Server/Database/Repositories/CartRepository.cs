@@ -7,6 +7,13 @@ public class CartRepository(DatabaseContext database) : ICartRepository
         database.Add(cartItem);
     }
 
+    public CartItem? FindCartItem(Guid userId, Guid catId)
+    {
+        return database.CartItems.SingleOrDefault(item =>
+            item.UserId == userId &&
+            item.CatId == catId);
+    }
+    
     public CartItem? FindCartItem(CartItem cartItem)
     {
         return database.CartItems.SingleOrDefault(item =>
@@ -23,11 +30,12 @@ public class CartRepository(DatabaseContext database) : ICartRepository
                 cartItem.CatId == catId);
     }
 
-    public IEnumerable<CartItem> GetCartItems(Guid userId)
+    public List<CartItem> GetCartItems(Guid userId)
     {
         return database.CartItems
             .AsNoTracking()
-            .Where(cartItem => cartItem.UserId == userId);
+            .Where(cartItem => cartItem.UserId == userId)
+            .ToList();
     }
 
     public int GetUserCartItemsCount(Guid userId)

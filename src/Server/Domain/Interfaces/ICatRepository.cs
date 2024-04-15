@@ -8,7 +8,7 @@ public interface ICatRepository
     //Read
     Cat? FindCatById(Guid catId);
     Cat? GetCat(Guid catId);
-    IEnumerable<Cat> GetCats();
+    List<Cat> GetCats();
     bool IsCatExists(string name);
     bool IsCatExists(Guid catId);
 

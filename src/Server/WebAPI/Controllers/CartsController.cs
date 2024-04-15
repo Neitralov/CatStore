@@ -48,9 +48,9 @@ public class CartsController(CartService cartService) : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<CartItem>> getCartItemsResult = cartService.GetCartItems(userId);
+        var cartItems = cartService.GetCartItems(userId);
 
-        return getCartItemsResult.Match(cartItems => Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse))), Problem);
+        return Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse)));
     }
 
     /// <summary>Получить количество всех товаров в корзине пользователя</summary>
@@ -75,14 +75,8 @@ public class CartsController(CartService cartService) : ApiController
     public IActionResult UpdateCartItemQuantity([Required] UpdateCartItemQuantityRequest request)
     {
         var userId = GetUserGuid();
-
-        ErrorOr<CartItem> requestToCartItemResult = CreateCartItemFrom(request, userId);
-
-        if (requestToCartItemResult.IsError)
-            return Problem(requestToCartItemResult.Errors);
-
-        var cartItem = requestToCartItemResult.Value;
-        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(cartItem);
+        
+        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(request.CatId, userId, request.Quantity);
 
         return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
@@ -109,15 +103,7 @@ public class CartsController(CartService cartService) : ApiController
             request.CatId,
             request.Quantity);
     }
-
-    private static ErrorOr<CartItem> CreateCartItemFrom(UpdateCartItemQuantityRequest request, Guid userId)
-    {
-        return CartItem.Create(
-            userId,
-            request.CatId,
-            request.Quantity);
-    }
-
+    
     private static CartItemResponse MapCartItemResponse(CartItem cartItem)
     {
         return new CartItemResponse(

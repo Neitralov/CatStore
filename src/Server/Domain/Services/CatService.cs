@@ -20,11 +20,11 @@ public class CatService(ICatRepository catRepository)
         return result is not null ? result : Errors.Cat.NotFound;
     }
     
-    public ErrorOr<IEnumerable<Cat>> GetCats()
+    public List<Cat> GetCats()
     {
         var result = catRepository.GetCats();
 
-        return result.ToList();
+        return result;
     }
 
     public ErrorOr<Updated> UpdateCatPrice(Guid catId, decimal price, decimal discount)

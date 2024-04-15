@@ -9,7 +9,7 @@ public class OrderService(
     {
         orderRepository.AddOrder(order);
         
-        var cartItems = cartRepository.GetCartItems(order.UserId).ToList();
+        var cartItems = cartRepository.GetCartItems(order.UserId);
         var result = cartRepository.RemoveCartItems(cartItems);
         if (result is false)
             return Errors.CartItem.NotFound;
@@ -22,7 +22,7 @@ public class OrderService(
 
     public ErrorOr<List<OrderItem>> CreateOrderItemsFromCart(Guid userId)
     {
-        var cartItems = cartRepository.GetCartItems(userId).ToList();
+        var cartItems = cartRepository.GetCartItems(userId);
         var orderItems = new List<OrderItem>();
         
         foreach (var item in cartItems)
@@ -49,8 +49,8 @@ public class OrderService(
         return result is not null ? result : Errors.Order.NotFound;
     }
 
-    public ErrorOr<IEnumerable<Order>> GetOrders(Guid userId)
+    public List<Order> GetOrders(Guid userId)
     {
-        return orderRepository.GetOrders(userId).ToList();
+        return orderRepository.GetOrders(userId);
     }
 }

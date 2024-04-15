@@ -17,13 +17,14 @@ public class OrderRepository(DatabaseContext database) : IOrderRepository
                 order.UserId == userId);
     }
 
-    public IEnumerable<Order> GetOrders(Guid userId)
+    public List<Order> GetOrders(Guid userId)
     {
         return database.Orders
             .AsNoTracking()
             .Include(order => order.OrderItems)
             .Where(order => order.UserId == userId)
-            .OrderByDescending(order => order.OrderDate);
+            .OrderByDescending(order => order.OrderDate)
+            .ToList();
     }
 
     public void SaveChanges() => database.SaveChanges();

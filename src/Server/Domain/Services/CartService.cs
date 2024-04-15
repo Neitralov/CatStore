@@ -25,10 +25,10 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
 
         return result is not null ? result : Errors.CartItem.NotFound;
     }
-
-    public ErrorOr<IEnumerable<CartItem>> GetCartItems(Guid userId)
+    
+    public List<CartItem> GetCartItems(Guid userId)
     {
-        return cartRepository.GetCartItems(userId).ToList();
+        return cartRepository.GetCartItems(userId);
     }
 
     public ErrorOr<Deleted> DeleteCartItem(Guid userId, Guid catId)
@@ -39,15 +39,14 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
         return result ? Result.Deleted : Errors.CartItem.NotFound;
     }
 
-    public ErrorOr<Updated> UpdateQuantity(CartItem cartItem)
+    public ErrorOr<Updated> UpdateQuantity(Guid userId, Guid catId, int quantity)
     {
-        var dbCartItem = cartRepository.FindCartItem(cartItem);
+        var cartItem = cartRepository.FindCartItem(userId, catId);
 
-        if (dbCartItem is null)
+        if (cartItem is null)
             return Errors.CartItem.NotFound;
-
-        //TODO: А почему я создаю новый cartItem и извлекаю его количество, а не передаю CatId и UserId, а кол-во отдельно?
-        var result = dbCartItem.UpdateQuantity(cartItem.Quantity);
+        
+        var result = cartItem.UpdateQuantity(quantity);
 
         if (result == Result.Updated)
             cartRepository.SaveChanges();

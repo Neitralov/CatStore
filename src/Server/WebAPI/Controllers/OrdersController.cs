@@ -55,9 +55,9 @@ public class OrdersController(OrderService orderService) : ApiController
     {
         var userId = GetUserGuid();
 
-        ErrorOr<IEnumerable<Order>> getOrdersResult = orderService.GetOrders(userId);
+        var orders = orderService.GetOrders(userId);
 
-        return getOrdersResult.Match(orders => Ok(new List<OrderResponse>(orders.Select(MapOrderResponse))), Problem);
+        return Ok(new List<OrderResponse>(orders.Select(MapOrderResponse)));
     }
 
     private static ErrorOr<Order> CreateOrderFrom(

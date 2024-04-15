@@ -41,9 +41,9 @@ public class CatsController(CatService catService) : ApiController
     [ProducesResponseType(typeof(List<CatResponse>), 200)]
     public IActionResult GetCats()
     {
-        ErrorOr<IEnumerable<Cat>> getAllCatsResult = catService.GetCats();
+        var cats = catService.GetCats();
 
-        return getAllCatsResult.Match(cats => Ok(new List<CatResponse>(cats.Select(MapCatResponse))), Problem);
+        return Ok(new List<CatResponse>(cats.Select(MapCatResponse)));
     }
 
     /// <summary>Обновить цену существующего кота</summary>

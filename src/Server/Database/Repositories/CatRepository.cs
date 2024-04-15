@@ -19,9 +19,9 @@ public class CatRepository(DatabaseContext database) : ICatRepository
             .SingleOrDefault(cat => cat.CatId == catId);
     }
 
-    public IEnumerable<Cat> GetCats()
+    public List<Cat> GetCats()
     {
-        return database.Cats.AsNoTracking();
+        return database.Cats.AsNoTracking().ToList();
     }
 
     public bool RemoveCat(Guid catId)
