@@ -26,8 +26,8 @@ try
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
         builder.Services.AddControllers();
         builder.Services.AddHealthChecks();
-
-        builder.Services.AddDbContextFactory<DatabaseContext>(options =>
+        
+        builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddTransient<ICatRepository, CatRepository>();

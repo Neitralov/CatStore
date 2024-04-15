@@ -1,37 +1,35 @@
 namespace Database.Repositories;
 
-public class UserRepository(IDbContextFactory<DatabaseContext> factory) : IUserRepository
+public class UserRepository(DatabaseContext database) : IUserRepository
 {
-    private DatabaseContext Database { get; } = factory.CreateDbContext();
-
     public void AddUser(User user)
     {
-        Database.Add(user);
+        database.Add(user);
     }
 
     public void AddRefreshTokenSession(RefreshTokenSession refreshTokenSession)
     {
-        Database.Add(refreshTokenSession);
+        database.Add(refreshTokenSession);
     }
 
     public User? FindUserById(Guid userId)
     {
-        return Database.Users.SingleOrDefault(user => user.UserId == userId);
+        return database.Users.SingleOrDefault(user => user.UserId == userId);
     }
 
     public User? FindUserByEmail(string email)
     {
-        return Database.Users.SingleOrDefault(user => user.Email == email);
+        return database.Users.SingleOrDefault(user => user.Email == email);
     }
 
     public int GetNumberOfUsersRefreshTokenSessions(Guid userId)
     {
-        return Database.RefreshTokenSessions.Count(refreshTokenSession => refreshTokenSession.UserId == userId);
+        return database.RefreshTokenSessions.Count(refreshTokenSession => refreshTokenSession.UserId == userId);
     }
 
     public RefreshTokenSession? GetUserRefreshTokenSession(Guid userId, string oldRefreshToken)
     {
-        return Database.RefreshTokenSessions.SingleOrDefault(refreshTokenSession =>
+        return database.RefreshTokenSessions.SingleOrDefault(refreshTokenSession =>
             refreshTokenSession.UserId == userId &&
             refreshTokenSession.Token == oldRefreshToken &&
             refreshTokenSession.ExpirationDate >= DateTime.UtcNow);
@@ -39,24 +37,24 @@ public class UserRepository(IDbContextFactory<DatabaseContext> factory) : IUserR
     
     public void RemoveAllUsersRefreshTokenSessions(Guid userId)
     {
-        var usersRefreshTokenSessions = Database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId);
-        Database.RefreshTokenSessions.RemoveRange(usersRefreshTokenSessions);
+        var usersRefreshTokenSessions = database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId);
+        database.RefreshTokenSessions.RemoveRange(usersRefreshTokenSessions);
     }
 
     public bool IsUserExists(string email)
     {
-        return Database.Users.Any(user => user.Email == email);
+        return database.Users.Any(user => user.Email == email);
     }
 
     public void SaveChanges()
     {
-        Database.SavingChanges += (_, _) => DeleteAllInvalidRefreshTokenSessions();
-        Database.SaveChanges();
+        database.SavingChanges += (_, _) => DeleteAllInvalidRefreshTokenSessions();
+        database.SaveChanges();
     }
 
     private void DeleteAllInvalidRefreshTokenSessions()
     {
-        var invalidSessions = Database.RefreshTokenSessions.Where(session => session.ExpirationDate < DateTime.UtcNow);
-        Database.RemoveRange(invalidSessions);
+        var invalidSessions = database.RefreshTokenSessions.Where(session => session.ExpirationDate < DateTime.UtcNow);
+        database.RemoveRange(invalidSessions);
     }
 }
