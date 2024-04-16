@@ -32,7 +32,7 @@ public class CatsController(CatService catService) : ApiController
     {
         ErrorOr<Cat> getCatResult = catService.GetCat(catId);
         
-        return getCatResult.Match(cat => Ok(MapCatResponse(cat)), Problem);
+        return getCatResult.Match(cat => Ok(cat.Adapt<CatResponse>()), Problem);
     }
     
     /// <summary>Получить всех котов из магазина</summary>
@@ -43,7 +43,7 @@ public class CatsController(CatService catService) : ApiController
     {
         var cats = catService.GetCats();
 
-        return Ok(new List<CatResponse>(cats.Select(MapCatResponse)));
+        return Ok(cats.Adapt<List<CatResponse>>());
     }
 
     /// <summary>Обновить цену существующего кота</summary>
@@ -91,19 +91,6 @@ public class CatsController(CatService catService) : ApiController
         return CreatedAtAction(
             actionName:  nameof(GetCat),
             routeValues: new { catId = cat.CatId },
-            value:       MapCatResponse(cat));
-    }
-
-    private static CatResponse MapCatResponse(Cat cat)
-    {
-        return new CatResponse(
-            cat.CatId,
-            cat.Name,
-            cat.SkinColor,
-            cat.EyeColor,
-            cat.EarColor,
-            cat.IsMale,
-            cat.Cost,
-            cat.Discount);
+            value:       cat.Adapt<CatResponse>());
     }
 }
