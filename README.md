@@ -62,6 +62,7 @@ Backend:
 * [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 * [Swashbuckle.AspNetCore.Filters](https://github.com/mattfrear/Swashbuckle.AspNetCore.Filters)
 * [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore)
+* [Mapster](https://github.com/MapsterMapper/Mapster)
 
 # 📃 Лицензия
 Программа распространяется под лицензией [MIT](https://github.com/Neitralov/CatStore/blob/master/LICENSE).
