@@ -37,7 +37,7 @@ public class CartsController(CartService cartService) : ApiController
 
         ErrorOr<CartItem> getCartItemResult = cartService.GetCartItem(userId, catId);
 
-        return getCartItemResult.Match(cartItem => Ok(MapCartItemResponse(cartItem)), Problem);
+        return getCartItemResult.Match(cartItem => Ok(cartItem.Adapt<CartItemResponse>()), Problem);
     }
 
     /// <summary>Получить список всех товаров в корзине пользователя</summary>
@@ -50,7 +50,7 @@ public class CartsController(CartService cartService) : ApiController
 
         var cartItems = cartService.GetCartItems(userId);
 
-        return Ok(new List<CartItemResponse>(cartItems.Select(MapCartItemResponse)));
+        return Ok(cartItems.Adapt<List<CartItemResponse>>());
     }
 
     /// <summary>Получить количество всех товаров в корзине пользователя</summary>
@@ -102,12 +102,5 @@ public class CartsController(CartService cartService) : ApiController
             userId,
             request.CatId,
             request.Quantity);
-    }
-    
-    private static CartItemResponse MapCartItemResponse(CartItem cartItem)
-    {
-        return new CartItemResponse(
-            cartItem.CatId,
-            cartItem.Quantity);
     }
 }

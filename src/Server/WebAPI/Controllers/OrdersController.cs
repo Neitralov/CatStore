@@ -43,8 +43,8 @@ public class OrdersController(OrderService orderService) : ApiController
         var userId = GetUserGuid();
 
         ErrorOr<Order> getOrderResult = orderService.GetOrder(orderId, userId);
-
-        return getOrderResult.Match(order => Ok(MapOrderResponse(order)), Problem);
+        
+        return getOrderResult.Match(order => Ok(order.Adapt<OrderResponse>()), Problem);
     }
     
     /// <summary>Получить список заказов пользователя</summary>
@@ -56,8 +56,8 @@ public class OrdersController(OrderService orderService) : ApiController
         var userId = GetUserGuid();
 
         var orders = orderService.GetOrders(userId);
-
-        return Ok(new List<OrderResponse>(orders.Select(MapOrderResponse)));
+        
+        return Ok(orders.Adapt<List<OrderResponse>>());
     }
 
     private static ErrorOr<Order> CreateOrderFrom(
@@ -74,26 +74,6 @@ public class OrdersController(OrderService orderService) : ApiController
         return CreatedAtAction(
             actionName:  nameof(GetOrder),
             routeValues: new { orderId = order.OrderId },
-            value:       MapOrderResponse(order));
-    }
-
-    private static OrderResponse MapOrderResponse(Order order)
-    {
-        var orderCatResponses = order.OrderItems.Select(MapOrderCatResponse);
-
-        return new OrderResponse(
-            order.OrderId,
-            order.OrderDate,
-            order.TotalPrice,
-            orderCatResponses);
-    }
-
-    private static OrderCatResponse MapOrderCatResponse(OrderItem orderItem)
-    {
-        return new OrderCatResponse(
-            orderItem.CatId,
-            orderItem.Name,
-            orderItem.Quantity,
-            orderItem.TotalPrice);
+            value:       order.Adapt<OrderResponse>());
     }
 }

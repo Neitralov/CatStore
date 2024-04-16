@@ -106,6 +106,7 @@ try
         app.UseAuthorization();
         app.MapControllers();
         app.MapHealthChecks("/health");
+        app.ApplyTypeAdapterConfigs();
         await app.MigrateDatabaseAsync();
         await app.RunAsync();
     }
