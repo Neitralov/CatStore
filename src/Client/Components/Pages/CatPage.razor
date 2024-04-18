@@ -6,14 +6,14 @@
 
 @if (Cat is not null)
 {
-    <div class="grid grid-cols-12 xl:gap-5 gap-4">
-        <div class="flex flex-col xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12 xl:gap-5 gap-4">
+    <div class="grid grid-cols-12 xl:gap-5 md:gap-4 gap-3">
+        <div class="flex flex-col xl:col-start-2 lg:col-start-2 xl:col-span-3 lg:col-span-10 col-span-12 xl:gap-5 md:gap-4 gap-3">
             <Panel>
                 <CatPreview SkinColor="@Cat.SkinColor" EyeColor="@Cat.EyeColor" EarColor="@Cat.EarColor" IsMale="@Cat.IsMale"/>
             </Panel>
 
             <Panel CssClasses="flex flex-col items-center w-full gap-2">
-                <p class="flex justify-center items-center gap-1 w-full h-8 text-sm font-bold bg-background rounded-lg">
+                <p class="flex justify-center items-center gap-1 w-full h-8 font-bold bg-background rounded-lg">
                     @if (Cat.Discount > 0)
                     {
                         <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
@@ -37,7 +37,7 @@
             </Panel>
         </div>
 
-        <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col gap-3">
+        <Panel CssClasses="xl:col-start-5 lg:col-start-2 xl:col-span-7 lg:col-span-10 col-span-12 flex flex-col md:gap-3 gap-2">
             <ValueFieldWithLabel Label="Имя">@Cat.Name</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Цвет шерсти">@Cat.SkinColor</ValueFieldWithLabel>
             <ValueFieldWithLabel Label="Цвет глаз">@Cat.EyeColor</ValueFieldWithLabel>

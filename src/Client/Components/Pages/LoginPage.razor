@@ -9,11 +9,14 @@
 <PageTitle>Авторизация — CatStore</PageTitle>
 
 <div class="xl:container w-full grid grid-cols-12 xl:gap-5 gap-4 content-center grow">
-    <Panel CssClasses="xl:col-span-4 col-span-6 xl:col-start-5 col-start-4 flex flex-col gap-3">
-        <h1 class="text-xl text-center">Авторизация</h1>
+    <Panel CssClasses="xl:col-span-4 md:col-span-6 col-span-12 xl:col-start-5 md:col-start-4 flex flex-col md:gap-3 gap-2">
+        <h1 class="md:text-xl text-base text-center">Авторизация</h1>
         <InputTextFieldWithLabel Label="Электронная почта" InputType="email" @bind-Value="Email"/>
         <InputTextFieldWithLabel Label="Пароль" InputType="password" @bind-Value="Password" />
-        <p class="text-attention">@ErrorMessage</p>
+        @if (ErrorMessage != string.Empty)
+        {
+            <p class="text-attention">@ErrorMessage</p>
+        }
         <div class="flex justify-between gap-3">
             <ApplyButton OnClick="Login">Войти</ApplyButton>
             <Button OnClick="Back">Назад</Button>

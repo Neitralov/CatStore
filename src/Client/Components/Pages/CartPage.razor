@@ -7,7 +7,7 @@
 
 <PageTitle>Корзина — CatStore</PageTitle>
 
-<div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 gap-4">
+<div class="grid grid-cols-12 lg:order-none order-reverse xl:gap-5 md:gap-4 gap-3">
     @if (CartItems.Count > 0)
     {
         <Panel CssClasses="lg:col-span-9 col-span-12 flex flex-col gap-2">
@@ -25,10 +25,10 @@
     }
     else if (HasDataLoaded)
     {
-        <h1 class="col-span-12 text-sm">Корзина пуста. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/">каталог</a>, чтобы добавить котов.</h1>
+        <h1 class="col-span-12 md:text-sm text-xs">Корзина пуста. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/">каталог</a>, чтобы добавить котов.</h1>
         if (IsUserAuthenticated is false)
         {
-            <h1 class="col-span-12 text-sm">Если в Корзине были товары, <a class="text-primary hover:cursor-pointer hover:underline" href="/login?returnUrl=/cart">войдите</a>, чтобы увидеть их.</h1>
+            <h1 class="col-span-12 md:text-sm text-xs">Если в Корзине были товары, <a class="text-primary hover:cursor-pointer hover:underline" href="/login?returnUrl=/cart">войдите</a>, чтобы увидеть их.</h1>
         }
     }
     
@@ -36,16 +36,16 @@
     {
         <Panel CssClasses="lg:col-span-3 col-span-12 flex flex-col gap-2">
             <ApplyButton OnClick="PlaceOrder">К оформлению</ApplyButton>
-            <div class="flex justify-between text-sm">
+            <div class="flex justify-between">
                 <span>Итого</span>
                 <span>@TotalPrice $</span>
             </div>
             <hr />
-            <div class="flex justify-between text-sm text-muted">
+            <div class="flex justify-between text-muted">
                 <span>Товары</span>
                 <span>@TotalPriceWithoutDiscount $</span>
             </div>
-            <div class="flex justify-between text-sm text-muted">
+            <div class="flex justify-between text-muted">
                 <span>Скидка</span>
                 <span class="text-primary">- @TotalDiscount $</span>
             </div>
