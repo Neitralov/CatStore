@@ -11,6 +11,16 @@
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/8cc15f42-4614-40af-9d3b-6e7b081a9cb5)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/758388f4-6e07-42ca-9732-816f13d50ca3)
 </details>
+<details>
+  <summary>Скриншоты с телефона</summary>
+
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/a44f56e6-3acc-454f-af84-07417cf20df5)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/69082618-0176-4719-9662-aefd59557a9c)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/3e0729d7-f8b6-4e2f-bade-2f96572d3690)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/72b07fe9-db28-4299-a180-9a2a73e1a0bd)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/18dc5795-8d1e-4fc4-8e9d-e7955d12a471)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/299da835-f5b6-4e85-916f-1d0e4e2fbdd7)
+</details>
 
 # 🔥 Возможности
 * Наполнение каталога магазина котятами.
@@ -20,7 +30,6 @@
 * Формирование заказов пользователей.
 
 # 🧭 Дорожная карта
-* Адаптивы для мобильных устройств.
 * Интеграция с [ЮКасса](https://yookassa.ru).
 
 # 📑 Документация
