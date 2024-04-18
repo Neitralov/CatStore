@@ -2,12 +2,14 @@
 @layout ProfileLayout
 @inject HttpClient HttpClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
+@inject ILocalStorageService LocalStorage
 @attribute [Authorize]
 
 <PageTitle>Профиль — CatStore</PageTitle>
 
-<Panel CssClasses="flex flex-col gap-3">
+<Panel CssClasses="flex flex-col md:gap-3 gap-2">
     <ValueFieldWithLabel Label="Электронная почта">@UserEmail</ValueFieldWithLabel>
     <hr />
     <div class="flex flex-col gap-2">
@@ -15,8 +17,15 @@
         <InputTextFieldWithLabel CssClasses="text-xs text-muted" Label="Старый пароль" InputType="password" @bind-Value="OldPassword" />
         <InputTextFieldWithLabel CssClasses="text-xs text-muted" Label="Новый пароль" InputType="password" @bind-Value="NewPassword" />
         <InputTextFieldWithLabel CssClasses="text-xs text-muted" Label="Повторите новый пароль" InputType="password" @bind-Value="ConfirmNewPassword" />
-        <p class="text-attention text-xs">@ErrorMessage</p>
+        @if (ErrorMessage != string.Empty)
+        {
+            <p class="text-attention">@ErrorMessage</p>
+        }
         <ApplyButton OnClick="ChangePassword">Изменить</ApplyButton>
+    </div>
+    <hr class="md:hidden" />
+    <div class="md:hidden">
+        <Button OnClick="Logout">Выйти из аккаунта</Button>
     </div>
 </Panel>
 
@@ -68,5 +77,18 @@
             NewPassword = string.Empty;
             ConfirmNewPassword = string.Empty;
         }
+    }
+    
+    private async Task Logout()
+    {
+        if (await JsRuntime.InvokeAsync<bool>("confirm", "Вы точно хотите выйти из аккаунта?") is false)
+            return;
+
+        await LocalStorage.RemoveItemAsync("AccessToken");
+        await LocalStorage.RemoveItemAsync("RefreshToken");
+
+        NavigationManager.NavigateTo("/");
+        
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
     }
 }

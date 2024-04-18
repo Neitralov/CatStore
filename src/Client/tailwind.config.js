@@ -6,6 +6,7 @@ module.exports = {
             center: true
         },
         screens: {
+            "sm": "480px",
             "md": "768px",
             "lg": "960px",
             "xl": "1280px"
@@ -29,6 +30,9 @@ module.exports = {
                 'top' : '0 -1px 3px 0 rgba(0, 0, 0, 0.1)',
             }
         },
+    },
+    future: {
+        hoverOnlyWhenSupported: true,
     },
     plugins: [],
 }

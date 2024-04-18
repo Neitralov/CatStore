@@ -7,16 +7,16 @@
 
 @if (Orders.Count > 0)
 {
-    <Panel CssClasses="flex flex-col gap-3">
+    <Panel CssClasses="flex flex-col md:gap-3 gap-2">
         @foreach(var order in Orders)
         {
-            <details class="px-5 py-2 bg-background rounded-lg hover:cursor-pointer hover:shadow-md" name="order">
+            <details class="md:px-5 px-3 py-2 bg-background rounded-lg hover:cursor-pointer hover:shadow-md" name="order">
                 <summary class="flex justify-between">
-                    <span>Заказ @order.OrderId <span class="text-xs text-muted">от @order.OrderDate.ToShortDateString() </span></span>
-                    <span>Итого: @($"{order.TotalPrice:F0}") $</span>
+                    <span class="basis-2/3">Заказ @order.OrderId <span class="text-xs text-muted">от @order.OrderDate.ToShortDateString() </span></span>
+                    <span class="basis-1/3 text-end">Итого: @($"{order.TotalPrice:F0}") $</span>
                 </summary>
 
-                <div class="flex flex-col gap-2 mt-3">
+                <div class="flex flex-col gap-2 md:mt-3 mt-2">
                     @foreach(var orderItem in order.Cats)
                     {
                         <div class="flex justify-between">
@@ -32,7 +32,7 @@
 }
 else if (HasDataLoaded)
 {
-    <h1 class="col-span-12 text-sm">Вы еще не сделали ни одного заказа. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/cart">Корзину</a>, чтобы оформить заказ.</h1>
+    <h1 class="col-span-12 md:text-sm text-xs">Вы еще не сделали ни одного заказа. Перейдите в <a class="text-primary hover:cursor-pointer hover:underline" href="/cart">Корзину</a>, чтобы оформить заказ.</h1>
 }
 
 @code {

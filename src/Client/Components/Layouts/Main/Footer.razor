@@ -1,4 +1,11 @@
-<footer class="bg-neutral shadow-top">
+@inject HttpClient HttpClient
+@inject CartService CartService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@implements IDisposable
+
+<footer class="md:block hidden bg-neutral shadow-top">
     <div class="xl:container w-full flex justify-between xl:gap-5 gap-4 h-10 xl:px-[50px] px-4 text-xs">
         <p class="flex items-center">
             CatStore
@@ -11,3 +18,84 @@
         </a>
     </div>
 </footer>
+
+<footer class="fixed w-full bottom-0 md:hidden bg-neutral shadow-top">
+    <div class="flex justify-around mx-4 my-2">
+        <NavLink href="/" Match="NavLinkMatch.All" class="mobile flex flex-col gap-1 items-center self-center text-black text-xs hover:cursor-pointer hover:text-primary hover:fill-primary" @onclick="ClearSearchLine">
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28">
+                <path d="M300-286q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm0-164q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm0-164q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm132 328h244v-60H432v60Zm0-164h244v-60H432v60Zm0-164h244v-60H432v60ZM180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm0-600v600-600Z"/>
+            </svg>
+            Каталог
+        </NavLink>
+        
+        <NavLink href="cart" class="mobile flex flex-col gap-1 items-center self-center text-black text-xs relative hover:cursor-pointer hover:text-primary hover:fill-primary" @onclick="ClearSearchLine">
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="30">
+                    <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/>
+                </svg>
+                @if (CartItemsQuantity > 0)
+                {
+                    <div class="w-4 h-4 bg-primary text-white text-[10px] flex justify-center items-center rounded-full absolute top-3">
+                        @CartItemsQuantity
+                    </div>
+                }
+            </div>
+            Корзина
+        </NavLink>
+
+        <NavLink href="orders" class="mobile flex flex-col gap-1 items-center self-center text-black text-xs hover:cursor-pointer hover:text-primary hover:fill-primary" @onclick="ClearSearchLine">
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28">
+                <path d="M450-154v-309L180-619v309l270 156Zm60 0 270-156v-310L510-463v309Zm-60 69L150-258q-14-8-22-22t-8-30v-340q0-16 8-30t22-22l300-173q14-8 30-8t30 8l300 173q14 8 22 22t8 30v340q0 16-8 30t-22 22L510-85q-14 8-30 8t-30-8Zm194-525 102-59-266-154-102 59 266 154Zm-164 96 104-61-267-154-104 60 267 155Z"/>
+            </svg>
+            Заказы
+        </NavLink>
+
+        <AuthorizeView>
+            <Authorized>
+                <NavLink href="profile" class="mobile flex flex-col gap-1 items-center self-center text-black text-xs hover:cursor-pointer hover:text-primary hover:fill-primary" @onclick="ClearSearchLine">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28">
+                        <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/>
+                    </svg>
+                    Профиль
+                </NavLink>
+            </Authorized>
+            <NotAuthorized>
+                <NavLink href="login" class="mobile flex flex-col gap-1 items-center self-center text-black text-xs hover:cursor-pointer hover:text-primary hover:fill-primary" @onclick="ClearSearchLine">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28">
+                        <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"/>
+                    </svg>
+                    Войти
+                </NavLink>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</footer>
+
+@code {
+    private string? Name { get; set; }
+    private int CartItemsQuantity { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCartItemsQuantity();
+        CartService.OnChange += GetCartItemsQuantity;
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= GetCartItemsQuantity;
+    }
+
+    private async Task GetCartItemsQuantity()
+    {
+        CartItemsQuantity = await CartService.GetCartItemsQuantity();
+        StateHasChanged();
+    }
+
+    private void FindCat()
+    {
+        NavigationManager.NavigateTo(string.IsNullOrWhiteSpace(Name) ? "/" : $"/?Name={Name?.Trim()}");
+    }
+
+    private void ClearSearchLine() => Name = string.Empty;
+}

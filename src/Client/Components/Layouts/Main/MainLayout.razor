@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject IWebAssemblyHostEnvironment Env
 
-<div class="flex flex-col min-h-full bg-background">
+<div class="flex flex-col min-h-screen bg-background">
     @if (Env.IsDevelopment())
     {
         <div class="flex justify-center bg-green-300">
@@ -10,7 +10,7 @@
     }
     <Header />
 
-    <main class="xl:container w-full grow xl:py-5 py-4 xl:px-[50px] px-4">
+    <main class="xl:container w-full grow xl:py-5 md:py-4 py-3 xl:px-[50px] px-4 md:mb-0 mb-16">
         @Body
     </main>
 
