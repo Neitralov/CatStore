@@ -1,12 +1,10 @@
 <div class="@CssClasses flex flex-col gap-2 w-full has-[:disabled]:opacity-50">
     <h2>@Label</h2>
-    <label class="flex items-center border-solid border-second border rounded-lg h-9 text-muted has-[:enabled]:hover:cursor-pointer has-[:disabled]:hover:cursor-not-allowed select-none has-[:enabled]:hover:shadow-md has-[:disabled]:shadow-none" for="@For" onclick="document.querySelector('#@For').click()">
+    <label class="flex items-center border-solid border-second border rounded-lg h-9 text-muted has-[:enabled]:hover:cursor-pointer has-[:disabled]:hover:cursor-not-allowed select-none has-[:enabled]:hover:shadow-md has-[:disabled]:shadow-none" for="@For">
         <input class="border-solid border-second border rounded-lg h-3.5 ml-3 mr-2 accent-black focus:outline-none" type="checkbox" id="@For" value="@Value" @onchange="OnValueChanged" checked="@Value" disabled="@Disabled"/>
         @Text
     </label>
 </div>
-
-
 
 @code {
     [Parameter]
