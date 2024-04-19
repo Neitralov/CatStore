@@ -48,7 +48,7 @@ public class UserRepository(DatabaseContext database) : IUserRepository
 
     public async Task SaveChanges()
     {
-        database.SavingChanges += async (_, _) => await DeleteAllInvalidRefreshTokenSessions();
+        await DeleteAllInvalidRefreshTokenSessions();
         await database.SaveChangesAsync();
     }
 
