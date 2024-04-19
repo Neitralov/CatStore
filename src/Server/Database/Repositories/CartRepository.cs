@@ -2,52 +2,52 @@ namespace Database.Repositories;
 
 public class CartRepository(DatabaseContext database) : ICartRepository
 {
-    public void AddCartItem(CartItem cartItem)
+    public async Task AddCartItem(CartItem cartItem)
     {
-        database.Add(cartItem);
+        await database.AddAsync(cartItem);
     }
 
-    public CartItem? FindCartItem(Guid userId, Guid catId)
+    public async Task<CartItem?> FindCartItem(Guid userId, Guid catId)
     {
-        return database.CartItems.SingleOrDefault(item =>
+        return await database.CartItems.SingleOrDefaultAsync(item =>
             item.UserId == userId &&
             item.CatId == catId);
     }
     
-    public CartItem? FindCartItem(CartItem cartItem)
+    public async Task<CartItem?> FindCartItem(CartItem cartItem)
     {
-        return database.CartItems.SingleOrDefault(item =>
+        return await database.CartItems.SingleOrDefaultAsync(item =>
             item.UserId == cartItem.UserId &&
             item.CatId == cartItem.CatId);
     }
 
-    public CartItem? GetCartItem(Guid userId, Guid catId)
+    public async Task<CartItem?> GetCartItem(Guid userId, Guid catId)
     {
-        return database.CartItems
+        return await database.CartItems
             .AsNoTracking()
-            .SingleOrDefault(cartItem =>
+            .SingleOrDefaultAsync(cartItem =>
                 cartItem.UserId == userId &&
                 cartItem.CatId == catId);
     }
 
-    public List<CartItem> GetCartItems(Guid userId)
+    public async Task<List<CartItem>> GetCartItems(Guid userId)
     {
-        return database.CartItems
+        return await database.CartItems
             .AsNoTracking()
             .Where(cartItem => cartItem.UserId == userId)
-            .ToList();
+            .ToListAsync();
     }
 
-    public int GetUserCartItemsCount(Guid userId)
+    public async Task<int> GetUserCartItemsCount(Guid userId)
     {
-        return database.CartItems
+        return await database.CartItems
             .Where(item => item.UserId == userId)
-            .Sum(item => item.Quantity);
+            .SumAsync(item => item.Quantity);
     }
 
-    public bool RemoveCartItem(Guid userId, Guid catId)
+    public async Task<bool> RemoveCartItem(Guid userId, Guid catId)
     {
-        var cartItem = database.CartItems.SingleOrDefault(cartItem =>
+        var cartItem = await database.CartItems.SingleOrDefaultAsync(cartItem =>
             cartItem.UserId == userId &&
             cartItem.CatId == catId);
 
@@ -57,13 +57,13 @@ public class CartRepository(DatabaseContext database) : ICartRepository
         return cartItem is not null;
     }
 
-    public bool RemoveCartItems(List<CartItem> items)
+    public async Task<bool> RemoveCartItems(List<CartItem> items)
     {
         var dbCartItems = new List<CartItem>();
 
         foreach (var item in items)
         {
-            var dbCartItem = database.CartItems.SingleOrDefault(dbItem =>
+            var dbCartItem = await database.CartItems.SingleOrDefaultAsync(dbItem =>
                 dbItem.UserId == item.UserId &&
                 dbItem.CatId == item.CatId);
 
@@ -77,5 +77,5 @@ public class CartRepository(DatabaseContext database) : ICartRepository
         return true;
     }
 
-    public void SaveChanges() => database.SaveChanges();
+    public async Task SaveChanges() => await database.SaveChangesAsync();
 }

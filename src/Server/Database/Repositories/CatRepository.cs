@@ -2,31 +2,31 @@ namespace Database.Repositories;
 
 public class CatRepository(DatabaseContext database) : ICatRepository
 {
-    public void AddCat(Cat cat)
+    public async Task AddCat(Cat cat)
     {
-        database.Add(cat);
+        await database.AddAsync(cat);
     }
 
-    public Cat? FindCatById(Guid catId)
+    public async Task<Cat?> FindCatById(Guid catId)
     {
-        return database.Cats.SingleOrDefault(cat => cat.CatId == catId);
+        return await database.Cats.SingleOrDefaultAsync(cat => cat.CatId == catId);
     }
 
-    public Cat? GetCat(Guid catId)
+    public async Task<Cat?> GetCat(Guid catId)
     {
-        return database.Cats
+        return await database.Cats
             .AsNoTracking()
-            .SingleOrDefault(cat => cat.CatId == catId);
+            .SingleOrDefaultAsync(cat => cat.CatId == catId);
     }
 
-    public List<Cat> GetCats()
+    public async Task<List<Cat>> GetCats()
     {
-        return database.Cats.AsNoTracking().ToList();
+        return await database.Cats.AsNoTracking().ToListAsync();
     }
 
-    public bool RemoveCat(Guid catId)
+    public async Task<bool> RemoveCat(Guid catId)
     {
-        var storedCat = database.Cats.Find(catId);
+        var storedCat = await database.Cats.FindAsync(catId);
 
         if (storedCat is not null)
             database.Remove(storedCat);
@@ -34,15 +34,15 @@ public class CatRepository(DatabaseContext database) : ICatRepository
         return storedCat is not null;
     }
 
-    public bool IsCatExists(string name)
+    public async Task<bool> IsCatExists(string name)
     {
-        return database.Cats.Any(cat => cat.Name == name);
+        return await database.Cats.AnyAsync(cat => cat.Name == name);
     }
 
-    public bool IsCatExists(Guid catId)
+    public async Task<bool> IsCatExists(Guid catId)
     {
-        return database.Cats.Any(cat => cat.CatId == catId);
+        return await database.Cats.AnyAsync(cat => cat.CatId == catId);
     }
 
-    public void SaveChanges() => database.SaveChanges();
+    public async Task SaveChanges() => await database.SaveChangesAsync();
 }

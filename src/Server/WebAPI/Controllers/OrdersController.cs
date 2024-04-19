@@ -11,11 +11,11 @@ public class OrdersController(OrderService orderService) : ApiController
     /// <response code="404">Не удается найти товар, чтобы сформировать заказ</response>
     [HttpPost, Authorize]
     [ProducesResponseType(typeof(OrderResponse), 201)]
-    public IActionResult CreateOrder()
+    public async Task<IActionResult> CreateOrder()
     {
         var userId = GetUserGuid();
         
-        ErrorOr<List<OrderItem>> cartItemsToOrderItemsResult = orderService.CreateOrderItemsFromCart(userId);
+        ErrorOr<List<OrderItem>> cartItemsToOrderItemsResult = await orderService.CreateOrderItemsFromCart(userId);
 
         if (cartItemsToOrderItemsResult.IsError)
             return Problem(cartItemsToOrderItemsResult.Errors);
@@ -27,7 +27,7 @@ public class OrdersController(OrderService orderService) : ApiController
             return Problem(orderItemsToOrderResult.Errors);
         
         var order = orderItemsToOrderResult.Value;
-        ErrorOr<Created> createOrderResult = orderService.StoreOrder(order);
+        ErrorOr<Created> createOrderResult = await orderService.StoreOrder(order);
         
         return createOrderResult.Match(_ => CreatedAtGetOrderDetails(order), Problem);
     }
@@ -38,11 +38,11 @@ public class OrdersController(OrderService orderService) : ApiController
     /// <response code="404">Not found</response>
     [HttpGet("{orderId:guid}"), Authorize]
     [ProducesResponseType(typeof(OrderResponse), 200)]
-    public IActionResult GetOrder(Guid orderId)
+    public async Task<IActionResult> GetOrder(Guid orderId)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Order> getOrderResult = orderService.GetOrder(orderId, userId);
+        ErrorOr<Order> getOrderResult = await orderService.GetOrder(orderId, userId);
         
         return getOrderResult.Match(order => Ok(order.Adapt<OrderResponse>()), Problem);
     }
@@ -51,11 +51,11 @@ public class OrdersController(OrderService orderService) : ApiController
     /// <response code="200">Список заказов</response>
     [HttpGet, Authorize]
     [ProducesResponseType(typeof(List<OrderResponse>), 200)]
-    public IActionResult GetOrders()
+    public async Task<IActionResult> GetOrders()
     {
         var userId = GetUserGuid();
 
-        var orders = orderService.GetOrders(userId);
+        var orders = await orderService.GetOrders(userId);
         
         return Ok(orders.Adapt<List<OrderResponse>>());
     }

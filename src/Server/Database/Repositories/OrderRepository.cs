@@ -2,30 +2,30 @@ namespace Database.Repositories;
 
 public class OrderRepository(DatabaseContext database) : IOrderRepository
 {
-    public void AddOrder(Order order)
+    public async Task AddOrder(Order order)
     {
-        database.Add(order);
+        await database.AddAsync(order);
     }
 
-    public Order? GetOrder(Guid orderId, Guid userId)
+    public async Task<Order?> GetOrder(Guid orderId, Guid userId)
     {
-        return database.Orders
+        return await database.Orders
             .AsNoTracking()
             .Include(order => order.OrderItems)
-            .SingleOrDefault(order => 
+            .SingleOrDefaultAsync(order => 
                 order.OrderId == orderId && 
                 order.UserId == userId);
     }
 
-    public List<Order> GetOrders(Guid userId)
+    public async Task<List<Order>> GetOrders(Guid userId)
     {
-        return database.Orders
+        return await database.Orders
             .AsNoTracking()
             .Include(order => order.OrderItems)
             .Where(order => order.UserId == userId)
             .OrderByDescending(order => order.OrderDate)
-            .ToList();
+            .ToListAsync();
     }
 
-    public void SaveChanges() => database.SaveChanges();
+    public async Task SaveChanges() => await database.SaveChangesAsync();
 }

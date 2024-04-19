@@ -3,18 +3,18 @@ namespace Domain.Interfaces;
 public interface ICatRepository
 {
     //Create
-    void AddCat(Cat cat);
+    Task AddCat(Cat cat);
 
     //Read
-    Cat? FindCatById(Guid catId);
-    Cat? GetCat(Guid catId);
-    List<Cat> GetCats();
-    bool IsCatExists(string name);
-    bool IsCatExists(Guid catId);
+    Task<Cat?> FindCatById(Guid catId);
+    Task<Cat?> GetCat(Guid catId);
+    Task<List<Cat>> GetCats();
+    Task<bool> IsCatExists(string name);
+    Task<bool> IsCatExists(Guid catId);
 
     //Delete
-    bool RemoveCat(Guid catId);
+    Task<bool> RemoveCat(Guid catId);
 
     //Other
-    void SaveChanges();
+    Task SaveChanges();
 }

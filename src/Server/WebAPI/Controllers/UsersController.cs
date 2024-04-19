@@ -11,7 +11,7 @@ public class UsersController(UserService userService) : ApiController
     /// </response>
     [HttpPost]
     [ProducesResponseType(204)]
-    public IActionResult CreateUser([Required] CreateUserRequest request)
+    public async Task<IActionResult> CreateUser([Required] CreateUserRequest request)
     {
         ErrorOr<User> requestToUserResult = CreateUserFrom(request);
 
@@ -19,7 +19,7 @@ public class UsersController(UserService userService) : ApiController
             return Problem(requestToUserResult.Errors);
 
         var user = requestToUserResult.Value;
-        ErrorOr<Created> createUserResult = userService.StoreUser(user);
+        ErrorOr<Created> createUserResult = await userService.StoreUser(user);
 
         return createUserResult.Match(_ => NoContent(), Problem);
     }
@@ -29,11 +29,11 @@ public class UsersController(UserService userService) : ApiController
     /// <response code="400">Слишком короткий пароль, пароли не совпадают, новый пароль не может совпадать со старым</response>
     [HttpPatch("change-password"), Authorize]
     [ProducesResponseType(204)]
-    public IActionResult ChangePassword([Required] ChangeUserPasswordRequest request)
+    public async Task<IActionResult> ChangePassword([Required] ChangeUserPasswordRequest request)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Updated> changeUserPasswordResult = userService.ChangeUserPassword(
+        ErrorOr<Updated> changeUserPasswordResult = await userService.ChangeUserPassword(
             userId,
             request.OldPassword,
             request.NewPassword,
@@ -47,9 +47,9 @@ public class UsersController(UserService userService) : ApiController
     /// <response code="400">Логин или пароль указан некорректно</response>
     [HttpPost("login")]
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
-    public IActionResult Login([Required] LoginUserRequest request)
+    public async Task<IActionResult> Login([Required] LoginUserRequest request)
     {
-        ErrorOr<TokensPair> loginUserResult = userService.Login(request.Email, request.Password);
+        ErrorOr<TokensPair> loginUserResult = await userService.Login(request.Email, request.Password);
 
         if (loginUserResult.IsError)
             return Problem(loginUserResult.Errors);
@@ -66,9 +66,9 @@ public class UsersController(UserService userService) : ApiController
     /// <response code="404">Владелец токена (пользователь) не найден</response>
     [HttpPost("refresh-tokens")]
     [ProducesResponseType(typeof(LoginUserResponse), 200)]
-    public IActionResult LoginByTokens([Required] RefreshUserTokensRequest request)
+    public async Task<IActionResult> LoginByTokens([Required] RefreshUserTokensRequest request)
     {
-        ErrorOr<TokensPair> refreshTokensResult = userService.RefreshTokens(request.ExpiredAccessToken,  request.RefreshToken);
+        ErrorOr<TokensPair> refreshTokensResult = await userService.RefreshTokens(request.ExpiredAccessToken,  request.RefreshToken);
 
         if (refreshTokensResult.IsError)
             return Problem(refreshTokensResult.Errors);

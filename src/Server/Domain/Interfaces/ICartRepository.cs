@@ -3,21 +3,21 @@ namespace Domain.Interfaces;
 public interface ICartRepository
 {
     //Create
-    void AddCartItem(CartItem cartItem);
+    Task AddCartItem(CartItem cartItem);
 
     //Read
-    CartItem? FindCartItem(Guid userId, Guid catId);
-    CartItem? FindCartItem(CartItem cartItem);
-    CartItem? GetCartItem(Guid userId, Guid catId);
-    List<CartItem> GetCartItems(Guid userId);
-    int GetUserCartItemsCount(Guid userId);
+    Task<CartItem?> FindCartItem(Guid userId, Guid catId);
+    Task<CartItem?> FindCartItem(CartItem cartItem);
+    Task<CartItem?> GetCartItem(Guid userId, Guid catId);
+    Task<List<CartItem>> GetCartItems(Guid userId);
+    Task<int> GetUserCartItemsCount(Guid userId);
 
     //Update
 
     //Delete
-    bool RemoveCartItem(Guid userId, Guid catId);
-    bool RemoveCartItems(List<CartItem> items);
+    Task<bool> RemoveCartItem(Guid userId, Guid catId);
+    Task<bool> RemoveCartItems(List<CartItem> items);
 
     //Other
-    void SaveChanges();
+    Task SaveChanges();
 }

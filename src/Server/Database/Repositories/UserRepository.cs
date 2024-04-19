@@ -2,59 +2,59 @@ namespace Database.Repositories;
 
 public class UserRepository(DatabaseContext database) : IUserRepository
 {
-    public void AddUser(User user)
+    public async Task AddUser(User user)
     {
-        database.Add(user);
+        await database.AddAsync(user);
     }
 
-    public void AddRefreshTokenSession(RefreshTokenSession refreshTokenSession)
+    public async Task AddRefreshTokenSession(RefreshTokenSession refreshTokenSession)
     {
-        database.Add(refreshTokenSession);
+        await database.AddAsync(refreshTokenSession);
     }
 
-    public User? FindUserById(Guid userId)
+    public async Task<User?> FindUserById(Guid userId)
     {
-        return database.Users.SingleOrDefault(user => user.UserId == userId);
+        return await database.Users.SingleOrDefaultAsync(user => user.UserId == userId);
     }
 
-    public User? FindUserByEmail(string email)
+    public async Task<User?> FindUserByEmail(string email)
     {
-        return database.Users.SingleOrDefault(user => user.Email == email);
+        return await database.Users.SingleOrDefaultAsync(user => user.Email == email);
     }
 
-    public int GetNumberOfUsersRefreshTokenSessions(Guid userId)
+    public async Task<int> GetNumberOfUsersRefreshTokenSessions(Guid userId)
     {
-        return database.RefreshTokenSessions.Count(refreshTokenSession => refreshTokenSession.UserId == userId);
+        return await database.RefreshTokenSessions.CountAsync(refreshTokenSession => refreshTokenSession.UserId == userId);
     }
 
-    public RefreshTokenSession? GetUserRefreshTokenSession(Guid userId, string oldRefreshToken)
+    public async Task<RefreshTokenSession?> GetUserRefreshTokenSession(Guid userId, string oldRefreshToken)
     {
-        return database.RefreshTokenSessions.SingleOrDefault(refreshTokenSession =>
+        return await database.RefreshTokenSessions.SingleOrDefaultAsync(refreshTokenSession =>
             refreshTokenSession.UserId == userId &&
             refreshTokenSession.Token == oldRefreshToken &&
             refreshTokenSession.ExpirationDate >= DateTime.UtcNow);
     }
     
-    public void RemoveAllUsersRefreshTokenSessions(Guid userId)
+    public async Task RemoveAllUsersRefreshTokenSessions(Guid userId)
     {
-        var usersRefreshTokenSessions = database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId);
+        var usersRefreshTokenSessions = await database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId).ToListAsync();
         database.RefreshTokenSessions.RemoveRange(usersRefreshTokenSessions);
     }
 
-    public bool IsUserExists(string email)
+    public async Task<bool> IsUserExists(string email)
     {
-        return database.Users.Any(user => user.Email == email);
+        return await database.Users.AnyAsync(user => user.Email == email);
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     {
-        database.SavingChanges += (_, _) => DeleteAllInvalidRefreshTokenSessions();
-        database.SaveChanges();
+        await DeleteAllInvalidRefreshTokenSessions();
+        await database.SaveChangesAsync();
     }
 
-    private void DeleteAllInvalidRefreshTokenSessions()
+    private async Task DeleteAllInvalidRefreshTokenSessions()
     {
-        var invalidSessions = database.RefreshTokenSessions.Where(session => session.ExpirationDate < DateTime.UtcNow);
+        var invalidSessions = await database.RefreshTokenSessions.Where(session => session.ExpirationDate < DateTime.UtcNow).ToListAsync();
         database.RemoveRange(invalidSessions);
     }
 }

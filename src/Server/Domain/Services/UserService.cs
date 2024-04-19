@@ -4,24 +4,24 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
 {
     private const int AccessTokenLifeTimeInMinutes = 15;
 
-    public ErrorOr<Created> StoreUser(User user)
+    public async Task<ErrorOr<Created>> StoreUser(User user)
     {
-        if (userRepository.IsUserExists(user.Email))
+        if (await userRepository.IsUserExists(user.Email))
             return Errors.User.AlreadyExists;
 
-        userRepository.AddUser(user);
-        userRepository.SaveChanges();
+        await userRepository.AddUser(user);
+        await userRepository.SaveChanges();
 
         return Result.Created;
     }
 
-    public ErrorOr<Updated> ChangeUserPassword(
+    public async Task<ErrorOr<Updated>> ChangeUserPassword(
         Guid userId,
         string oldPassword,
         string newPassword,
         string confirmNewPassword)
     {
-        var user = userRepository.FindUserById(userId);
+        var user = await userRepository.FindUserById(userId);
 
         if (user is null)
             return Errors.User.NotFound;
@@ -38,12 +38,12 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         var result = user.ChangePassword(newPassword);
 
         if (result == Result.Updated)
-            userRepository.SaveChanges();
+            await userRepository.SaveChanges();
 
         return result;
     }
 
-    public ErrorOr<TokensPair> RefreshTokens(string? expiredAccessToken, string? refreshToken)
+    public async Task<ErrorOr<TokensPair>> RefreshTokens(string? expiredAccessToken, string? refreshToken)
     {
         if (expiredAccessToken is null)
             return Errors.AccessToken.NotFound;
@@ -58,18 +58,18 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
 
         var userEmail = claimsPrincipal.Value.Identity?.Name!;
 
-        var user = userRepository.FindUserByEmail(userEmail);
+        var user = await userRepository.FindUserByEmail(userEmail);
 
         if (user is null)
             return Errors.User.NotFound;
 
-        var refreshTokenSession = userRepository.GetUserRefreshTokenSession(user.UserId, refreshToken);
+        var refreshTokenSession = await userRepository.GetUserRefreshTokenSession(user.UserId, refreshToken);
 
         if (refreshTokenSession is null)
             return Errors.RefreshToken.TokenIsInvalid;
 
         refreshTokenSession.Update();
-        userRepository.SaveChanges();
+        await userRepository.SaveChanges();
 
         var newAccessToken = CreateAccessToken(user);
         var newRefreshToken = refreshTokenSession.Token;
@@ -77,9 +77,9 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         return (newAccessToken, newRefreshToken);
     }
 
-    public ErrorOr<TokensPair> Login(string email, string password)
+    public async Task<ErrorOr<TokensPair>> Login(string email, string password)
     {
-        var user = userRepository.FindUserByEmail(email);
+        var user = await userRepository.FindUserByEmail(email);
 
         if (user is null)
             return Errors.Login.IncorrectEmailOrPassword;
@@ -89,11 +89,11 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
 
         var refreshTokenSession = RefreshTokenSession.Create(user.UserId);
 
-        if (AreThereTooManySessionsPerUser(refreshTokenSession.UserId))
-            userRepository.RemoveAllUsersRefreshTokenSessions(refreshTokenSession.UserId);
+        if (await AreThereTooManySessionsPerUser(refreshTokenSession.UserId))
+            await userRepository.RemoveAllUsersRefreshTokenSessions(refreshTokenSession.UserId);
 
-        userRepository.AddRefreshTokenSession(refreshTokenSession);
-        userRepository.SaveChanges();
+        await userRepository.AddRefreshTokenSession(refreshTokenSession);
+        await userRepository.SaveChanges();
 
         var accessToken = CreateAccessToken(user);
         var refreshToken = refreshTokenSession.Token;
@@ -159,8 +159,8 @@ public class UserService(IUserRepository userRepository, IConfiguration configur
         return computedHash.SequenceEqual(passwordHash);
     }
 
-    private bool AreThereTooManySessionsPerUser(Guid userId)
+    private async Task<bool> AreThereTooManySessionsPerUser(Guid userId)
     {
-        return userRepository.GetNumberOfUsersRefreshTokenSessions(userId) >= RefreshTokenSession.MaxRefreshTokenSessionsPerUser;
+        return await userRepository.GetNumberOfUsersRefreshTokenSessions(userId) >= RefreshTokenSession.MaxRefreshTokenSessionsPerUser;
     }
 }
