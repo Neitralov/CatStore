@@ -19,7 +19,7 @@ try
 
         builder.Services.AddCors(
             options => options.AddPolicy("AllowCatStoreApp", policy =>
-                policy.WithOrigins("http://192.168.0.103:8080")
+                policy.WithOrigins("http://localhost:8080")
                     .AllowAnyHeader()
                     .AllowAnyMethod()));
 

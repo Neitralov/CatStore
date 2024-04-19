@@ -4,7 +4,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://192.168.0.103:8081") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:8081") });
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore(options =>
 {
