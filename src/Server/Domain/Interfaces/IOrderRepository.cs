@@ -3,16 +3,16 @@ namespace Domain.Interfaces;
 public interface IOrderRepository
 {
     //Create
-    void AddOrder(Order order);
+    Task AddOrder(Order order);
 
     //Read
-    Order? GetOrder(Guid orderId, Guid userId);
-    List<Order> GetOrders(Guid userId);
+    Task<Order?> GetOrder(Guid orderId, Guid userId);
+    Task<List<Order>> GetOrders(Guid userId);
 
     //Update
 
     //Delete
 
     //Other
-    void SaveChanges();
+    Task SaveChanges();
 }

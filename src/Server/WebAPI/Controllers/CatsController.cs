@@ -9,7 +9,7 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="400">Неправильная длина имени, цвет указан в некорректном формате, цена указана некорректно, кот с таким именем уже существует</response>
     [HttpPost, Authorize("CanEditCats")]
     [ProducesResponseType(typeof(CatResponse), 201)]
-    public IActionResult CreateCat([Required] CreateCatRequest request)
+    public async Task<IActionResult> CreateCat([Required] CreateCatRequest request)
     {
         ErrorOr<Cat> requestToCatResult = CreateCatFrom(request);
         
@@ -17,7 +17,7 @@ public class CatsController(CatService catService) : ApiController
             return Problem(requestToCatResult.Errors);
         
         var cat = requestToCatResult.Value;
-        ErrorOr<Created> createCatResult = catService.StoreCat(cat);
+        ErrorOr<Created> createCatResult = await catService.StoreCat(cat);
         
         return createCatResult.Match(_ => CreatedAtGetCat(cat), Problem);
     }
@@ -28,9 +28,9 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="404">Not found</response>
     [HttpGet("{catId:guid}")]
     [ProducesResponseType(typeof(CatResponse), 200)]
-    public IActionResult GetCat(Guid catId)
+    public async Task<IActionResult> GetCat(Guid catId)
     {
-        ErrorOr<Cat> getCatResult = catService.GetCat(catId);
+        ErrorOr<Cat> getCatResult = await catService.GetCat(catId);
         
         return getCatResult.Match(cat => Ok(cat.Adapt<CatResponse>()), Problem);
     }
@@ -39,9 +39,9 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="200">Список котов</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<CatResponse>), 200)]
-    public IActionResult GetCats()
+    public async Task<IActionResult> GetCats()
     {
-        var cats = catService.GetCats();
+        var cats = await catService.GetCats();
 
         return Ok(cats.Adapt<List<CatResponse>>());
     }
@@ -54,9 +54,9 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="404">Not found</response>
     [HttpPatch("{catId:guid}/update-price"), Authorize("CanEditCats")]
     [ProducesResponseType(204)]
-    public IActionResult UpdateCatPrice(Guid catId, [Required] UpdateCatPriceRequest request)
+    public async Task<IActionResult> UpdateCatPrice(Guid catId, [Required] UpdateCatPriceRequest request)
     {
-        ErrorOr<Updated> updateCatPriceResult = catService.UpdateCatPrice(catId, request.Cost, request.Discount);
+        ErrorOr<Updated> updateCatPriceResult = await catService.UpdateCatPrice(catId, request.Cost, request.Discount);
         
         return updateCatPriceResult.Match(_ => NoContent(), Problem);
     }
@@ -67,9 +67,9 @@ public class CatsController(CatService catService) : ApiController
     /// <response code="404">Not found</response>
     [HttpDelete("{catId:guid}"), Authorize("CanEditCats")]
     [ProducesResponseType(204)]
-    public IActionResult DeleteCat(Guid catId)
+    public async Task<IActionResult> DeleteCat(Guid catId)
     {
-        ErrorOr<Deleted> deleteCatResult = catService.DeleteCat(catId);
+        ErrorOr<Deleted> deleteCatResult = await catService.DeleteCat(catId);
         
         return deleteCatResult.Match(_ => NoContent(), Problem);
     }

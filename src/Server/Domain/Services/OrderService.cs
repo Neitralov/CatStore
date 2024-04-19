@@ -5,29 +5,29 @@ public class OrderService(
     ICartRepository cartRepository,
     ICatRepository catRepository)
 {
-    public ErrorOr<Created> StoreOrder(Order order)
+    public async Task<ErrorOr<Created>> StoreOrder(Order order)
     {
-        orderRepository.AddOrder(order);
+        await orderRepository.AddOrder(order);
         
-        var cartItems = cartRepository.GetCartItems(order.UserId);
-        var result = cartRepository.RemoveCartItems(cartItems);
+        var cartItems = await cartRepository.GetCartItems(order.UserId);
+        var result = await cartRepository.RemoveCartItems(cartItems);
         if (result is false)
             return Errors.CartItem.NotFound;
 
-        orderRepository.SaveChanges();
-        cartRepository.SaveChanges();
+        await orderRepository.SaveChanges();
+        await cartRepository.SaveChanges();
 
         return Result.Created;
     }
 
-    public ErrorOr<List<OrderItem>> CreateOrderItemsFromCart(Guid userId)
+    public async Task<ErrorOr<List<OrderItem>>> CreateOrderItemsFromCart(Guid userId)
     {
-        var cartItems = cartRepository.GetCartItems(userId);
+        var cartItems = await cartRepository.GetCartItems(userId);
         var orderItems = new List<OrderItem>();
         
         foreach (var item in cartItems)
         {
-            var cat = catRepository.GetCat(item.CatId);
+            var cat = await catRepository.GetCat(item.CatId);
             if (cat is null)
                 return Errors.Cat.NotFound;
             
@@ -42,15 +42,15 @@ public class OrderService(
         return orderItems;
     }
 
-    public ErrorOr<Order> GetOrder(Guid orderId, Guid userId)
+    public async Task<ErrorOr<Order>> GetOrder(Guid orderId, Guid userId)
     {
-        var result = orderRepository.GetOrder(orderId, userId);
+        var result = await orderRepository.GetOrder(orderId, userId);
 
         return result is not null ? result : Errors.Order.NotFound;
     }
 
-    public List<Order> GetOrders(Guid userId)
+    public async Task<List<Order>> GetOrders(Guid userId)
     {
-        return orderRepository.GetOrders(userId);
+        return await orderRepository.GetOrders(userId);
     }
 }

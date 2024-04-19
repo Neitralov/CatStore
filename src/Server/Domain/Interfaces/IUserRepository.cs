@@ -3,21 +3,21 @@ namespace Domain.Interfaces;
 public interface IUserRepository
 {
     //Create
-    void AddUser(User user);
-    void AddRefreshTokenSession(RefreshTokenSession refreshTokenSession);
+    Task AddUser(User user);
+    Task AddRefreshTokenSession(RefreshTokenSession refreshTokenSession);
 
     //Read
-    User? FindUserById(Guid userId);
-    User? FindUserByEmail(string email);
-    int GetNumberOfUsersRefreshTokenSessions(Guid userId);
-    RefreshTokenSession? GetUserRefreshTokenSession(Guid userId, string refreshToken);
-    bool IsUserExists(string email);
+    Task<User?> FindUserById(Guid userId);
+    Task<User?> FindUserByEmail(string email);
+    Task<int> GetNumberOfUsersRefreshTokenSessions(Guid userId);
+    Task<RefreshTokenSession?> GetUserRefreshTokenSession(Guid userId, string refreshToken);
+    Task<bool> IsUserExists(string email);
 
     //Update
 
     //Delete
-    void RemoveAllUsersRefreshTokenSessions(Guid userId);
+    Task RemoveAllUsersRefreshTokenSessions(Guid userId);
 
     //Other
-    void SaveChanges();
+    Task SaveChanges();
 }

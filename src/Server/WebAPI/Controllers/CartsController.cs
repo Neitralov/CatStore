@@ -10,7 +10,7 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="404">Not found</response>
     [HttpPost, Authorize]
     [ProducesResponseType(204)]
-    public IActionResult CreateCartItem([Required] CreateCartItemRequest request)
+    public async Task<IActionResult> CreateCartItem([Required] CreateCartItemRequest request)
     {
         var userId = GetUserGuid();
 
@@ -20,7 +20,7 @@ public class CartsController(CartService cartService) : ApiController
             return Problem(requestToCartItemResult.Errors);
 
         var cartItem = requestToCartItemResult.Value;
-        ErrorOr<Created> createCartItemResult = cartService.StoreCartItem(cartItem);
+        ErrorOr<Created> createCartItemResult = await cartService.StoreCartItem(cartItem);
 
         return createCartItemResult.Match(_ => NoContent(), Problem);
     }
@@ -31,11 +31,11 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="404">Not found</response>
     [HttpGet("{catId:guid}"), Authorize]
     [ProducesResponseType(typeof(CartItemResponse), 200)]
-    public IActionResult GetCartItem(Guid catId)
+    public async Task<IActionResult> GetCartItem(Guid catId)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<CartItem> getCartItemResult = cartService.GetCartItem(userId, catId);
+        ErrorOr<CartItem> getCartItemResult = await cartService.GetCartItem(userId, catId);
 
         return getCartItemResult.Match(cartItem => Ok(cartItem.Adapt<CartItemResponse>()), Problem);
     }
@@ -44,11 +44,11 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="200">Список товаров из корзины пользователя</response>
     [HttpGet, Authorize]
     [ProducesResponseType(typeof(List<CartItemResponse>), 200)]
-    public IActionResult GetCartItems()
+    public async Task<IActionResult> GetCartItems()
     {
         var userId = GetUserGuid();
 
-        var cartItems = cartService.GetCartItems(userId);
+        var cartItems = await cartService.GetCartItems(userId);
 
         return Ok(cartItems.Adapt<List<CartItemResponse>>());
     }
@@ -57,11 +57,11 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="200">Количество всех товаров в корзине пользователя</response>
     [HttpGet("count"), Authorize]
     [ProducesResponseType(typeof(TotalNumberOfCartItemsResponse), 200)]
-    public IActionResult GetCartItemsCount()
+    public async Task<IActionResult> GetCartItemsCount()
     {
         var userId = GetUserGuid();
 
-        ErrorOr<int> getCartItemsCountResult = cartService.GetUserCartItemsCount(userId);
+        ErrorOr<int> getCartItemsCountResult = await cartService.GetUserCartItemsCount(userId);
 
         return getCartItemsCountResult.Match(count => Ok(new TotalNumberOfCartItemsResponse(count)), Problem);
     }
@@ -72,11 +72,11 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="404">Not found</response>
     [HttpPatch("update-quantity"), Authorize]
     [ProducesResponseType(204)]
-    public IActionResult UpdateCartItemQuantity([Required] UpdateCartItemQuantityRequest request)
+    public async Task<IActionResult> UpdateCartItemQuantity([Required] UpdateCartItemQuantityRequest request)
     {
         var userId = GetUserGuid();
         
-        ErrorOr<Updated> updateCartItemQuantityResult = cartService.UpdateQuantity(userId, request.CatId, request.Quantity);
+        ErrorOr<Updated> updateCartItemQuantityResult = await cartService.UpdateQuantity(userId, request.CatId, request.Quantity);
 
         return updateCartItemQuantityResult.Match(_ => NoContent(), Problem);
     }
@@ -87,11 +87,11 @@ public class CartsController(CartService cartService) : ApiController
     /// <response code="404">Not found</response>
     [HttpDelete("{catId:guid}"), Authorize]
     [ProducesResponseType(204)]
-    public IActionResult DeleteCartItem(Guid catId)
+    public async Task<IActionResult> DeleteCartItem(Guid catId)
     {
         var userId = GetUserGuid();
 
-        ErrorOr<Deleted> deleteCartItemResult = cartService.DeleteCartItem(userId, catId);
+        ErrorOr<Deleted> deleteCartItemResult = await cartService.DeleteCartItem(userId, catId);
 
         return deleteCartItemResult.Match(_ => NoContent(), Problem);
     }

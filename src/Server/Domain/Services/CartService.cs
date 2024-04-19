@@ -2,46 +2,46 @@ namespace Domain.Services;
 
 public class CartService(ICartRepository cartRepository, ICatRepository catRepository)
 {
-    public ErrorOr<Created> StoreCartItem(CartItem cartItem)
+    public async Task<ErrorOr<Created>> StoreCartItem(CartItem cartItem)
     {
-        if (catRepository.IsCatExists(cartItem.CatId) is false)
+        if (await catRepository.IsCatExists(cartItem.CatId) is false)
             return Errors.Cat.NotFound;
         
-        var sameCartItem = cartRepository.FindCartItem(cartItem);
+        var sameCartItem = await cartRepository.FindCartItem(cartItem);
 
         if (sameCartItem is null)
-            cartRepository.AddCartItem(cartItem);
+            await cartRepository.AddCartItem(cartItem);
         else
             sameCartItem.IncreaseQuantity();
 
-        cartRepository.SaveChanges();
+        await cartRepository.SaveChanges();
 
         return Result.Created;
     }
 
-    public ErrorOr<CartItem> GetCartItem(Guid userId, Guid catId)
+    public async Task<ErrorOr<CartItem>> GetCartItem(Guid userId, Guid catId)
     {
-        var result = cartRepository.GetCartItem(userId, catId);
+        var result = await cartRepository.GetCartItem(userId, catId);
 
         return result is not null ? result : Errors.CartItem.NotFound;
     }
     
-    public List<CartItem> GetCartItems(Guid userId)
+    public async Task<List<CartItem>> GetCartItems(Guid userId)
     {
-        return cartRepository.GetCartItems(userId);
+        return await cartRepository.GetCartItems(userId);
     }
 
-    public ErrorOr<Deleted> DeleteCartItem(Guid userId, Guid catId)
+    public async Task<ErrorOr<Deleted>> DeleteCartItem(Guid userId, Guid catId)
     {
-        var result = cartRepository.RemoveCartItem(userId, catId);
-        cartRepository.SaveChanges();
+        var result = await cartRepository.RemoveCartItem(userId, catId);
+        await cartRepository.SaveChanges();
 
         return result ? Result.Deleted : Errors.CartItem.NotFound;
     }
 
-    public ErrorOr<Updated> UpdateQuantity(Guid userId, Guid catId, int quantity)
+    public async Task<ErrorOr<Updated>> UpdateQuantity(Guid userId, Guid catId, int quantity)
     {
-        var cartItem = cartRepository.FindCartItem(userId, catId);
+        var cartItem = await cartRepository.FindCartItem(userId, catId);
 
         if (cartItem is null)
             return Errors.CartItem.NotFound;
@@ -49,14 +49,14 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
         var result = cartItem.UpdateQuantity(quantity);
 
         if (result == Result.Updated)
-            cartRepository.SaveChanges();
+            await cartRepository.SaveChanges();
 
         return result;
     }
 
-    public ErrorOr<int> GetUserCartItemsCount(Guid userId)
+    public async Task<ErrorOr<int>> GetUserCartItemsCount(Guid userId)
     {
-        var result = cartRepository.GetUserCartItemsCount(userId);
+        var result = await cartRepository.GetUserCartItemsCount(userId);
 
         return result;
     }

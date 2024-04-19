@@ -2,34 +2,34 @@ namespace Domain.Services;
 
 public class CatService(ICatRepository catRepository)
 {
-    public ErrorOr<Created> StoreCat(Cat cat)
+    public async Task<ErrorOr<Created>> StoreCat(Cat cat)
     {
-        if (catRepository.IsCatExists(cat.Name))
+        if (await catRepository.IsCatExists(cat.Name))
             return Errors.Cat.AlreadyExists;
 
-        catRepository.AddCat(cat);
-        catRepository.SaveChanges();
+        await catRepository.AddCat(cat);
+        await catRepository.SaveChanges();
         
         return Result.Created;
     }
     
-    public ErrorOr<Cat> GetCat(Guid catId)
+    public async Task<ErrorOr<Cat>> GetCat(Guid catId)
     {
-        var result = catRepository.GetCat(catId);
+        var result = await catRepository.GetCat(catId);
         
         return result is not null ? result : Errors.Cat.NotFound;
     }
     
-    public List<Cat> GetCats()
+    public async Task<List<Cat>> GetCats()
     {
-        var result = catRepository.GetCats();
+        var result = await catRepository.GetCats();
 
         return result;
     }
 
-    public ErrorOr<Updated> UpdateCatPrice(Guid catId, decimal price, decimal discount)
+    public async Task<ErrorOr<Updated>> UpdateCatPrice(Guid catId, decimal price, decimal discount)
     {
-        var cat = catRepository.FindCatById(catId);
+        var cat = await catRepository.FindCatById(catId);
 
         if (cat is null)
             return Errors.Cat.NotFound;
@@ -37,15 +37,15 @@ public class CatService(ICatRepository catRepository)
         var result = cat.UpdatePrice(price, discount);
 
         if (result == Result.Updated)
-            catRepository.SaveChanges();
+            await catRepository.SaveChanges();
         
         return result;
     }
     
-    public ErrorOr<Deleted> DeleteCat(Guid catId)
+    public async Task<ErrorOr<Deleted>> DeleteCat(Guid catId)
     {
-        var result = catRepository.RemoveCat(catId);
-        catRepository.SaveChanges();
+        var result = await catRepository.RemoveCat(catId);
+        await catRepository.SaveChanges();
         
         return result ? Result.Deleted : Errors.Cat.NotFound;
     }
