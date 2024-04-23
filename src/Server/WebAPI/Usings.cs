@@ -1,5 +1,7 @@
 global using System.Security.Claims;
 global using System.ComponentModel.DataAnnotations;
+global using System.Net.Http.Headers;
+global using System.Text;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -25,5 +27,6 @@ global using WebAPI.Contracts.Cat;
 global using WebAPI.Contracts.User;
 global using WebAPI.Contracts.CartItem;
 global using WebAPI.Contracts.Order;
+global using WebAPI.Contracts.Payment;
 
 global using TokensPair = (string AccessToken, string RefreshToken);

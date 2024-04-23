@@ -30,6 +30,16 @@ try
         builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        builder.Services.AddHttpClient("kassa", (client) =>
+        {
+            client.BaseAddress = new Uri("https://api.yookassa.ru");
+
+            var yooKassaId = builder.Configuration["Yookassa:Id"];
+            var yooKassaToken = builder.Configuration["Yookassa:Token"];
+            var byteArray = new UTF8Encoding().GetBytes($"{yooKassaId}:{yooKassaToken}");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        });
+        
         builder.Services.AddTransient<ICatRepository, CatRepository>();
         builder.Services.AddTransient<CatService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();

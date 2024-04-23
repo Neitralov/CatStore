@@ -8,10 +8,6 @@ public static partial class Errors
             code:        "Order.NotFound",
             description: "Order not found");
 
-        public static Error InvalidPrice => Error.Validation(
-            code:        "Order.InvalidPrice",
-            description: "Order cannot be free");
-
         public static Error EmptyOrder => Error.Validation(
             code:        "Order.EmptyOrder",
             description: "Order cannot be empty");

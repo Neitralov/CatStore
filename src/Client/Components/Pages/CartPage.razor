@@ -145,18 +145,29 @@
             return;
         }
 
-        var response = await HttpClient.PostAsync("/api/orders", null);
+        var orderResponse = await HttpClient.PostAsync("/api/orders", null);
 
-        if (response.IsSuccessStatusCode)
+        if (orderResponse.IsSuccessStatusCode)
         {
-            await JsRuntime.InvokeVoidAsync("alert", "Заказ успешно оформлен");
-            await CartService.InvokeOnCartChanged();
-            NavigationManager.NavigateTo("/");
+            var orderResult = await orderResponse.Content.ReadFromJsonAsync<OrderResponse>();
+            var paymentResponse = await HttpClient.PostAsJsonAsync("/api/payments", orderResult);
+
+            if (paymentResponse.IsSuccessStatusCode)
+            {
+                var paymentResult = await paymentResponse.Content.ReadFromJsonAsync<PaymentResponse>();
+                NavigationManager.NavigateTo(paymentResult?.Confirmation.ConfirmationUrl ?? "/");
+            }
+            else
+            {
+                var paymentResult = await orderResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+                var errorMessage = paymentResult!.GetFirstErrorMessage();
+                await JsRuntime.InvokeVoidAsync("alert", errorMessage);
+            }
         }
         else
         {
-            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-            var errorMessage = result!.GetFirstErrorMessage();
+            var orderResult = await orderResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+            var errorMessage = orderResult!.GetFirstErrorMessage();
             await JsRuntime.InvokeVoidAsync("alert", errorMessage);
         }
     }

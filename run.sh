@@ -34,6 +34,8 @@ podman run \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e AppSettings:Token="My favorite really secret key. 512 bit at least. (64 characters)." \
 -e ConnectionStrings:DefaultConnection="Host=catstore-postgres;Port=5432;Database=catstore;Username=postgres;Password=1234" \
+-e Yookassa:Id="123456" \
+-e Yookassa:Token="Your yookassa token" \
 --name catstore-webapi \
 --replace \
 webapitest

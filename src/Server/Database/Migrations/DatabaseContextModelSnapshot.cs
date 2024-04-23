@@ -35,7 +35,7 @@ namespace Database.Migrations
 
                     b.HasKey("UserId", "CatId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Data.Cat", b =>
@@ -71,7 +71,7 @@ namespace Database.Migrations
 
                     b.HasKey("CatId");
 
-                    b.ToTable("Cats");
+                    b.ToTable("Cats", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Data.Order", b =>
@@ -91,7 +91,7 @@ namespace Database.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Data.OrderItem", b =>
@@ -114,7 +114,7 @@ namespace Database.Migrations
 
                     b.HasKey("OrderId", "CatId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItem", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Data.RefreshTokenSession", b =>
@@ -137,7 +137,7 @@ namespace Database.Migrations
 
                     b.HasKey("SessionId");
 
-                    b.ToTable("RefreshTokenSessions");
+                    b.ToTable("RefreshTokenSessions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Data.User", b =>
@@ -166,7 +166,7 @@ namespace Database.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
