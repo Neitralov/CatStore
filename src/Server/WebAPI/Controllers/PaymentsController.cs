@@ -2,7 +2,7 @@ namespace WebAPI.Controllers;
 
 /// <inheritdoc />
 [Route("/api/payments"), Tags("Payments")]
-public class PaymentsController(IHttpClientFactory factory, OrderService orderService) : ApiController
+public class PaymentsController(IHttpClientFactory factory, OrderService orderService, IConfiguration configuration) : ApiController
 {
     /// <summary>Оформить платеж по заказу</summary>
     /// <response code="200">Платеж успешно создан</response>
@@ -22,7 +22,7 @@ public class PaymentsController(IHttpClientFactory factory, OrderService orderSe
         
         request.Content = JsonContent.Create(new CreatePaymentRequest(
             new Amount(orderData.TotalPrice),
-            new RequestConfirmation("http://localhost:8080"),
+            new RequestConfirmation(configuration["FrontendUrl"] ?? throw new NullReferenceException("env variable FrontendUrl is not defined")),
             Description: $"Платеж по заказу {orderData.OrderId}"));
 
         var httpClient = factory.CreateClient("kassa"); 

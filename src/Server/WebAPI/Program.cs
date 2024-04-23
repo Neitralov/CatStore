@@ -19,7 +19,7 @@ try
 
         builder.Services.AddCors(
             options => options.AddPolicy("AllowCatStoreApp", policy =>
-                policy.WithOrigins("http://localhost:8080")
+                policy.WithOrigins(builder.Configuration["FrontendUrl"] ?? throw new NullReferenceException("env variable FrontendUrl is not defined"))
                     .AllowAnyHeader()
                     .AllowAnyMethod()));
 
@@ -34,8 +34,8 @@ try
         {
             client.BaseAddress = new Uri("https://api.yookassa.ru");
 
-            var yooKassaId = builder.Configuration["Yookassa:Id"];
-            var yooKassaToken = builder.Configuration["Yookassa:Token"];
+            var yooKassaId = builder.Configuration["Yookassa:Id"] ?? throw new NullReferenceException("env variable Yookassa:Id is not defined");
+            var yooKassaToken = builder.Configuration["Yookassa:Token"] ?? throw new NullReferenceException("env variable Yookassa:Token is not defined");
             var byteArray = new UTF8Encoding().GetBytes($"{yooKassaId}:{yooKassaToken}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         });
@@ -59,7 +59,7 @@ try
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                        .GetBytes(builder.Configuration["AppSettings:Token"] ?? throw new NullReferenceException())),
+                        .GetBytes(builder.Configuration["AppSettings:Token"] ?? throw new NullReferenceException("env variable AppSettings:Token is not defined"))),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
