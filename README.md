@@ -41,6 +41,14 @@
 2. Убедитесь, что имеете [Podman](https://podman.io).
 3. Скачайте исходники и запустите скрипт `run.sh`.
 
+Для работы оформления платежей необходимо создать [тестовый магазин ЮKassa](https://yookassa.ru/developers/payment-acceptance/getting-started/quick-start) и добавить ID и Токен в `run.sh` 
+
+```
+# Иначе заказ будет оформлен без создания платежа
+-e Yookassa:Id="123456" \
+-e Yookassa:Token="Your yookassa token" \
+```
+
 После приложение будет доступно в браузере по адресу http://localhost:8080.
 
 Данные для входа (почта/пароль): `admin@gmail.com` `admin`
