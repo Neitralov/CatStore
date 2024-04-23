@@ -17,3 +17,4 @@ global using Client.Services;
 
 global using WebAPI.Contracts.CartItem;
 global using WebAPI.Contracts.User;
+global using WebAPI.Contracts.Payment;
