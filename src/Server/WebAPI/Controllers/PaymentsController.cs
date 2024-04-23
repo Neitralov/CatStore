@@ -28,6 +28,10 @@ public class PaymentsController(IHttpClientFactory factory, OrderService orderSe
         var httpClient = factory.CreateClient("kassa"); 
         
         var response = await httpClient.SendAsync(request);
+
+        if (response.IsSuccessStatusCode is false)
+            return BadRequest();
+        
         var result = await response.Content.ReadFromJsonAsync<PaymentResponse>();
         
         return Ok(result);

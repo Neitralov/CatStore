@@ -159,9 +159,9 @@
             }
             else
             {
-                var paymentResult = await orderResponse.Content.ReadFromJsonAsync<ProblemDetails>();
-                var errorMessage = paymentResult!.GetFirstErrorMessage();
-                await JsRuntime.InvokeVoidAsync("alert", errorMessage);
+                await JsRuntime.InvokeVoidAsync("alert", "Ошибка обращения к ЮKassa");
+                await CartService.InvokeOnCartChanged();
+                NavigationManager.NavigateTo("/");
             }
         }
         else
