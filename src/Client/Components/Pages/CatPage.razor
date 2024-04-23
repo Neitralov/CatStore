@@ -16,12 +16,12 @@
                 <p class="flex justify-center items-center gap-1 w-full h-8 font-bold bg-background rounded-lg">
                     @if (Cat.Discount > 0)
                     {
-                        <span class="text-primary">@($"{Cat.Cost - Cat.Discount:F0}") $</span>
-                        <span class="line-through text-xs">@($"{Cat.Cost:F0}") $</span>
+                        <span class="text-primary">@($"{Cat.Cost - Cat.Discount:C0}")</span>
+                        <span class="line-through text-xs">@($"{Cat.Cost:C0}")</span>
                     }
                     else
                     {
-                        <span>@($"{Cat.Cost:F0}") $</span>
+                        <span>@($"{Cat.Cost:C0}")</span>
                     }
                 </p>
                 @if (CartItem is not null)

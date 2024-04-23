@@ -38,16 +38,16 @@
             <ApplyButton OnClick="PlaceOrder">К оформлению</ApplyButton>
             <div class="flex justify-between">
                 <span>Итого</span>
-                <span>@TotalPrice $</span>
+                <span>@($"{TotalPrice:C0}")</span>
             </div>
             <hr />
             <div class="flex justify-between text-muted">
                 <span>Товары</span>
-                <span>@TotalPriceWithoutDiscount $</span>
+                <span>@($"{TotalPriceWithoutDiscount:C0}")</span>
             </div>
             <div class="flex justify-between text-muted">
                 <span>Скидка</span>
-                <span class="text-primary">- @TotalDiscount $</span>
+                <span class="text-primary">- @($"{TotalDiscount:C0}")</span>
             </div>
         </Panel>
     }
