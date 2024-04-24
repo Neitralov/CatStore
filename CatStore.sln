@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0E1127B7-5A24-4602-B958-D9888E274780}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5C382821-D467-4ACF-AD72-3A3B0BA7272E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "src\Client\Client.csproj", "{6AB5113A-DCFE-4320-A808-A5D60B8786E1}"
@@ -16,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Server\Domain\Domain.csproj", "{F9F636FB-C8B9-43F0-8874-3698E7FE6656}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "src\Server\Database\Database.csproj", "{9D3DE8BA-6164-4C4A-AFB9-8EE86C6414AB}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Domain.Tests", "tests\Domain.Tests\Domain.Tests.fsproj", "{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,10 +44,6 @@ Global
 		{9D3DE8BA-6164-4C4A-AFB9-8EE86C6414AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D3DE8BA-6164-4C4A-AFB9-8EE86C6414AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D3DE8BA-6164-4C4A-AFB9-8EE86C6414AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6AB5113A-DCFE-4320-A808-A5D60B8786E1} = {5C382821-D467-4ACF-AD72-3A3B0BA7272E}
@@ -59,6 +51,5 @@ Global
 		{36C122D2-A1F7-4CE1-9693-3F925E9E0A49} = {5C382821-D467-4ACF-AD72-3A3B0BA7272E}
 		{F9F636FB-C8B9-43F0-8874-3698E7FE6656} = {5C382821-D467-4ACF-AD72-3A3B0BA7272E}
 		{9D3DE8BA-6164-4C4A-AFB9-8EE86C6414AB} = {5C382821-D467-4ACF-AD72-3A3B0BA7272E}
-		{2C6C6092-DCF3-43C2-9C07-2FC7818E07FD} = {0E1127B7-5A24-4602-B958-D9888E274780}
 	EndGlobalSection
 EndGlobal
