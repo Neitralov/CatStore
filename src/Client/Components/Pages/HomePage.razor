@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject HttpClient HttpClient
+@inject CartService CartService
 
 <PageTitle>Главная — CatStore</PageTitle>
 
@@ -51,7 +52,7 @@
             <div class="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 auto-rows-min xl:gap-5 md:gap-4 gap-3">
                 @foreach(var cat in cats)
                 {
-                    <CatCard @key="cat" Cat="cat" />
+                    <CatCard @key="cat" Cat="cat" CartItem="CartItems.SingleOrDefault(item => item.CatId == cat.CatId)" />
                 }
             </div>
         }
@@ -71,6 +72,7 @@
 
 @code {
     private List<CatResponse> Cats { get; set; } = [];
+    private List<CartItemResponse> CartItems { get; set; } = [];
     private bool HasDataLoaded { get; set; }
 
     [SupplyParameterFromQuery]
@@ -85,6 +87,8 @@
     protected override async Task OnInitializedAsync()
     {
         Cats = await HttpClient.GetFromJsonAsync<List<CatResponse>>("/api/cats") ?? [];
+        CartItems = await CartService.GetCartItems();
+        
         HasDataLoaded = true;
     }
 

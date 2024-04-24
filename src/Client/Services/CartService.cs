@@ -17,7 +17,7 @@ public class CartService(
 
         async Task AddToLocalCart()
         {
-            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
 
             var sameItemIndex = localCart.FindIndex(cartItem => cartItem.CatId == request.CatId);
 
@@ -48,7 +48,7 @@ public class CartService(
 
         async Task<CartItemResponse?> GetLocalCartItem()
         {
-            var cart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            var cart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
             return cart.SingleOrDefault(cartItem => cartItem.CatId == catId);
         }
     }
@@ -58,10 +58,10 @@ public class CartService(
         return await (await userService.IsUserAuthenticated() ? GetDbCartItems() : GetLocalCartItems());
 
         async Task<List<CartItemResponse>> GetDbCartItems() =>
-            await httpClient.GetFromJsonAsync<List<CartItemResponse>>("api/cart-items") ?? new List<CartItemResponse>();
+            await httpClient.GetFromJsonAsync<List<CartItemResponse>>("api/cart-items") ?? [];
 
         async Task<List<CartItemResponse>> GetLocalCartItems() =>
-            await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
     }
 
     public async Task<HttpResponseMessage> DeleteCartItem(Guid catId)
@@ -75,7 +75,7 @@ public class CartService(
         
         async Task<HttpResponseMessage> DeleteLocalCartItem()
         {
-            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
 
             var sameItemIndex = localCart.FindIndex(cartItem => cartItem.CatId == catId);
 
@@ -99,7 +99,7 @@ public class CartService(
 
         async Task<HttpResponseMessage> UpdateLocalCartItemQuantity()
         {
-            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
 
             var sameItemIndex = localCart.FindIndex(cartItem => cartItem.CatId == request.CatId);
 
@@ -137,7 +137,7 @@ public class CartService(
 
         async Task<int> GetLocalCartItemsQuantity()
         {
-            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? new List<CartItemResponse>();
+            var localCart = await localStorage.GetItemAsync<List<CartItemResponse>>("LocalCart") ?? [];
             return localCart.Sum(item => item.Quantity);
         }
     }
@@ -149,7 +149,7 @@ public class CartService(
         if (localCart is null)
             return;
 
-        var dbCart = await httpClient.GetFromJsonAsync<List<CartItemResponse>>("api/cart-items") ?? new List<CartItemResponse>();
+        var dbCart = await httpClient.GetFromJsonAsync<List<CartItemResponse>>("api/cart-items") ?? [];
 
         if (dbCart.Count == 0)
         {

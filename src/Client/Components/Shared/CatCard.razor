@@ -77,7 +77,7 @@
                     @CartItem?.Quantity
                 </Counter>
             }
-            else if (HasDataLoaded)
+            else
             {
                 <ApplyButton OnClick="AddToCart">В корзину</ApplyButton>
             }
@@ -89,18 +89,9 @@
     [Parameter]
     public CatResponse? Cat { get; set; }
     
-    private CartItemResponse? CartItem { get; set; }
-
-    private bool HasDataLoaded { get; set; }
+    [Parameter]
+    public CartItemResponse? CartItem { get; set; }
     
-    protected override async Task OnInitializedAsync()
-    {
-        if (Cat != null)
-            CartItem = await CartService.GetCartItem(Cat.CatId);
-
-        HasDataLoaded = true;
-    }
-
     private async Task AddToCart()
     {
         var request = new CreateCartItemRequest(Cat!.CatId);
@@ -120,11 +111,14 @@
         if (Cat is null || CartItem is null)
             return;
 
-        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
-        var response = await CartService.UpdateCartItemQuantity(request);
-
-        if (response.IsSuccessStatusCode)
-            CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        if (CartItem.Quantity > 1)
+        {
+            var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
+            var response = await CartService.UpdateCartItemQuantity(request);
+            
+            if (response.IsSuccessStatusCode)
+                CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        }
         else
             await DeleteCartItem();
     }

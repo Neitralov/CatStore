@@ -91,16 +91,18 @@
     private async Task DecreaseCartItemQuantity(CatResponse cat)
     {
         var currentItemQuantity = CartItems.FirstOrDefault(item => item.Cat?.CatId == cat.CatId).Quantity;
-        var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity - 1);
-
-        var response = await CartService.UpdateCartItemQuantity(request);
-
-        if (response.IsSuccessStatusCode)
+        
+        if (currentItemQuantity > 1)
         {
-            var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
-            CartItems[index] = (cat, currentItemQuantity - 1);
-
-            CalculateCost();
+            var request = new UpdateCartItemQuantityRequest(cat.CatId, currentItemQuantity - 1);
+            var response = await CartService.UpdateCartItemQuantity(request);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var index = CartItems.FindIndex(item => item.Cat?.CatId == cat.CatId);
+                CartItems[index] = (cat, currentItemQuantity - 1);
+                CalculateCost();
+            }
         }
         else
             await DeleteCartItem(cat.CatId);

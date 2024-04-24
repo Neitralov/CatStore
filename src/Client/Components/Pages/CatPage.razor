@@ -81,33 +81,36 @@
     private async Task DecreaseCartItemQuantity()
     {
         if (Cat is null || CartItem is null)
-        return;
+            return;
 
-        var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
-        var response = await CartService.UpdateCartItemQuantity(request);
-
-        if (response.IsSuccessStatusCode)
-        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        if (CartItem.Quantity > 1)
+        {
+            var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity - 1);
+            var response = await CartService.UpdateCartItemQuantity(request);
+            
+            if (response.IsSuccessStatusCode)
+                CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity - 1);
+        }
         else
-        await DeleteCartItem();
+            await DeleteCartItem();
     }
 
     private async Task IncreaseCartItemQuantity()
     {
         if (Cat is null || CartItem is null)
-        return;
+            return;
 
         var request = new UpdateCartItemQuantityRequest(Cat.CatId, CartItem.Quantity + 1);
         var response = await CartService.UpdateCartItemQuantity(request);
 
         if (response.IsSuccessStatusCode)
-        CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity + 1);
+            CartItem = new CartItemResponse(CartItem.CatId, CartItem.Quantity + 1);
     }
 
     private async Task DeleteCartItem()
     {
         if (Cat != null)
-        await CartService.DeleteCartItem(Cat.CatId);
+            await CartService.DeleteCartItem(Cat.CatId);
 
         CartItem = null;
     }
