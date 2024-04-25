@@ -1,4 +1,4 @@
-namespace Domain.ServiceErrors;
+namespace Domain;
 
 public static partial class Errors
 {
@@ -6,10 +6,10 @@ public static partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             code:        "AccessToken.NotFound",
-            description: "Access token not found");
+            description: "Токен доступа не найден");
 
         public static Error TokenIsInvalid => Error.Validation(
             code:        "AccessToken.TokenIsInvalid",
-            description: "Access token is invalid");
+            description: "Токен доступа недействителен");
     }
 }

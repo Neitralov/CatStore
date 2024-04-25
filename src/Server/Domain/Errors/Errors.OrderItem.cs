@@ -1,4 +1,4 @@
-namespace Domain.ServiceErrors;
+namespace Domain;
 
 public static partial class Errors
 {
@@ -6,6 +6,6 @@ public static partial class Errors
     {
         public static Error InvalidQuantity => Error.Validation(
             code:        "OrderItem.InvalidQuantity",
-            description: "Order item quantity cannot be less than one");
+            description: "Количество элементов в заказе не может быть меньше одного");
     }
 }

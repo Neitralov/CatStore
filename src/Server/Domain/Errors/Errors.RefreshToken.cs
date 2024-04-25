@@ -1,4 +1,4 @@
-namespace Domain.ServiceErrors;
+namespace Domain;
 
 public static partial class Errors
 {
@@ -6,10 +6,10 @@ public static partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             code:        "RefreshToken.NotFound",
-            description: "Refresh token not found");
+            description: "Токен обновления не найден");
         
         public static Error TokenIsInvalid => Error.Validation(
             code:        "RefreshToken.TokenIsInvalid",
-            description: "Refresh token is invalid");
+            description: "Токен обновления недействителен");
     }
 }

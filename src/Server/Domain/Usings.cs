@@ -10,6 +10,5 @@ global using ErrorOr;
 
 global using Domain.Data;
 global using Domain.Interfaces;
-global using Domain.ServiceErrors;
 
 global using TokensPair = (string AccessToken, string RefreshToken);

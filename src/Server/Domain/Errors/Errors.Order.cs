@@ -1,4 +1,4 @@
-namespace Domain.ServiceErrors;
+namespace Domain;
 
 public static partial class Errors
 {
@@ -6,10 +6,10 @@ public static partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             code:        "Order.NotFound",
-            description: "Order not found");
+            description: "Заказ не найден");
 
         public static Error EmptyOrder => Error.Validation(
             code:        "Order.EmptyOrder",
-            description: "Order cannot be empty");
+            description: "Заказ не может быть пустым");
     }
 }

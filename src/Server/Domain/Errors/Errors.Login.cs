@@ -1,4 +1,4 @@
-namespace Domain.ServiceErrors;
+namespace Domain;
 
 public static partial class Errors
 {
