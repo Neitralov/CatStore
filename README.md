@@ -1,18 +1,21 @@
 # 🐱 CatStore
 CatStore — учебный проект, реализующий электронный магазин по продаже виртуальных котиков.
 
-# 🌆 Скриншоты
 ![image](https://github.com/Neitralov/CatStore/assets/109409226/9f788b0d-6517-48ac-92bf-713c445fc98b)
-<details>
-  <summary>Смотреть остальные</summary>
 
+# 🌆 Скриншоты
+
+<details>
+  <summary>ПК (1920x1080)</summary>
+  
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/9f788b0d-6517-48ac-92bf-713c445fc98b)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/557b6c35-0c3a-42c3-85cd-8d8bd2bfda70)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/e610f19b-bdf7-435c-95a9-a3068362bed4)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/8cc15f42-4614-40af-9d3b-6e7b081a9cb5)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/758388f4-6e07-42ca-9732-816f13d50ca3)
 </details>
 <details>
-  <summary>Скриншоты с телефона</summary>
+  <summary>Смартфон (360х669 (view port size))</summary>
 
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/a44f56e6-3acc-454f-af84-07417cf20df5)
   ![image](https://github.com/Neitralov/CatStore/assets/109409226/69082618-0176-4719-9662-aefd59557a9c)
@@ -80,6 +83,41 @@ Backend:
 * [Swashbuckle.AspNetCore.Filters](https://github.com/mattfrear/Swashbuckle.AspNetCore.Filters)
 * [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore)
 * [Mapster](https://github.com/MapsterMapper/Mapster)
+
+# 📊 Статистика по количеству строк кода
+## Frontend
+
+```
+github.com/AlDanial/cloc v 1.90  T=0.02 s (2052.9 files/s, 107982.6 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Razor                           32            279              0           1541
+C#                               6             62              0            224
+CSS                              1             22              0            106
+JavaScript                       1              1              1             37
+HTML                             1              4              0             35
+JSON                             2              0              0             30
+MSBuild script                   1              4              0             17
+Dockerfile                       1              0              0              4
+-------------------------------------------------------------------------------
+SUM:                            45            372              1           1994
+-------------------------------------------------------------------------------
+```
+## Backend
+```
+github.com/AlDanial/cloc v 1.90  T=0.03 s (2874.3 files/s, 116155.2 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C#                              65            547            148           2120
+MSBuild script                   4             14              0             64
+JSON                             3              0              0             53
+Dockerfile                       1              0              0              4
+-------------------------------------------------------------------------------
+SUM:                            73            561            148           2241
+-------------------------------------------------------------------------------
+```
 
 # 📃 Лицензия
 Программа распространяется под лицензией [MIT](https://github.com/Neitralov/CatStore/blob/master/LICENSE).
