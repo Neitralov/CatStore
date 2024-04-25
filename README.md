@@ -1,18 +1,20 @@
 # 🐱 CatStore
 CatStore — учебный проект, реализующий электронный магазин по продаже виртуальных котиков.
 
-![image](https://github.com/Neitralov/CatStore/assets/109409226/9f788b0d-6517-48ac-92bf-713c445fc98b)
+![image](https://github.com/Neitralov/CatStore/assets/109409226/964f1826-eaa8-489e-87cd-4fbcb06eca40)
+
 
 # 🌆 Скриншоты
 
 <details>
   <summary>ПК (1920x1080)</summary>
   
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/9f788b0d-6517-48ac-92bf-713c445fc98b)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/557b6c35-0c3a-42c3-85cd-8d8bd2bfda70)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/e610f19b-bdf7-435c-95a9-a3068362bed4)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/8cc15f42-4614-40af-9d3b-6e7b081a9cb5)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/758388f4-6e07-42ca-9732-816f13d50ca3)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/ba8a2a54-e97b-4b51-ae9a-b589b046897e)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/ecde551d-c770-4f05-ac76-4e96775234b5)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/f3f7e704-05fd-474f-85e5-1a32b89c21c4)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/3ad1ae13-76c5-472f-a9c7-5c64b039a849)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/81329125-6562-428c-981e-de1348e2e3bb)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/2b6a13aa-184b-45d5-86eb-f2d6b2070328)
 </details>
 <details>
   <summary>Смартфон (360х669 (view port size))</summary>
