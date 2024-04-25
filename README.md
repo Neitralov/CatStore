@@ -19,12 +19,11 @@ CatStore — учебный проект, реализующий электро�
 <details>
   <summary>Смартфон (360х669 (view port size))</summary>
 
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/a44f56e6-3acc-454f-af84-07417cf20df5)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/69082618-0176-4719-9662-aefd59557a9c)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/3e0729d7-f8b6-4e2f-bade-2f96572d3690)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/72b07fe9-db28-4299-a180-9a2a73e1a0bd)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/18dc5795-8d1e-4fc4-8e9d-e7955d12a471)
-  ![image](https://github.com/Neitralov/CatStore/assets/109409226/299da835-f5b6-4e85-916f-1d0e4e2fbdd7)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/0c361fe6-c898-42cc-ba40-6ce759ce2d27)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/086c596a-ba26-4630-9e53-fc64c0f6cef6)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/5d4f5763-7de2-4ef5-b87d-c212d5d70065)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/c0a94d65-7fcd-4950-a49a-79a5fe5eb605)
+  ![image](https://github.com/Neitralov/CatStore/assets/109409226/2b73e242-33d7-443f-a372-fedb243a29a5)
 </details>
 
 # 🔥 Особенности
