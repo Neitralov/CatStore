@@ -1,60 +1,96 @@
 namespace Database.Repositories;
 
-public class UserRepository(DatabaseContext database) : IUserRepository
+public class UserRepository(IMongoDatabase database) : IUserRepository
 {
     public async Task AddUser(User user)
     {
-        await database.AddAsync(user);
+        var collection = database.GetCollection<User>("users");
+        
+        await collection.InsertOneAsync(user);
     }
 
     public async Task AddRefreshTokenSession(RefreshTokenSession refreshTokenSession)
     {
-        await database.AddAsync(refreshTokenSession);
+        var collection = database.GetCollection<RefreshTokenSession>("tokenSessions");
+        
+        await collection.InsertOneAsync(refreshTokenSession);
     }
 
     public async Task<User?> FindUserById(Guid userId)
     {
-        return await database.Users.SingleOrDefaultAsync(user => user.UserId == userId);
+        var collection = database.GetCollection<User>("users");
+        
+        var builder = Builders<User>.Filter;
+        var filter = builder.Eq(user => user.UserId, userId);
+
+        return await collection.Find(filter).SingleOrDefaultAsync();
     }
 
     public async Task<User?> FindUserByEmail(string email)
     {
-        return await database.Users.SingleOrDefaultAsync(user => user.Email == email);
+        var collection = database.GetCollection<User>("users");
+        
+        var builder = Builders<User>.Filter;
+        var filter = builder.Eq(user => user.Email, email);
+        
+        return await collection.Find(filter).SingleOrDefaultAsync();
     }
 
     public async Task<int> GetNumberOfUsersRefreshTokenSessions(Guid userId)
     {
-        return await database.RefreshTokenSessions.CountAsync(refreshTokenSession => refreshTokenSession.UserId == userId);
+        var collection = database.GetCollection<RefreshTokenSession>("tokenSessions");
+        
+        var builder = Builders<RefreshTokenSession>.Filter;
+        var filter = builder.Eq(tokenSession => tokenSession.UserId, userId);
+        
+        return (int)await collection.CountDocumentsAsync(filter);
     }
 
     public async Task<RefreshTokenSession?> GetUserRefreshTokenSession(Guid userId, string oldRefreshToken)
     {
-        return await database.RefreshTokenSessions.SingleOrDefaultAsync(refreshTokenSession =>
-            refreshTokenSession.UserId == userId &&
-            refreshTokenSession.Token == oldRefreshToken &&
-            refreshTokenSession.ExpirationDate >= DateTime.UtcNow);
+        var collection = database.GetCollection<RefreshTokenSession>("tokenSessions");
+        
+        var builder = Builders<RefreshTokenSession>.Filter;
+        var filter = 
+            builder.Eq(tokenSession => tokenSession.UserId, userId) & 
+            builder.Eq(tokenSession => tokenSession.Token, oldRefreshToken) & 
+            builder.Gte(tokenSession => tokenSession.ExpirationDate, DateTime.UtcNow);
+        
+        return await collection.Find(filter).SingleOrDefaultAsync();
     }
     
     public async Task RemoveAllUsersRefreshTokenSessions(Guid userId)
     {
-        var usersRefreshTokenSessions = await database.RefreshTokenSessions.Where(refreshTokenSession => refreshTokenSession.UserId == userId).ToListAsync();
-        database.RefreshTokenSessions.RemoveRange(usersRefreshTokenSessions);
+        var collection = database.GetCollection<RefreshTokenSession>("tokenSessions");
+        
+        var builder = Builders<RefreshTokenSession>.Filter;
+        var filter = builder.Eq(tokenSession => tokenSession.UserId, userId);
+
+        await collection.DeleteManyAsync(filter);
     }
 
     public async Task<bool> IsUserExists(string email)
     {
-        return await database.Users.AnyAsync(user => user.Email == email);
+        var collection = database.GetCollection<User>("users");
+        
+        var builder = Builders<User>.Filter;
+        var filter = builder.Eq(user => user.Email, email);
+
+        return await collection.Find(filter).AnyAsync();
     }
 
     public async Task SaveChanges()
     {
         await DeleteAllInvalidRefreshTokenSessions();
-        await database.SaveChangesAsync();
     }
 
     private async Task DeleteAllInvalidRefreshTokenSessions()
     {
-        var invalidSessions = await database.RefreshTokenSessions.Where(session => session.ExpirationDate < DateTime.UtcNow).ToListAsync();
-        database.RemoveRange(invalidSessions);
+        var collection = database.GetCollection<RefreshTokenSession>("tokenSessions");
+        
+        var builder = Builders<RefreshTokenSession>.Filter;
+        var filter = builder.Lt(tokenSession => tokenSession.ExpirationDate, DateTime.UtcNow);
+
+        await collection.DeleteManyAsync(filter);
     }
 }

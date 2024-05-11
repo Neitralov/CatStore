@@ -1,81 +1,91 @@
 namespace Database.Repositories;
 
-public class CartRepository(DatabaseContext database) : ICartRepository
+public class CartRepository(IMongoDatabase database) : ICartRepository
 {
     public async Task AddCartItem(CartItem cartItem)
     {
-        await database.AddAsync(cartItem);
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        await collection.InsertOneAsync(cartItem);
     }
 
     public async Task<CartItem?> FindCartItem(Guid userId, Guid catId)
     {
-        return await database.CartItems.SingleOrDefaultAsync(item =>
-            item.UserId == userId &&
-            item.CatId == catId);
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        var builder = Builders<CartItem>.Filter;
+        var filter = builder.Eq(item => item.UserId, userId) & builder.Eq(item => item.CatId, catId);
+        
+        return await collection.Find(filter).SingleOrDefaultAsync();
     }
     
     public async Task<CartItem?> FindCartItem(CartItem cartItem)
     {
-        return await database.CartItems.SingleOrDefaultAsync(item =>
-            item.UserId == cartItem.UserId &&
-            item.CatId == cartItem.CatId);
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        var builder = Builders<CartItem>.Filter;
+        var filter = builder.Eq(item => item.UserId, cartItem.UserId) & builder.Eq(item => item.CatId, cartItem.CatId);
+        
+        return await collection.Find(filter).SingleOrDefaultAsync();
     }
 
     public async Task<CartItem?> GetCartItem(Guid userId, Guid catId)
     {
-        return await database.CartItems
-            .AsNoTracking()
-            .SingleOrDefaultAsync(cartItem =>
-                cartItem.UserId == userId &&
-                cartItem.CatId == catId);
+        return await FindCartItem(userId, catId);
     }
 
     public async Task<List<CartItem>> GetCartItems(Guid userId)
     {
-        return await database.CartItems
-            .AsNoTracking()
-            .Where(cartItem => cartItem.UserId == userId)
-            .ToListAsync();
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        var builder = Builders<CartItem>.Filter;
+        var filter = builder.Eq(item => item.UserId, userId);
+        
+        return await collection.Find(filter).ToListAsync();
     }
 
     public async Task<int> GetUserCartItemsCount(Guid userId)
     {
-        return await database.CartItems
-            .Where(item => item.UserId == userId)
-            .SumAsync(item => item.Quantity);
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        return await Task.FromResult(collection.AsQueryable().Where(item => item.UserId == userId).Sum(item => item.Quantity));
+    }
+    
+    public async Task ReplaceCartItem(CartItem cartItem)
+    {
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        var builder = Builders<CartItem>.Filter;
+        var filter = builder.Eq(item => item.UserId, cartItem.UserId) & builder.Eq(item => item.CatId, cartItem.CatId);
+
+        await collection.ReplaceOneAsync(filter, cartItem);
     }
 
     public async Task<bool> RemoveCartItem(Guid userId, Guid catId)
     {
-        var cartItem = await database.CartItems.SingleOrDefaultAsync(cartItem =>
-            cartItem.UserId == userId &&
-            cartItem.CatId == catId);
-
-        if (cartItem is not null)
-            database.Remove(cartItem);
-
-        return cartItem is not null;
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
+        var builder = Builders<CartItem>.Filter;
+        var filter = builder.Eq(item => item.UserId, userId) & builder.Eq(item => item.CatId, catId);
+        
+        var result = await collection.DeleteOneAsync(filter);
+        return result.DeletedCount > 0;
     }
 
     public async Task<bool> RemoveCartItems(List<CartItem> items)
     {
-        var dbCartItems = new List<CartItem>();
-
+        var collection = database.GetCollection<CartItem>("cartItems");
+        
         foreach (var item in items)
         {
-            var dbCartItem = await database.CartItems.SingleOrDefaultAsync(dbItem =>
-                dbItem.UserId == item.UserId &&
-                dbItem.CatId == item.CatId);
+            var builder = Builders<CartItem>.Filter;
+            var filter = builder.Eq(field => field.UserId, item.UserId) & builder.Eq(field => field.CatId, item.CatId);
 
-            if (dbCartItem is not null)
-                dbCartItems.Add(dbCartItem);
-            else
-                return false;
+            await collection.DeleteOneAsync(filter);
         }
-
-        database.CartItems.RemoveRange(dbCartItems);
+        
         return true;
     }
 
-    public async Task SaveChanges() => await database.SaveChangesAsync();
+    public async Task SaveChanges() => await Task.CompletedTask;
 }

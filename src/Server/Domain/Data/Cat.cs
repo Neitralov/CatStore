@@ -2,6 +2,7 @@ namespace Domain.Data;
 
 public partial class Cat
 {
+    [BsonId]
     public Guid CatId { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string SkinColor { get; private set; } = string.Empty;

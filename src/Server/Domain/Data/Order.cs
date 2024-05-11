@@ -2,6 +2,7 @@ namespace Domain.Data;
 
 public class Order
 {
+    [BsonId]
     public Guid OrderId { get; private set; }
     public Guid UserId { get; private set; }
     public DateTime OrderDate { get; private set; }

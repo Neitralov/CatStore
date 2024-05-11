@@ -13,7 +13,8 @@ public interface ICartRepository
     Task<int> GetUserCartItemsCount(Guid userId);
 
     //Update
-
+    Task ReplaceCartItem(CartItem cartItem);
+    
     //Delete
     Task<bool> RemoveCartItem(Guid userId, Guid catId);
     Task<bool> RemoveCartItems(List<CartItem> items);

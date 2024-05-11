@@ -2,6 +2,7 @@ namespace Domain.Data;
 
 public class User
 {
+    [BsonId]
     public Guid UserId { get; private set; }
     public string Email { get; private set; } = string.Empty;
     public byte[] PasswordHash { get; private set; } = default!;

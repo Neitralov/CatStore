@@ -37,7 +37,7 @@ public class CatService(ICatRepository catRepository)
         var result = cat.UpdatePrice(price, discount);
 
         if (result == Result.Updated)
-            await catRepository.SaveChanges();
+            await catRepository.ReplaceCat(cat);
         
         return result;
     }

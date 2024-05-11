@@ -7,11 +7,11 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
-global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.OpenApi.Models;
 
 global using ErrorOr;
+global using MongoDB.Driver;
 global using Swashbuckle.AspNetCore.Filters;
 global using Serilog;
 global using Mapster;

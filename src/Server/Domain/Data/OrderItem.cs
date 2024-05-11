@@ -2,6 +2,8 @@ namespace Domain.Data;
 
 public class OrderItem
 {
+    [BsonId]
+    public Guid OrderItemId { get; private set; }
     public Guid OrderId { get; private set; }
     public Guid CatId { get; private set; }
     public string Name { get; private set; } = string.Empty;

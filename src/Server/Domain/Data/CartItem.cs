@@ -2,6 +2,8 @@ namespace Domain.Data;
 
 public class CartItem
 {
+    [BsonId]
+    public Guid CartItemId { get; private set; }
     public Guid UserId { get; private set; }
     public Guid CatId { get; private set; }
     public int Quantity { get; private set; } = 1;

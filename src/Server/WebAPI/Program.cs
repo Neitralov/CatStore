@@ -26,10 +26,11 @@ try
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
         builder.Services.AddControllers();
         builder.Services.AddHealthChecks();
-        
-        builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        builder.Services.AddSingleton(
+            new MongoClient(builder.Configuration.GetConnectionString("DefaultConnection"))
+                .GetDatabase(builder.Configuration["DatabaseName"]) ?? throw new NullReferenceException("env variable DatabaseName is not defined"));
+        
         builder.Services.AddHttpClient("kassa", (client) =>
         {
             client.BaseAddress = new Uri("https://api.yookassa.ru");
@@ -117,7 +118,7 @@ try
         app.MapControllers();
         app.MapHealthChecks("/health");
         app.ApplyTypeAdapterConfigs();
-        await app.MigrateDatabaseAsync();
+        await app.SeedDataAsync();
         await app.RunAsync();
     }
 }

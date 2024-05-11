@@ -2,9 +2,9 @@ namespace Domain.Data;
 
 public class RefreshTokenSession
 {
-    public int SessionId { get; private set; }
-    public Guid UserId { get; private set; }
+    [BsonId]
     public string Token { get; private set; } = default!;
+    public Guid UserId { get; private set; }
     public DateTime ExpirationDate { get; private set; }
     
     public const int ExpiresInDays = 30;

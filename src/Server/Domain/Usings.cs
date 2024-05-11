@@ -7,6 +7,7 @@ global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.Extensions.Configuration;
 
 global using ErrorOr;
+global using MongoDB.Bson.Serialization.Attributes;
 
 global using Domain.Data;
 global using Domain.Interfaces;

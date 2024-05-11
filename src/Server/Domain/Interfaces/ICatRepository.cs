@@ -11,6 +11,9 @@ public interface ICatRepository
     Task<List<Cat>> GetCats();
     Task<bool> IsCatExists(string name);
     Task<bool> IsCatExists(Guid catId);
+    
+    //Update
+    Task ReplaceCat(Cat cat);
 
     //Delete
     Task<bool> RemoveCat(Guid catId);

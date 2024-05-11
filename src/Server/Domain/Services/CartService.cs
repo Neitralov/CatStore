@@ -49,7 +49,7 @@ public class CartService(ICartRepository cartRepository, ICatRepository catRepos
         var result = cartItem.UpdateQuantity(quantity);
 
         if (result == Result.Updated)
-            await cartRepository.SaveChanges();
+            await cartRepository.ReplaceCartItem(cartItem);
 
         return result;
     }

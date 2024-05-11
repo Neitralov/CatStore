@@ -16,22 +16,19 @@ podman pod create \
 --name catstore \
 -p 8080:80 \
 -p 8081:8080 \
--p 5432:5432 \
+-p 27017:27017 \
 --replace
 
 # Запускаем контейнер с БД
 podman run \
 -d \
 --pod catstore \
--v catstore-volume:/var/lib/postgresql/data:Z \
--e POSTGRES_DB=catstore \
--e POSTGRES_USER=postgres \
--e POSTGRES_PASSWORD=1234 \
---name catstore-postgres \
+-v catstore-volume:/data/db:Z \
+--name catstore-mongodb \
 --replace \
-postgres:16.2
+mongo:7.0.9
 
-sleep 3
+sleep 2
 
 # Запускаем контейнер с backend-ом
 podman run \
@@ -40,9 +37,10 @@ podman run \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e FrontendUrl="http://localhost:8080" \
 -e AppSettings:Token="My favorite really secret key. 512 bit at least. (64 characters)." \
--e ConnectionStrings:DefaultConnection="Host=catstore-postgres;Port=5432;Database=catstore;Username=postgres;Password=1234" \
--e Yookassa:Id="123456" \
--e Yookassa:Token="Your yookassa token" \
+-e ConnectionStrings:DefaultConnection="mongodb://catstore-mongodb:27017" \
+-e DatabaseName="catstore" \
+-e Yookassa:Id="374735" \
+-e Yookassa:Token="test_dUbdl7ejvqx5_S6_rZyYxv-ta0fp88EpuLzJQj5xBPw" \
 --name catstore-webapi \
 --replace \
 webapitest
